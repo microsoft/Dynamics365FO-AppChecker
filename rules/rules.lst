@@ -1,1 +1,8 @@
 rules/X++/BooleanExpressionWithLiteral.xq
+rules\X++\ComplexityIndentationCombined.xq
+rules\X++\DirectSQL.xq
+rules\X++\ExtensionsWithoutPrefix.xq
+rules\X++\MissingClassDocumentation.xq
+rules\X++\MissingMethodDocumentation.xq
+rules\X++\NestedSearch.xq
+rules\X++\SelectForUpdateAbsent.xq
