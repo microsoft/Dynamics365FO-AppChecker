@@ -5,7 +5,7 @@
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/BooleanWithLiterals' Version='1.0'>
 {
-    for $c in /*
+    for $c in /(Class | Table | Form | Query)
     for $m in $c//Method
     let $exprs := $m//OrExpression/BooleanLiteralExpression
                 | $m//AndExpression/BooleanLiteralExpression
@@ -18,10 +18,10 @@
       <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
       <Message>The &amp;&amp; and || operators are used on the boolean literals true and false. Remove as appropriate while keeping expression semantics. For instance: true &amp;&amp; expression should be just expression</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
-      <Line>{$exprs/@StartLine}</Line>
-      <Column>{$exprs/@StartCol}</Column>
-      <EndLine>{$exprs/@EndLine}</EndLine>
-      <EndColumn>{$exprs/@EndCol}</EndColumn>
+      <Line>{string($exprs/@StartLine)}</Line>
+      <Column>{string($exprs/@StartCol)}</Column>
+      <EndLine>{string($exprs/@EndLine)}</EndLine>
+      <EndColumn>{string($exprs/@EndCol)}</EndColumn>
     </Diagnostic>
 }
 </Diagnostics>
