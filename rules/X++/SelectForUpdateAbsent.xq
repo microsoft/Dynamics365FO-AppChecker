@@ -4,7 +4,7 @@
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/SelectForUpdateAbsent' Version='1.0'>
 {
-for $a in /Class | /Table | /Form | /Query
+for $a in /(Class | Table | Form | Query)
 for $m in $a/Method 
 for $q in $m//Query
 where $q/data(SelectionHints) = "ForUpdate"

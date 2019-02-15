@@ -4,7 +4,7 @@
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/DirectSQL' Version='1.0'>
 {
-  for $a in /Class | /Table | /Form | /Query
+  for $a in /(Class | Table | Form | Query)
   for $m in $a/Method 
   for $qc in $m//QualifiedCall
   where $qc/ExpressionQualifier[@Type = "Statement"] 

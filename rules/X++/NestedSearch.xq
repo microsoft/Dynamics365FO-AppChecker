@@ -4,7 +4,7 @@
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/NestedSearch' Version='1.0'>
 {
-  for $a in /Class | /Table | /Form | /Query
+  for $a in /(Class | Table | Form | Query)
   for $m in $a/Method 
   for $nested in $m//SearchStatement//SearchStatement  
   let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
