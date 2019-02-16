@@ -12,13 +12,13 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
 {
   for $c in /(Class | Table | Form | Query)[@IsPrivate = "false" and functx:trim(@Comments) = ""]
   let $typeNamePair := fn:tokenize($c/@Artifact, ":")  
-      return
-        <Diagnostic>
-          <Moniker>MissingClassDocumentation</Moniker>
-          <Severity>Warning</Severity>
-          <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}</Path>
-          <Message>Documentation is missing for this non-private {$typeNamePair[1]}. XML documentation should be created to provide information related to usage.</Message>
-          <DiagnosticType>AppChecker</DiagnosticType>
-        </Diagnostic>  
+  return
+    <Diagnostic>
+      <Moniker>MissingClassDocumentation</Moniker>
+      <Severity>Warning</Severity>
+      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}</Path>
+      <Message>Documentation is missing for this non-private {$typeNamePair[1]}. XML documentation should be created to provide information related to usage.</Message>
+      <DiagnosticType>AppChecker</DiagnosticType>
+    </Diagnostic>  
 } 
 </Diagnostics>

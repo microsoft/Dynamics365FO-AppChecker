@@ -4,13 +4,13 @@
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/SelectForUpdateAbsent' Version='1.0'>
 {
-for $a in /(Class | Table | Form | Query)
-for $m in $a/Method 
-for $q in $m//Query
-where $q/data(SelectionHints) = "ForUpdate"
-let $obj := $q/data(@BufferName)
-where not(fn:exists($m//QualifiedCall[@MethodName = ("doUpdate", "update", "delete", "doDelete", "write")]/SimpleQualifier[@Name = $obj]))
-let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
+  for $a in /(Class | Table | Form | Query)
+  for $m in $a/Method 
+  for $q in $m//Query
+  where $q/data(SelectionHints) = "ForUpdate"
+  let $obj := $q/data(@BufferName)
+  where not(fn:exists($m//QualifiedCall[@MethodName = ("doUpdate", "update", "delete", "doDelete", "write")]/SimpleQualifier[@Name = $obj]))
+  let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
   return
     <Diagnostic>
       <Moniker>SelectForUpdateAbsent</Moniker>
