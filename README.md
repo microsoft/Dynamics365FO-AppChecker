@@ -1,4 +1,4 @@
-# Appchedker README
+# Appchecker README
 The Dynamics Appchecker is a set of technologies that allow customers to gain insight into their application code (i.e. source and metadata) in ways that have not been possible before. The tecnology is based on representing both source code and metadata as XML and providing rich search facilities by using the XQuery language to express declarative queries over the source code. The current implementation runs inside a BaseX database running locally on the developer's box. You can find more information about installing BaseX here: https://docs.microsoft.com/en-us/dynamics365/unified-operations/dev-itpro/dev-tools/install-basex  
 
 ## Rules
