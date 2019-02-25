@@ -13,7 +13,7 @@
   and fn:exists($q/AllFieldsSelection)
   let $typeNamePair := fn:tokenize($a/@Artifact, ":")
   return
-      <Diagnostic>
+    <Diagnostic>
       <Moniker>SelectUsingFirstOnly</Moniker>
       <Severity>Warning</Severity>
       <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/method/{string($m/@Name)}</Path>

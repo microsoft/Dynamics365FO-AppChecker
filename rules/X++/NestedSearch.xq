@@ -6,7 +6,7 @@
 {
   for $a in /(Class | Table | Form | Query)
   for $m in $a/Method 
-  for $nested in $m//SearchStatement//SearchStatement  
+  for $nested in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)//SearchStatement  
   let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
   return
     <Diagnostic>

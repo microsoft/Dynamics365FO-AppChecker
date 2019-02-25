@@ -10,7 +10,7 @@
   where $a/@Name = fn:concat($targetClass, "_Extension")
   let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
   return 
-      <Diagnostic>
+    <Diagnostic>
       <Moniker>ExtensionsWithoutPrefix</Moniker>
       <Severity>Error</Severity>
       <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}</Path>
