@@ -60,8 +60,8 @@ declare function local:visitMethod($m as element(Method)) as xs:integer
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ComplexityIndentation' Version='1.0'>
 {
   (: Define thresholds for complexity and indentation: :)
-  let $complexityLimit := 30
-  let $indentationLimit := 2
+  let $complexityLimit := xs:integer(30)
+  let $indentationLimit := xs:integer(2)
   
   for $c in /(Class | Table | Form | Query)
   for $m in $c//Method
@@ -69,12 +69,11 @@ declare function local:visitMethod($m as element(Method)) as xs:integer
   where $cmpl > $complexityLimit  
   order by $cmpl descending
   let $level := local:visitMethod($m)
-  let $typeNamePair := fn:tokenize($c/@Artifact, ":")
   return
     <Diagnostic>
       <Moniker>ComplexityIndentationCombined</Moniker>
       <Severity>{if ($level > $indentationLimit) then "Error" else "Warning"}</Severity>
-      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
+      <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
       <Message>Method complexity is above {$complexityLimit}{if ($level > $indentationLimit) then concat(", indentation is more than ", $indentationLimit) else ""}</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($m/@StartLine)}</Line>

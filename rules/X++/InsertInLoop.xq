@@ -10,13 +10,12 @@
   for $s in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)
   for $e in $s//CompoundStatement/ExpressionStatement//QualifiedCall[@MethodName = $ins]
   let $type := $e/(ExpressionQualifier | SimpleQualifier)/@Type
-  where exists (for $t in /Table[@Name = $type] where not (exists($t//TableType)) return 1)
-  let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
+  where not(exists(for $t in /Table[@Name = $type] where exists($t//TableType) return 1))
   return
     <Diagnostic>
       <Moniker>InsertInLoop</Moniker>
       <Severity>Warning</Severity>
-      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
+      <Path>{string($a/@PathPrefix)}/Method/{string($m/@Name)}</Path>
       <Message>Consider using insert_recordset or a RecordInsertList list to bundle database inserts inside a loop.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($e/@StartLine)}</Line>
