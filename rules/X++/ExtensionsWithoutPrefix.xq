@@ -5,17 +5,20 @@
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ExtensionsWithoutPrefix' Version='1.0'>
 {
   for $a in /Class
-  where $a/@ExtensionOfAttributeExists = "true" 
-  let $targetClass := $a/@ExtensionTarget
+  where $a/AttributeList/Attribute[@Name = "ExtensionOf"] 
+  let $targetClass := $a/AttributeList/Attribute[@Name = "ExtensionOf"]/AttributeExpression/IntrinsicAttributeLiteral[@FunctionName = "classStr"]/string(@Arg1)
   where $a/@Name = fn:concat($targetClass, "_Extension")
-  let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
   return 
     <Diagnostic>
       <Moniker>ExtensionsWithoutPrefix</Moniker>
       <Severity>Error</Severity>
-      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}</Path>
+      <Path>{string($a/@PathPrefix)}</Path>
       <Message>Extension class name should include a prefix</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
+      <Line>{string($a/@StartLine)}</Line>
+      <Column>{string($a/@StartCol)}</Column>
+      <EndLine>{string($a/@EndLine)}</EndLine>
+      <EndColumn>{string($a/@EndCol)}</EndColumn>      
     </Diagnostic>  
 }
 </Diagnostics>

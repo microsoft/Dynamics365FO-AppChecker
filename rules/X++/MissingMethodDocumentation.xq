@@ -12,13 +12,12 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
 {
   for $c in /(Class | Table | Form)[@IsPrivate = "false"]
   for $m in $c//Method[@IsPrivate = "false" and functx:trim(@Comments) = ""]
-  let $typeNamePair := fn:tokenize($c/@Artifact, ":")  
   return
     <Diagnostic>
       <Moniker>MissingMethodDocumentation</Moniker>
       <Severity>Warning</Severity>
-      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
-      <Message>Documentation is missing for non-private method on non-private {$typeNamePair[1]}. XML documentation should be created to provide information related to usage.</Message>
+      <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
+      <Message>Documentation is missing for non-private method on non-private class. XML documentation should be created to provide information related to usage.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($m/@StartLine)}</Line>
       <Column>{string($m/@StartCol)}</Column>

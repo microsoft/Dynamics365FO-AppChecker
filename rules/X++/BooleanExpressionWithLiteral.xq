@@ -10,19 +10,17 @@
     let $exprs := $m//OrExpression/BooleanLiteralExpression
                 | $m//AndExpression/BooleanLiteralExpression
     where $exprs
-    order by $m/@Name ascending
-    let $typeNamePair := fn:tokenize($c/@Artifact, ":")
     return 
       <Diagnostic>
         <Moniker>BooleanExpressionWithLiteral</Moniker>
         <Severity>Error</Severity>
-        <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
+      <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
         <Message>The &amp;&amp; and || operators are used on the boolean literals true and false. Remove as appropriate while keeping expression semantics. For instance: true &amp;&amp; expression should be just expression</Message>
         <DiagnosticType>AppChecker</DiagnosticType>
-        <Line>{string($exprs/@StartLine)}</Line>
-        <Column>{string($exprs/@StartCol)}</Column>
-        <EndLine>{string($exprs/@EndLine)}</EndLine>
-        <EndColumn>{string($exprs/@EndCol)}</EndColumn>
+        <Line>{string($exprs[1]/@StartLine)}</Line>
+        <Column>{string($exprs[1]/@StartCol)}</Column>
+        <EndLine>{string($exprs[1]/@EndLine)}</EndLine>
+        <EndColumn>{string($exprs[1]/@EndCol)}</EndColumn>
       </Diagnostic>
 }
 </Diagnostics>

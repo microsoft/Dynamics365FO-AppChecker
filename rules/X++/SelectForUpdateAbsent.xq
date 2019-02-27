@@ -10,12 +10,11 @@
   where $q/data(SelectionHints) = "ForUpdate"
   let $obj := $q/data(@BufferName)
   where not(fn:exists($m//QualifiedCall[@MethodName = ("doUpdate", "update", "delete", "doDelete", "write")]/SimpleQualifier[@Name = $obj]))
-  let $typeNamePair := fn:tokenize($a/@Artifact, ":")  
   return
     <Diagnostic>
       <Moniker>SelectForUpdateAbsent</Moniker>
       <Severity>Warning</Severity>
-      <Path>dynamics://{$typeNamePair[1]}/{$typeNamePair[2]}/Method/{string($m/@Name)}</Path>
+      <Path>{string($a/@PathPrefix)}/Method/{string($m/@Name)}</Path>
       <Message>This method contains a "select forupdate" statement, but does not perform the corresponding write operation. Review the code to make sure a call to an update, delete, or write method is not missing.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($q/@StartLine)}</Line>
