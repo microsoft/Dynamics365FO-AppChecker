@@ -619,14 +619,11 @@ declare function local:visitUpdateStatement($s as element(UpdateStatement))
   ($NOCALLSNEXT, $NOBREAKSFLOW)
 };
 
-let $testClass := fn:doc('/users/pvillads/desktop/testclass.xml')/*
-
-return <Problems>
+<Results>
 {
-  let $classes := $testClass
-  for $extensionClass in $testClass[AttributeList/Attribute[lower-case(@Name) = 'extensionof' or lower-case(@Name) = 'extensionofattribute']]
+  for $extensionClass in /Class[AttributeList/Attribute[lower-case(@Name) = 'extensionof' or lower-case(@Name) = 'extensionofattribute']]
   for $m in $extensionClass/Method[@Modifiers='None' or (@IsPublic='true' or @IsProtected='true')]
-    let $methodStatus :=  local:visitMethodContent($m)
-    return <Status Name='{$m/@Name}' Reason='{$methodStatus}' />
+    let $methodStatus := local:visitMethodContent($m)
+    return <Status Name='{$m/@Name}' Reason='{$methodStatus}'/>
 }
-</Problems>
+</Results>
