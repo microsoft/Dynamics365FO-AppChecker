@@ -5,7 +5,7 @@
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/BooleanWithLiterals' Version='1.0'>
 {
-    for $c in /(Class | Table | Form | Query)
+    for $c in //(Class | Table | Form | Query)
     for $m in $c//Method
     let $exprs := $m//OrExpression/BooleanLiteralExpression
                 | $m//AndExpression/BooleanLiteralExpression

@@ -5,7 +5,7 @@
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/SelectUsingFirstOnly' Version='1.0'>
 {
   let $hints := ("FirstOnly1", "FirstOnly", "NoFetch")
-  for $a in /(Class | Table | Form | Query)
+  for $a in //(Class | Table | Form | Query)
   for $m in $a//Method
   for $q in $m//Query
   where string(node-name($q/..)) != "JoinSpecification" (: only outermost query :)

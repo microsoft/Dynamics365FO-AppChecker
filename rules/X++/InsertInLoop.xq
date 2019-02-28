@@ -5,7 +5,7 @@
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/InsertInLoop' Version='1.0'>
 {
   let $ins := ("Insert", "doInsert")
-  for $a in /(Class | Table | Form | Query)
+  for $a in //(Class | Table | Form | Query)
   for $m in $a//Method
   for $s in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)
   for $e in $s//CompoundStatement/ExpressionStatement//QualifiedCall[@MethodName = $ins]
@@ -16,7 +16,7 @@
       <Moniker>InsertInLoop</Moniker>
       <Severity>Warning</Severity>
       <Path>{string($a/@PathPrefix)}/Method/{string($m/@Name)}</Path>
-      <Message>Consider using insert_recordset or a RecordInsertList list to bundle database inserts inside a loop.</Message>
+      <Message>Consider using insert_recordset or a RecordInsertList list to bundle database inserts.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($e/@StartLine)}</Line>
       <Column>{string($e/@StartCol)}</Column>
