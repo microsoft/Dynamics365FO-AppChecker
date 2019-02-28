@@ -10,7 +10,7 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
  
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/MissingClassDocumentation' Version='1.0'>
 {
-  for $c in /(Class | Table | Form | Query)[@IsPrivate = "false" and functx:trim(@Comments) = ""]
+  for $c in //(Class | Table | Form | Query)[@IsPrivate = "false" and functx:trim(@Comments) = ""]
   return
     <Diagnostic>
       <Moniker>MissingClassDocumentation</Moniker>

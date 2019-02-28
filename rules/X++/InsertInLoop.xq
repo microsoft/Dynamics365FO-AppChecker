@@ -5,7 +5,7 @@
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/InsertInLoop' Version='1.0'>
 {
   let $ins := ("Insert", "doInsert")
-  for $a in /(Class | Table | Form | Query)
+  for $a in //(Class | Table | Form | Query)
   for $m in $a//Method
   for $s in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)
   for $e in $s//CompoundStatement/ExpressionStatement//QualifiedCall[@MethodName = $ins]

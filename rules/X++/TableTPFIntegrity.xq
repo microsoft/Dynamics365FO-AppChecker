@@ -5,7 +5,7 @@
  
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/TableTPFIntegrity' Version='1.0'>
 {
-  for $child in /Table[@SupportInheritance = "true" and @Extends != ""]
+  for $child in //Table[@SupportInheritance = "true" and @Extends != ""]
   where $child//AosAuthorization
   let $childAuth := $child//data(AosAuthorization)
   let $parentTable := $child/string(@Extends)

@@ -10,7 +10,7 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
  
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/MissingMethodDocumentation' Version='1.0'>
 {
-  for $c in /(Class | Table | Form)[@IsPrivate = "false"]
+  for $c in //(Class | Table | Form)[@IsPrivate = "false"]
   for $m in $c//Method[@IsPrivate = "false" and functx:trim(@Comments) = ""]
   return
     <Diagnostic>

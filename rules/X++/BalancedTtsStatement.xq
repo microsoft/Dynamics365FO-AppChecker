@@ -6,7 +6,7 @@
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/BalancedTtsStatement' Version='1.0'>
 {
 let $scopes := ("IfStatement", "IfThenElseStatement", "WhileStatement", "DoWhileStatement", "ForStatement", "TryStatement", "CatchStatement", "FinallyStatement", "SearchStatement", "SwitchEntryStatement", "Method", "FunctionDeclaration")
-for $a in /(Table | Class | Form | Query)
+for $a in //(Table | Class | Form | Query)
 for $m in $a//Method
 for $s in ($m, $m//*[local-name() = $scopes])
 let $ttsbegin := count( ($s/CompoundStatement/TtsBeginStatement) | ($s/TtsBeginStatement) )
