@@ -16,7 +16,7 @@
       <Moniker>InsertInLoop</Moniker>
       <Severity>Warning</Severity>
       <Path>{string($a/@PathPrefix)}/Method/{string($m/@Name)}</Path>
-      <Message>Consider using insert_recordset or a RecordInsertList list to bundle database inserts inside a loop.</Message>
+      <Message>Consider using insert_recordset or a RecordInsertList list to bundle database inserts.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
       <Line>{string($e/@StartLine)}</Line>
       <Column>{string($e/@StartCol)}</Column>

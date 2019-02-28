@@ -9,7 +9,9 @@ let $scopes := ("IfStatement", "IfThenElseStatement", "WhileStatement", "DoWhile
 for $a in /(Table | Class | Form | Query)
 for $m in $a//Method
 for $s in ($m, $m//*[local-name() = $scopes])
-where count( ($s/CompoundStatement/TtsBeginStatement) | ($s/TtsBeginStatement) ) != count( ($s/CompoundStatement/(TtsAbortStatement | TtsEndStatement)) | ($s/(TtsAbortStatement | TtsEndStatement)) )
+let $ttsbegin := count( ($s/CompoundStatement/TtsBeginStatement) | ($s/TtsBeginStatement) )
+let $ttsend := count( ($s/CompoundStatement/(TtsAbortStatement | TtsEndStatement)) | ($s/(TtsAbortStatement | TtsEndStatement)) )
+where $ttsbegin != $ttsend
 return
     <Diagnostic>
       <Moniker>BalancedTtsStatement</Moniker>
