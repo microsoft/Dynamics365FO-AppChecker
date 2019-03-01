@@ -10,19 +10,19 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
  
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/MissingMethodDocumentation' Version='1.0'>
 {
-  for $c in //(Class | Table | Form)[@IsPrivate = "false"]
-  for $m in $c//Method[@IsPrivate = "false" and functx:trim(@Comments) = ""]
+  for $c in /(Class | Table | Form)[@IsPrivate = "false"]
+  where $c//Method[@IsPrivate = "false" and functx:trim(@Comments) = ""]
   return
     <Diagnostic>
       <Moniker>MissingMethodDocumentation</Moniker>
       <Severity>Warning</Severity>
-      <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
-      <Message>Documentation is missing for non-private method on non-private class. XML documentation should be created to provide information related to usage.</Message>
+      <Path>{string($c/@PathPrefix)}</Path>
+      <Message>Documentation is missing for non-private method on this non-private class. XML documentation should be created to provide information related to usage.</Message>
       <DiagnosticType>AppChecker</DiagnosticType>
-      <Line>{string($m/@StartLine)}</Line>
-      <Column>{string($m/@StartCol)}</Column>
-      <EndLine>{string($m/@EndLine)}</EndLine>
-      <EndColumn>{string($m/@EndCol)}</EndColumn>
+      <Line>{string($c/@StartLine)}</Line>
+      <Column>{string($c/@StartCol)}</Column>
+      <EndLine>{string($c/@EndLine)}</EndLine>
+      <EndColumn>{string($c/@EndCol)}</EndColumn>
     </Diagnostic>  
 } 
 </Diagnostics>
