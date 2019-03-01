@@ -242,7 +242,8 @@ declare function local:visitExpressionQualifier($qualifier)
 {
   typeswitch($qualifier)
     case element(ExpressionQualifier) return local:visitExpression($qualifier/*[1])
-    case element(SimpleQualifier) return $NOCALLSNEXT
+    case element(SimpleQualifier) 
+       | element(StaticQualifier) return $NOCALLSNEXT
     default return "Not implemented - Expression qualifier: " || local-name($qualifier)
 };
 
