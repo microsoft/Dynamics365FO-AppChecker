@@ -619,11 +619,25 @@ declare function local:visitUpdateStatement($s as element(UpdateStatement))
   ($NOCALLSNEXT, $NOBREAKSFLOW)
 };
 
-<Results>
+<Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/CallsNext' Version='0.1'>
 {
-  for $extensionClass in /Class[AttributeList/Attribute[lower-case(@Name) = 'extensionof' or lower-case(@Name) = 'extensionofattribute']]
-  for $m in $extensionClass/Method[@Modifiers='None' or (@IsPublic='true' or @IsProtected='true')]
-    let $methodStatus := local:visitMethodContent($m)
-    return <Status Name='{$m/@Name}' Reason='{$methodStatus}'/>
+  for $extensionClass in /Class[@ExtensionOfAttributeExists]
+  for $m in $extensionClass/Method[@IsChainOfCommandMethod='true']    let $methodStatus := local:visitMethodContent($m)
+    where $methodStatus != $CALLSNEXT
+    return <Diagnostic Artifact='{$extensionClass/@Artifact}' 
+        Method='{$m/@Name}' Package='{$extensionClass/@Package}'
+        Status='{$methodStatus}'
+        StartLine='{$m/@StartLine}' EndLine='{$m/@EndLine}' />
+    (: <Diagnostic>
+      <Moniker>CallsNextNotProvable</Moniker>
+      <Severity>Error</Severity>
+      <Path>{string($extensionClass/@PathPrefix)}/Method/{string($m/@Name)}</Path>
+      <Message>Not all paths contain a call to next in this extension method.</Message>
+      <DiagnosticType>AppChecker</DiagnosticType>
+      <Line>{string($m/@StartLine)}</Line>
+      <Column>{string($m/@StartCol)}</Column>
+      <EndLine>{string($m/@EndLine)}</EndLine>
+      <EndColumn>{string($m/@EndCol)}</EndColumn>
+    </Diagnostic> :)  
 }
-</Results>
+</Diagnostics>
