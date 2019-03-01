@@ -4,7 +4,7 @@
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/Breakpoint' Version='1.0'>
 {
-  for $a in //(Class | Table | Form | Query)
+  for $a in /*
   for $m in $a//Method
   for $s in $m//BreakpointStatement
   return

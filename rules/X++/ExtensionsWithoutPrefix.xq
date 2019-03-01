@@ -4,9 +4,9 @@
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ExtensionsWithoutPrefix' Version='1.0'>
 {
-  for $a in //Class
+  for $a in /Class
   where $a/AttributeList/Attribute[@Name = "ExtensionOf"] 
-  let $targetClass := $a/string(@ExtensionTarget)
+  let $targetClass := $a/AttributeList/Attribute[@Name = "ExtensionOf"]/AttributeExpression/IntrinsicAttributeLiteral[@FunctionName = "classStr"]/string(@Arg1)
   where $a/@Name = fn:concat($targetClass, "_Extension")
   return 
     <Diagnostic>

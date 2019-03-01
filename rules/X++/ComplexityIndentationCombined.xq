@@ -63,7 +63,7 @@ declare function local:visitMethod($m as element(Method)) as xs:integer
   let $complexityLimit := xs:integer(30)
   let $indentationLimit := xs:integer(2)
   
-  for $c in //(Class | Table | Form | Query)
+  for $c in /*
   for $m in $c//Method
   let $cmpl := local:MethodComplexity($m)
   where $cmpl > $complexityLimit  

@@ -4,7 +4,7 @@
  
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/DeleteFromNotUsed' Version='1.0'>
 {
-  for $a in //(Class | Table | Form | Query)
+  for $a in /*
   for $m in $a//Method
   for $s in $m//SearchStatement
   where count($s/CompoundStatement/*) = 1
