@@ -242,8 +242,7 @@ declare function local:visitExpressionQualifier($qualifier)
 {
   typeswitch($qualifier)
     case element(ExpressionQualifier) return local:visitExpression($qualifier/*[1])
-    case element(SimpleQualifier) 
-       | element(StaticQualifier) return $NOCALLSNEXT
+    case element(SimpleQualifier) return $NOCALLSNEXT
     default return "Not implemented - Expression qualifier: " || local-name($qualifier)
 };
 
@@ -444,32 +443,81 @@ declare function local:visitForStatement($s as element(ForStatement))
   return ($status, $NOBREAKSFLOW)
 };
 
+declare function local:getAllCaseStatements($s as element(SwitchStatement), $index as xs:integer, $sofar) as element(CompoundStatement)*
+{
+   let $v := local:getCaseStatements($s, $index)
+   return if ($v[1] > count($s/*)) then 
+     ($sofar, $v[2])
+   else local:getAllCaseStatements($s, $v[1], ($sofar, $v[2]))
+};
+
+declare function local:getCaseStatements($s as element(SwitchStatement), $i as xs:integer)
+{
+    if (local-name($s/*[$i]) = ('CaseValues', 'CaseDefault')) then
+      local:getCaseStatements($s, $i + 1) (: skip until a statement is found :)
+    else (
+      let $from := $i
+      let $to := local:collectStatements($s, $from)
+      let $s := ($to, <CompoundStatement>{for $index in $from to ($to - 1) return $s/*[$index]}</CompoundStatement>)
+      
+      return $s
+    )
+};
+
+declare function local:collectStatements($s as element(SwitchStatement), $i as xs:integer) as xs:integer
+{
+  if ($i > count($s/*)) then
+     $i
+  else if (local-name($s/*[$i]) = ('CaseValues', 'CaseDefault')) then
+     $i
+  else
+     local:collectStatements($s, $i + 1)      
+};
+
 declare function local:visitSwitchStatement($s as element(SwitchStatement))
 {
+  (: If the switch expression calls next, then the switch statement calls next.
+     There is no need for further analysis :)
   let $switchValueStatus := local:visitExpression($s/*[1])
+  
   let $status := if ($switchValueStatus = $CALLSNEXT) then
     $CALLSNEXT
   else (
-    (: TODO implement this properly. It can be done by transforming the 
-       switch statement into an if statement with the same semantics and 
-       then analysing that statement. So for instance:
-       
-       switch(e){
-         case e1,e2, e3:
-         case e4 : S11; S12
-         case e5 : S2
-         default: S3
-       }
-       can be generated into
-       
-       if (e1 || e2 || e3 || e4)
-       { S11; S12 }
-       else if (e5)
-       { S2l }
-       else { S3 }
-       :)
-     $NOCALLSNEXT
+    (: The only other case where the switch statement can invariably call next is
+       if all the bodies call next and there is a default part. If none of
+       the expressions call next, and none of the bodies do, then the switch
+       statement does not call next. In any other cases, the switch statement
+       may call next. :)
+    
+    (: Get all the expressions and statements. Wrap the statements in each case
+       in a compound statement since they case entries are statement lists :)
+
+    let $allStatements := local:getAllCaseStatements($s, 2, ())
+
+    (: Calculate the vector of call next for each compound statement :)
+    let $callsNextStatementStatus := (for $cs in $allStatements return local:visitStatement($cs)[1])
+    
+    return if (exists($s/CaseDefault) and (every $s1 in $callsNextStatementStatus satisfies $s1[1] = $CALLSNEXT)) then
+      $CALLSNEXT
+    else if (some $s1 in $callsNextStatementStatus satisfies $s1[1] = ($CALLSNEXT, $MAYCALLNEXT)) then
+      $MAYCALLNEXT
+    else (
+      (: None of the statements call next. Only thing lef to check now 
+         is the expression contributions :)
+      let $caseexpressions := $s/CaseValues/*
+      let $caseExpressionStatus := (for $e in $caseexpressions return local:visitExpression($e))
+      
+      let $ddd := trace($caseExpressionStatus, 'expr vector ' )
+      
+      return if (some $s1 in $caseExpressionStatus satisfies $s1 = ($CALLSNEXT, $MAYCALLNEXT)) then
+         $MAYCALLNEXT
+      else
+         $NOCALLSNEXT
+    )
   )
+  
+  let $eee := trace($status, "prior to returning ")
+  
   return ($status, $NOBREAKSFLOW)
 };
 
@@ -623,7 +671,8 @@ declare function local:visitUpdateStatement($s as element(UpdateStatement))
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/CallsNext' Version='0.1'>
 {
   for $extensionClass in /Class[@ExtensionOfAttributeExists]
-  for $m in $extensionClass/Method[@IsChainOfCommandMethod='true']    let $methodStatus := local:visitMethodContent($m)
+  for $m in $extensionClass/Method[@IsChainOfCommandMethod='true']    
+    let $methodStatus := local:visitMethodContent($m)
     where $methodStatus != $CALLSNEXT
     return <Diagnostic Artifact='{$extensionClass/@Artifact}' 
         Method='{$m/@Name}' Package='{$extensionClass/@Package}'
