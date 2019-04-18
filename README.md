@@ -17,7 +17,7 @@ The tools directory contains tools that the user can use to query over his sourc
 None at this time
 
 ## Notes and Caveats
-As discussed above, the compiler generates an XML representation of the source code. This is stored by BaseX in a directory with the name of the package being compiled inside the root directory called data. Note that the XMLs stored are just an enriched representation of the source code. You can run your own queries over this content by using the BaseX GUI tool. If you want to delete this information, use the BaseX GUI to drop the database with the appropriate name  (Database | Open and manage... | Drop...)
+As discussed above, the compiler generates an enriched, structured XML representation of the source code. This is stored by BaseX in a directory with the name of the package being compiled inside the root directory called data. You can run your own queries over this content by using the BaseX GUI tool. If you want to delete this representation of the source, use the BaseX GUI to drop the database with the appropriate name  (Database | Open and manage... | Drop...)
 
 ## Contributing
 
