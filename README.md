@@ -9,7 +9,7 @@ The tools directory contains tools that the user can use to query over his sourc
 
 ## Using
 
-* First, you will need to have a BaseX server installed on a server that can be reached from the computer on which you are running this extension. BaseX is open source and can be installed from here: www.basex.org. You will be given instructions the first time you use the application checker.
+* First, you will need to have the BaseX functionality installed on the computer running this extension. BaseX is open source and can be installed from here: www.basex.org. You will be given installation instructions the first time you use the application checker.
 * You then need to extract the ASTs for the source code that you are looking at. This happens automatically during building of the deployable backage. The X++ compiler now supports generating the XML artifacts as a by product of compilation.
 
 ## Known Issues
@@ -25,8 +25,6 @@ This project welcomes contributions and suggestions. Most contributions require 
 agree to a Contributor License Agreement (CLA) declaring that you have the right to,
 and actually do, grant us the rights to use your contribution. For details, visit
 https://cla.microsoft.com.
-
-Please note that u
 
 When you submit a pull request, a CLA-bot will automatically determine whether you need
 to provide a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the
