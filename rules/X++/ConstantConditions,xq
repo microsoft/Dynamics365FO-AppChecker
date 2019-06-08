@@ -2,13 +2,13 @@
 (: @Language Xpp :)
 (: @Author pvillads@microsoft.com :)
 
-<ConstantConditions Category='Mandatory' href='docs.microsoft.com/Socratex/ConstantConditions' Version='1.0'>
+<Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ConstantConditions' Version='1.0'>
 {
   for $a in /(Class | Table | Form | Query)
   for $m in $a//Method
   for $s in $m//(IfStatement | IfThenElseStatement | WhileStatement)/*[1][@IsConst='True']
   return 
-      <Diagnostic>
+    <Diagnostic>
       <Moniker>ConstantCondition</Moniker>
       <Severity>Error</Severity>
       <Path>{string($a/@PathPrefix)}/Method/{string($m/@Name)}</Path>
@@ -20,4 +20,4 @@
       <EndColumn>{string($s/@EndCol)}</EndColumn>
     </Diagnostic> 
 }
-</ConstantConditions>
+</Diagnostics>
