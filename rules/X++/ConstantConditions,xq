@@ -6,7 +6,7 @@
 {
   for $a in /(Class | Table | Form | Query)
   for $m in $a//Method
-  for $s in $m//(IfStatement | IfThenElseStatement | WhileStatement)/*[1][@IsConst='True']
+  for $s in $m//(IfStatement | IfThenElseStatement | WhileStatement)/*[1][lower-case(@IsConst)='true']
   return 
     <Diagnostic>
       <Moniker>ConstantCondition</Moniker>
