@@ -3,7 +3,7 @@
 (: @Category Mandatory :)
 (: @Author pvillads@microsoft.com :)
 
-<ConstrainedStringTypes Category='Mandatory' href='docs.microsoft.com/Socratex/ConstrainedStringTypes' Version='1.0'>
+<Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ConstrainedStringTypes' Version='1.0'>
 {
   for $a in /(Class | Table | Form | Query)
   for $m in $a//Method
@@ -21,4 +21,4 @@
       <EndColumn>{string($s/@EndCol)}</EndColumn>
     </Diagnostic> 
  }
-</ConstrainedStringTypes>
+</Diagnostics>
