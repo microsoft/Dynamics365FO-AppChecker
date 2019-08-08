@@ -2,7 +2,7 @@
 The Dynamics Application checker is a set of technologies that allow customers to gain insight into their application code (i.e. source and metadata) in ways that have not been possible before. The technology is based on representing both source code and metadata in XML and providing rich search facilities by using the XQuery language to express declarative queries over the source code. The current implementation runs inside a BaseX repository running locally on the developer's box. You can find more information about installing BaseX here: https://docs.microsoft.com/en-us/dynamics365/unified-operations/dev-itpro/dev-tools/install-basex  
 
 ## Rules
-The rules directory contains the set of rules that are will be checked when the user uploads their deployable package to LCS. If the submitted application code does not satisfy these requirements, the deployable package will not be accepted. The rules can be inspected and downloaded for any use, but Microsoft is the only agent that can modify and add new rules.
+The rules directory contains the set of rules that are currently available and will be checked when the user uploads their deployable package to LCS. If the submitted application code does not satisfy these requirements, the deployable package will not be accepted. The rules can be inspected and downloaded for any use, but Microsoft is the only agent that can modify and add new rules.
 
 ## Tools
 The tools directory contains tools that the user can use to query over his source code that is extracted into an XML database.
@@ -10,7 +10,7 @@ The tools directory contains tools that the user can use to query over his sourc
 ## Using
 
 * First, you will need to have the BaseX functionality installed on the computer running this extension. BaseX is open source and can be installed from here: www.basex.org. You will be given installation instructions the first time you use the application checker.
-* You then need to extract the ASTs for the source code that you are looking at. This happens automatically during building of the deployable backage. The X++ compiler now supports generating the XML artifacts as a by product of compilation.
+* You then need to extract the ASTs for the source code that you are looking at. This happens automatically during the compilation process of a full package and/or building of the deployable package. The X++ compiler now supports generating the XML artifacts as a _by product_ of compilation.
 
 ## Known Issues
 
