@@ -14,8 +14,8 @@
       <Diagnostic>
         <Moniker>BooleanExpressionWithLiteral</Moniker>
         <Severity>Error</Severity>
-      <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
-        <Message>The &amp;&amp; and || operators are used on the boolean literals true and false. Remove as appropriate while keeping expression semantics. For instance: true &amp;&amp; expression should be just expression</Message>
+        <Path>{string($c/@PathPrefix)}/Method/{string($m/@Name)}</Path>
+        <Message>Logical operators are applied to boolean literals. Remove as appropriate while keeping expression semantics.</Message>
         <DiagnosticType>AppChecker</DiagnosticType>
         <Line>{string($exprs[1]/@StartLine)}</Line>
         <Column>{string($exprs[1]/@StartCol)}</Column>
