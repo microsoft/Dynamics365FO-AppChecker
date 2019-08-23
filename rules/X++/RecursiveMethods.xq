@@ -8,7 +8,7 @@
   return (
     for $m in $a//Method[lower-case(@IsStatic)='true']
       for $call in $m//StaticMethodCall
-      where $call[@ClassName=$a/@Name and @MethodName=$m/@Name]
+      where $call[lower-case(@ClassName)=lower-case($a/@Name) and lower-case(@MethodName)=lower-case($m/@Name)]
       return
           <Diagnostic>
             <Moniker>RecursiveStaticMethod</Moniker>
@@ -24,7 +24,7 @@
    ,
     for $m in $a//Method[lower-case(@IsStatic) !='true']
       for $call in $m//QualifiedCall/SimpleQualifier
-      where $call[@Type=$a/@Name and $m/@Name = $call/../@MethodName]
+      where $call[lower-case(@Type)=lower-case($a/@Name) and lower-case($m/@Name) = lower-case($call/../@MethodName)]
       return
           <Diagnostic>
             <Moniker>RecursiveInstanceMethod</Moniker>
