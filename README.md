@@ -14,7 +14,11 @@ The tools directory contains tools that the user can use to query over his sourc
 
 ## Known Issues
 
-None at this time
+The Java virtual machine needs to know how much RAM it is allowed to allocate. If the default supplied is too high for you to start the VM, you will get an error message. To work around that, create an environment variable called BASEX_JVM and set it to the following value:
+
+set BASEX_JVM=-Xmx3G
+
+where the specification after the Xmx specifies the number of gigabytes to allocate.
 
 ## Notes and Caveats
 As discussed above, the compiler generates an enriched, structured XML representation of the source code. This is stored by BaseX in a directory with the name of the package being compiled inside the root directory called data. You can run your own queries over this content by using the BaseX GUI tool. If you want to delete this representation of the source, use the BaseX GUI to drop the database with the appropriate name  (Database | Open and manage... | Drop...)
