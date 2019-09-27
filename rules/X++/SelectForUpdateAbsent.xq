@@ -7,9 +7,9 @@
   for $a in /*
   for $m in $a/Method 
   for $q in $m//Query
-  where $q/data(SelectionHints) = "ForUpdate"
-  let $obj := $q/data(@BufferName)
-  where not(fn:exists($m//QualifiedCall[@MethodName = ("doUpdate", "update", "delete", "doDelete", "write")]/SimpleQualifier[@Name = $obj]))
+  where lower-case($q/data(SelectionHints)) = "forupdate"
+  let $obj := lower-case($q/data(@BufferName))
+  where not(fn:exists($m//QualifiedCall[lower-case(@MethodName) = ("doupdate", "update", "delete", "dodelete", "write")]/SimpleQualifier[lower-case(@Name) = $obj]))
   return
     <Diagnostic>
       <Moniker>SelectForUpdateAbsent</Moniker>
