@@ -1,0 +1,216 @@
+﻿<?xml version="1.0"?>
+
+<!-- Copyright (c) Microsoft Corporation.
+Licensed under the MIT license. -->
+
+<SyntaxDefinition name = "X++" extensions = ".xpp">
+  <Properties>
+    <Property name="LineComment" value="//"/>
+  </Properties>
+  <Digits name = "Digits" bold = "true" italic = "false" color = "Blue"/>
+  <RuleSets>
+    <RuleSet ignorecase = "true">
+      <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,   .?</Delimiters>
+      <Span name="SingleQuoteString" bold="false" italic="false" color="Red" stopateol="false">
+        <Begin>'</Begin>
+        <End>'</End>
+      </Span>
+      <Span name="DoubleQuoteString" bold="false" italic="false" color="Red" stopateol="false">
+        <Begin>"</Begin>
+        <End>"</End>
+      </Span>
+      <Span name = "LineComment" bold = "false" italic = "false" color = "Green" stopateol = "true">
+        <Begin>//</Begin>
+      </Span>
+      <Span name = "BlockComment" bold = "false" italic = "false" color = "Green" stopateol = "false">
+        <Begin>/*</Begin>
+        <End>*/</End>
+      </Span>
+      
+      <KeyWords name="XppKeywords" bold="true" italic="false" color ="Blue">
+        <Key word="while"                />
+        <Key word="guid"                 />
+        <Key word="int"                  />
+        <Key word="int64"                />
+        <Key word="str"                  />
+        <Key word="container"            />
+        <Key word="real"                 />
+        <Key word="date"                 />
+        <Key word="utcdatetime"          />
+        <Key word="void"                 />
+        <Key word="anytype"              />
+        <Key word="null"                 />
+        <Key word="new"                  />
+        <Key word="super"                />
+        <Key word="class"                />
+        <Key word="interface"            />
+        <Key word="implements"           />
+        <Key word="extends"              />
+        <Key word="like"                 />
+        <Key word="div"                  />
+        <Key word="mod"                  />
+        <Key word="do"                   />
+        <Key word="throw"                />
+        <Key word="try"                  />
+        <Key word="catch"                />
+        <Key word="switch"               />
+        <Key word="case"                 />
+        <Key word="default"              />
+        <Key word="if"                   />
+        <Key word="else"                 />
+        <Key word="print"                />
+        <Key word="break"                />
+        <Key word="breakpoint"           />
+        <Key word="continue"             />
+        <Key word="return"               />
+        <Key word="for"                  />
+        <Key word="retry"                />
+        <Key word="select"               />
+        <Key word="delete_from"          />
+        <Key word="from"                 />
+        <Key word="index"                />
+        <Key word="hint"                 />
+        <Key word="firstfast"            />
+        <Key word="reverse"              />
+        <Key word="firstonly"            />
+        <Key word="firstonly1"           />
+        <Key word="firstonly10"          />
+        <Key word="firstonly100"         />
+        <Key word="firstonly1000"        />
+        <Key word="forceliterals"        />
+        <Key word="forcenestedloop"      />
+        <Key word="forceselectorder"     />
+        <Key word="forceplaceholders"    />
+        <Key word="forupdate"            />
+        <Key word="nofetch"              />
+        <Key word="repeatableread"       />
+        <Key word="optimisticlock"       />
+        <Key word="pessimisticlock"      />
+        <Key word="generateonly"         />
+        <Key word="crosscompany"         />
+        <Key word="where"                />
+        <Key word="order"                />
+        <Key word="group"                />
+        <Key word="by"                   />
+        <Key word="asc"                  />
+        <Key word="desc"                 />
+        <Key word="outer"                />
+        <Key word="exists"               />
+        <Key word="notexists"            />
+        <Key word="join"                 />
+        <Key word="count"                />
+        <Key word="avg"                  />
+        <Key word="sum"                  />
+        <Key word="minof"                />
+        <Key word="maxof"                />
+        <Key word="insert_recordset"     />
+        <Key word="update_recordset"     />
+        <Key word="setting"              />
+        <Key word="ttsbegin"             />
+        <Key word="ttscommit"            />
+        <Key word="ttsabort"             />
+        <Key word="flush"                />
+        <Key word="next"                 />
+        <Key word="changecompany"        />
+        <Key word="private"              />
+        <Key word="protected"            />
+        <Key word="public"               />
+        <Key word="final"                />
+        <Key word="abstract"             />
+        <Key word="static"               />
+        <Key word="display"              />
+        <Key word="edit"                 />
+        <Key word="server"               />
+        <Key word="client"               />
+        <Key word="true"                 />
+        <Key word="false"                />
+        <Key word="eventhandler"         />
+        <Key word="delegate"             />
+        <Key word="as"                   />
+        <Key word="is"                   />
+        <Key word="byref"                />
+        <Key word="unchecked"            />
+        <Key word="validtimestate"       />
+        <Key word="finally"              />
+        <Key word="namespace"            />
+        <Key word="using"                />
+        <Key word="const"                />
+        <Key word="readonly"             />
+        <Key word="internal"             />
+        <Key word="var"                  />
+      </KeyWords>
+
+      <KeyWords name="intrinsics" bold="true" italic="true" color ="Blue">
+        <Key word="classnum"/>
+        <Key word="classstr"/>
+        <Key word="configurationkeynum"/>
+        <Key word="configurationkeystr"/>
+        <Key word="datasetstr"/>
+        <Key word="delegatestr"/>
+        <Key word="staticdelegatestr"/>
+        <Key word="enumcnt"/>
+        <Key word="enumliteralstr"/>
+        <Key word="enumnum"/>
+        <Key word="enumstr"/>
+        <Key word="extendedtypenum"/>
+        <Key word="extendedtypestr"/>
+        <Key word="fieldnum"/>
+        <Key word="fieldpname"/>
+        <Key word="fieldstr"/>
+        <Key word="formstr"/>
+        <Key word="formmethodstr"/>
+        <Key word="identifierstr"/>
+        <Key word="indexnum"/>
+        <Key word="indexstr"/>
+        <Key word="licensecodenum"/>
+        <Key word="licensecodestr"/>
+        <Key word="literalstr"/>
+        <Key word="maxdate"/>
+        <Key word="maxint"/>
+        <Key word="menuitemactionstr"/>
+        <Key word="menuitemdisplaystr"/>
+        <Key word="menuitemoutputstr"/>
+        <Key word="menustr"/>
+        <Key word="methodstr"/>
+        <Key word="minint"/>
+        <Key word="querystr"/>
+        <Key word="querymethodstr"/>
+        <Key word="reportstr"/>
+        <Key word="resourcestr"/>
+        <Key word="staticmethodstr"/>
+        <Key word="tablecollectionstr"/>
+        <Key word="tablefieldgroupstr"/>
+        <Key word="tablemethodstr"/>
+        <Key word="tablenum"/>
+        <Key word="tablepname"/>
+        <Key word="tablestaticmethodstr"/>
+        <Key word="tablestr"/>
+        <Key word="workflowcategorystr"/>
+        <Key word="varstr"/>
+        <Key word="webactionitemstr"/>
+        <Key word="webdisplaycontentitemstr"/>
+        <Key word="webformstr"/>
+        <Key word="webletitemstr"/>
+        <Key word="webmenustr"/>
+        <Key word="weboutputcontentitemstr"/>
+        <Key word="webpagedefstr"/>
+        <Key word="webreportstr"/>
+        <Key word="websitedefstr"/>
+        <Key word="websitetempstr"/>
+        <Key word="webstaticfilestr"/>
+        <Key word="weburlitemstr"/>
+        <Key word="webwebpartstr"/>
+        <Key word="formcontrolstr"/>
+        <Key word="querydatasourcestr"/>
+        <Key word="ssrsreportstr"/>
+        <Key word="workflowtypestr"/>
+        <Key word="workflowtaskstr"/>
+        <Key word="workflowapprovalstr"/>
+        <Key word="attributestr"/>
+        <Key word="formdatasourcestr"/>
+        <Key word="formdatafieldstr"/>
+
+      </KeyWords>
+    </RuleSet>
+  </RuleSets>
+</SyntaxDefinition>

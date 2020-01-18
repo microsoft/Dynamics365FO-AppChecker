@@ -1,0 +1,429 @@
+﻿<!-- 
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT license.
+-->
+<Window x:Class="XppReasoningWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     	xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:local="clr-namespace:XppReasoningWpf"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+        xmlns:r="clr-namespace:Wpf.Controls"
+        xmlns:settings="clr-namespace:XppReasoningWpf.Properties"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="598" Width="981">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:MainWindow.AboutBoxCommand}"
+                        Executed="CommandBinding_AboutBoxExecute"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.SaveResultCommand}"
+                        Executed="CommandBinding_SaveResultExecuted"
+                        CanExecute="CommandBinding_SaveResultCanExecute"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.IncreaseQueryFontSizeCommand}"
+                        Executed="CommandBinding_IncreaseQueryFontSize"
+                        CanExecute="CommandBinding_CanIncreaseQueryFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}"
+                        Executed="CommandBinding_DecreaseQueryFontSize"
+                        CanExecute="CommandBinding_CanDecreaseQueryFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.IncreaseResultsFontSizeCommand}"
+                        Executed="CommandBinding_IncreaseResultsFontSize"
+                        CanExecute="CommandBinding_CanIncreaseResultsFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.DecreaseResultsFontSizeCommand}"
+                        Executed="CommandBinding_DecreaseResultsFontSize"
+                        CanExecute="CommandBinding_CanDecreaseResultsFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.IncreaseSourceFontSizeCommand}"
+                        Executed="CommandBinding_IncreaseSourceFontSize"
+                        CanExecute="CommandBinding_CanIncreaseSourceFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}"
+                        Executed="CommandBinding_DecreaseQueryFontSize"
+                        CanExecute="CommandBinding_CanDecreaseQueryFontSize"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.ShowExternalVariablesDialogCommand}"
+                        Executed="CommandBinding_ShowExternalVariablesDialog"/>
+
+        <CommandBinding Command="{x:Static local:MainWindow.ExecuteHelpXQueryCommand}"
+                        Executed="CommandBinding_HelpXQuery"/>
+        <CommandBinding Command="{x:Static local:MainWindow.ExecuteHelpBaseXCommand}"
+                        Executed="CommandBinding_HelpBaseX"/>
+
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SaveCommand}" Gesture='Ctrl+S'/>
+        <KeyBinding Command="{Binding CreateNewQueryCommand}" Gesture='Ctrl+N'/>
+        <KeyBinding Command="{Binding OpenQueryCommand}" Gesture="Ctrl+O"/>
+    </Window.InputBindings>
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}" x:Key="toolbarImageStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
+                    <Setter Property="Opacity" Value="0.30"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="toolbarTextStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
+                    <Setter Property="Opacity" Value="0.30"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <LinearGradientBrush x:Key="NormalTabBackground" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFFBFDFE" Offset="0"/>
+            <GradientStop Color="#FFEAF6FB" Offset="0.3"/>
+            <GradientStop Color="#FFCEE7FA" Offset="0.3"/>
+            <GradientStop Color="#FFB9D1FA" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SelectedTabBackground" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFFBFDFE" Offset="0"/>
+            <GradientStop Color="#FFEAF6FB" Offset="0.3"/>
+            <GradientStop Color="#FFCEE7FA" Offset="0.3"/>
+            <GradientStop Color="#FFB9D1FA" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="MouseOverTabBackground" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFFCFDFD" Offset="0"/>
+            <GradientStop Color="#FFC6DDF7" Offset="0.3"/>
+            <GradientStop Color="#FF99C6EE" Offset="0.3"/>
+            <GradientStop Color="#FFB6D6F1" Offset="0.7"/>
+            <GradientStop Color="#FFD9E9F9" Offset="1"/>
+        </LinearGradientBrush>
+        
+        <ObjectDataProvider x:Key="enum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Dock"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        
+        <Image x:Key="QueryRunningBitmap" Source="Images/Hourglass_16x.png" Height="32" Width="32" />
+    </Window.Resources>
+
+    <DockPanel >
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File" >
+                <MenuItem Header="New Query" Command="{Binding CreateNewQueryCommand}" InputGestureText="Ctrl+N" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/NewQuery_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open Query..." Command="{Binding OpenQueryCommand}" InputGestureText="Ctrl+O" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/OpenFolder_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save Query" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedIndex}" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Save_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save Query As..." Command="{Binding SaveAsCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedIndex}">
+                    <MenuItem.Icon>
+                        <Image Source="Images/SaveAs_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="External Variables..." Command="{x:Static local:MainWindow.ShowExternalVariablesDialogCommand}" />
+                <MenuItem Header="_Exit" Command="local:MainWindow.ExitCommand"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Command="Cut" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/cut_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Copy" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/copy_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Paste">
+                    <MenuItem.Icon>
+                        <Image Source="Images/paste_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Delete">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Cancel_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Undo">
+                    <MenuItem.Icon>
+                        <Image Source="Images/undo_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Redo" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/redo_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="SelectAll" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/SelectAll_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem x:Name="DatabaseMenuItem" Header="_Database" ItemsSource="{Binding Databases}"  >
+                <MenuItem.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="MenuItem.Header" Value="{Binding Name}"/>
+                        <Setter Property="MenuItem.IsChecked" Value="{Binding IsCurrent}"/>
+                        <Setter Property="MenuItem.IsCheckable" Value="False"/>
+                        <EventSetter Event="MenuItem.Click" Handler="SelectDatabaseMenu_Click" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+                
+
+            <MenuItem Header="Tasks">
+                <MenuItem x:Name="ExecuteQueryMenuItem" Command="{Binding ExecuteQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                          CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
+                          Header="Execute Query" InputGestureText="F5" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Run_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="CheckQueryMenuItem" Command="{Binding CheckQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                          CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
+                          Header="Check Query"  InputGestureText="Ctrl+F5">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Checkmark_green_12x_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>                
+                <MenuItem x:Name="SubmitQueryMenuItem" Command="{Binding SubmitQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                          CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
+                          Header="Submit Query" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/CloudRun_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="OpenQueuedQueries" Command="{Binding OpenQueuedQueriesWindow}" Header="Show Queued Queries"/>
+            </MenuItem>
+            <MenuItem Header="Window">
+                <MenuItem Header="Close All Documents" Command="{Binding CloseAllWindowsCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/CloseDocumentGroup_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="WindowsMenuItem" Header="Windows..." Command="{Binding WindowsCommand}" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="XQuery on w3.org" Command="local:MainWindow.ExecuteHelpXQueryCommand" />
+                <MenuItem Header="BaseX" Command="local:MainWindow.ExecuteHelpBaseXCommand"/>
+                <Separator/>
+                <MenuItem Header="About" Command="local:MainWindow.AboutBoxCommand"/>
+            </MenuItem>
+        </Menu>
+
+        <StatusBar  DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
+                <Label Content="{Binding Status}"/>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="1">
+                <Label Content="{Binding CaretPositionString}"></Label>
+            </StatusBarItem>
+
+        </StatusBar>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="80*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- The model, language and queries -->
+            <DockPanel Grid.Column="0">
+                <GroupBox DockPanel.Dock="Top" Header="Queries">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="4"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="LanguagesDropdown" Grid.Row="0" ItemsSource="{Binding Languages}" SelectedValue="{Binding Source={x:Static settings:Settings.Default}, Path=SelectedLanguage}" SelectionChanged="LanguagesDropdown_SelectionChanged"/>
+                        <ListView x:Name="QueriesList" Grid.Row="2" ItemsSource="{Binding Queries}" DockPanel.Dock="Bottom" SelectionMode="Single"  >
+                            <ListBox.ItemTemplate> 
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Name}" ToolTipService.ToolTip="{Binding Path=Description}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListView>
+
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
+
+            <!-- Vertical splitter -->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+
+            <!-- The editors -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="50*"/>
+                </Grid.RowDefinitions>
+<!--
+                <TabControl x:Name="DetailsTab" Grid.Column="0" />
+                -->
+                <r:TabControl Margin="10" x:Name="DetailsTab" Grid.Column="0" TabStripPlacement="Top" 
+				              TabItemMinWidth="150" TabItemMaxWidth="300" TabItemMinHeight="30" TabItemMaxHeight="50" VerticalContentAlignment="Center" AllowAddNew="False"
+                              TabItemNormalBackground="{StaticResource NormalTabBackground}" 
+                              TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
+                              TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}"/>
+
+
+                <!-- Horizontal splitter between source editor tab pane and (query, result) views -->
+                <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox x:Name="QueryGroupBox" Grid.Column="0" Header="Queries">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ToolBar Grid.Row="0">
+                                <Button x:Name="NewTabButton" Command="{Binding CreateNewQueryCommand}">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Document_16x.png" />
+                                </Button>
+                                <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/OpenFolder_16x.png"></Image>
+                                </Button>
+                                <Button Command="{Binding SaveCommand}" ToolTip="Save">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
+                                </Button>
+                                <Separator></Separator>
+                                <Button x:Name="ExecuteQueryButton"    Command="{Binding ExecuteQueryCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Execute query" VerticalAlignment="Bottom">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Run_16x.png"></Image>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="CheckQueryButton"    Command="{Binding CheckQueryCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Check query" VerticalAlignment="Bottom">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Checkmark_green_12x_16x.png"></Image>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="SubmitQueryButton"    Command="{Binding SubmitQueryCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Submit query">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/CloudRun_16x.png"></Image>
+                                    </StackPanel>
+                                </Button>
+
+                                <Separator></Separator>
+                                <Button Command="Cut" ToolTip="Cut">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cut_16x.png"></Image>
+                                </Button>
+                                <Button Command="Copy" ToolTip="Copy">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
+                                </Button>
+                                <Button Command="Paste" ToolTip="Paste">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Paste_16x.png"></Image>
+                                </Button>
+                                <Button Command="Delete" ToolTip="Delete">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cancel_16x.png"></Image>
+                                </Button>
+                                <Separator/>
+                                <Button Command="{Binding QueryUndoCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Undo">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Undo_16x.png"></Image>
+                                </Button>
+                                <Button Command="{Binding QueryRedoCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Redo">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
+                                </Button>
+                                <Separator></Separator>
+                                <Button Command="{x:Static local:MainWindow.IncreaseQueryFontSizeCommand}"  ToolTip="Increase font size">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
+                                </Button>
+                                <Button Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}" ToolTip="Decrease font size">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/DecreaseFontSize_16x.png"/>
+                                </Button>
+                            </ToolBar>
+
+                            <r:TabControl x:Name="queryTabPage" Grid.Row="1" AddNewTabToEnd="True" AllowAddNew="False" TabStripPlacement="Top"
+                                          TabItemClosing="QueryTabPage_TabItemClosing"
+                                          TabItemNormalBackground="{StaticResource NormalTabBackground}" 
+                                          TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
+                                          TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}" >
+                            </r:TabControl>
+                        </Grid>
+
+                    </GroupBox>
+
+                    <!-- Vertical splitter between query and results -->
+                    <GridSplitter Grid.Column="1"  HorizontalAlignment="Center" Width="5" Background="Silver"/>
+                    <GroupBox  Grid.Column="2" Header="Results">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ToolBar Grid.Row="0" >
+                                <Button Command="{x:Static local:MainWindow.SaveResultCommand}" ToolTip="Save">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
+                                </Button>
+                                <Separator></Separator>
+                                <Button Command="Copy" ToolTip="Copy">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
+                                </Button>
+                                <Button Command="Paste" ToolTip="Paste">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Paste_16x.png"></Image>
+                                </Button>
+                                <Separator/>
+                                <Button Command="{Binding ResultsUndoCommand}" CommandParameter="{Binding ElementName=ResultsEditor}" ToolTip="Undo">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Undo_16x.png"></Image>
+                                </Button>
+                                <Button Command="{Binding ResultsRedoCommand}" CommandParameter="{Binding ElementName=ResultsEditor}" ToolTip="Redo">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
+                                </Button>
+                                <Separator></Separator>
+                                <Button Command="{x:Static local:MainWindow.IncreaseResultsFontSizeCommand}"  ToolTip="Increase font size">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
+                                </Button>
+                                <Button Command="{x:Static local:MainWindow.DecreaseResultsFontSizeCommand}" ToolTip="Decrease font size">
+                                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/DecreaseFontSize_16x.png"/>
+                                </Button>
+
+                            </ToolBar>
+                            <local:ResultsEditor x:Name="ResultsEditor" Grid.Row="1" Text="{Binding QueryResult}" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+        </Grid>
+
+    </DockPanel>
+</Window>

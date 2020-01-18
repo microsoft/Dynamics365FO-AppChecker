@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4CDCE38B-5F43-4C55-8739-79CA419B8B80}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>XppReasoningWpf</RootNamespace>
+    <AssemblyName>SocrateX</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <HockeyAppResourceId>9fa4c0bd330f49b19b86b48b5020e94c</HockeyAppResourceId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Alecive-Flatwoken-Apps-File-Xml.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BaseXInterface">
+      <HintPath>..\BaseXInterface\bin\Debug\BaseXInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="SubmittedQueryDescriptor.cs" />
+    <Compile Include="TabControl\Converters.cs" />
+    <Compile Include="TabControl\Helper.cs" />
+    <Compile Include="TabControl\TabControl.cs" />
+    <Compile Include="TabControl\TabEventArgs.cs" />
+    <Compile Include="TabControl\TabItem.cs" />
+    <Compile Include="TabControl\TabPanel.cs" />
+    <Compile Include="ViewModels\SourceWindowDescriptor.cs" />
+    <Compile Include="ViewModels\SourceWindowViewModel.cs" />
+    <Compile Include="ViewModels\SubmittedQueriesViewModel.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="Views\BraceFoldingStrategy.cs" />
+    <Compile Include="Views\CSharpSourceEditor.cs" />
+    <Compile Include="Views\ExternalVariablesControl.xaml.cs">
+      <DependentUpon>ExternalVariablesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QueryEntry.cs" />
+    <Compile Include="SampleQueries.cs" />
+    <Compile Include="Views\ResultsEditor.cs" />
+    <Compile Include="Views\QueryEditor.cs" />
+    <Compile Include="Views\ConnectionWindow.xaml.cs">
+      <DependentUpon>ConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Snippets.cs" />
+    <Compile Include="Views\SourceEditor.cs" />
+    <Compile Include="Views\PythonSourceEditor.cs" />
+    <Compile Include="Views\SubmittedQueriesWindow.xaml.cs">
+      <DependentUpon>SubmittedQueriesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindowsWindow.xaml.cs">
+      <DependentUpon>WindowsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\XppSourceEditor.cs" />
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExternalVariablesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ApplicationExitCommand.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\ConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SubmittedQueriesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WindowsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Xpp-Mode.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Jupyter notebooks\Method Visibility.ipynb" />
+    <None Include="LinqPad files\Complexities.linq">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="LinqPad files\DocumentationCommentChecker.linq" />
+    <None Include="LinqPad files\Method and Field Visibility over all classes.linq" />
+    <None Include="LinqPad files\Method Visibility over all classes and tables.linq" />
+    <None Include="LinqPad files\Unused private methods.linq" />
+    <None Include="LinqPad files\Use BaseX server.linq" />
+    <EmbeddedResource Include="Queries\Xpp\LocalFunctions.xq" />
+    <None Include="Queries\Xpp\CSV Extractors\Neo4jPopulate.cypher" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="Resources\XQuery.xshd" />
+    <EmbeddedResource Include="Resources\CSharp-Mode.xshd" />
+    <EmbeddedResource Include="Queries\Xpp\ClassesImplementingInterface.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyCatchOrFinally.xq" />
+    <EmbeddedResource Include="Queries\Xpp\BooleanWithLiterals.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CallsToObsoleteMethodsOrClasses.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassAndTableMethodVisibility.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassesOrderedByFields.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassesWithoutDocumentation.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassesWithUndocumentedMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassExtension.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassMethodAndFieldVisibility.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Complexities.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyCompounds.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\FieldsByVisibility.xq" />
+    <EmbeddedResource Include="Queries\Xpp\InstanceMethodCalls.xq" />
+    <EmbeddedResource Include="Queries\Xpp\LookupClassOrTable.xq" />
+    <EmbeddedResource Include="Queries\Xpp\MismatchedTypeComparisons.xq" />
+    <EmbeddedResource Include="Queries\Xpp\NestedSelectStatements.xq" />
+    <EmbeddedResource Include="Queries\Xpp\NonLabelStringLiteralsWithDoubleQuotes.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ParametersNoUnderscore.xq" />
+    <EmbeddedResource Include="Queries\Xpp\PostHandlers.xq" />
+    <EmbeddedResource Include="Queries\Xpp\StaticMethodCalls.xq" />
+    <EmbeddedResource Include="Queries\Xpp\TablesWithInheritance.xq" />
+    <EmbeddedResource Include="Resources\Java-Mode.xshd" />
+    <EmbeddedResource Include="Resources\Python-Mode.xshd" />
+    <EmbeddedResource Include="Queries\Python\ClassDefs.xq" />
+    <EmbeddedResource Include="Queries\Xpp\PreHandlers.xq" />
+    <EmbeddedResource Include="Queries\Xpp\TODOComments.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyStatements.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyIfParts.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ConsiderTextBuffer.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ConstantConditions.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyFinally.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Enum Compatibility.xq" />
+    <EmbeddedResource Include="Queries\Xpp\LoopVariableOverwrites.xq" />
+    <EmbeddedResource Include="Queries\Xpp\MethodIndentationLevel.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ExceptionTypes.xq" />
+    <EmbeddedResource Include="Queries\Xpp\BPErrorFormCaptionIsEmpty.xq" />
+    <EmbeddedResource Include="Queries\Xpp\BPErrorNotAllowedEditMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\InternalMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\internalArtifacts.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ConstrainedStringTypes.xq" />
+    <EmbeddedResource Include="Queries\Xpp\DisposablesNotInUsingStatements.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyWhile.xq" />
+    <EmbeddedResource Include="Queries\Xpp\IllegalConnectionUsages.xq" />
+    <EmbeddedResource Include="Queries\Xpp\LineCount.xq" />
+    <EmbeddedResource Include="Queries\Xpp\MethodOverrides.xq" />
+    <EmbeddedResource Include="Queries\Xpp\SimpleSelfAssignment.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ParmMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\SwitchOverEnum.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EmptyLoops.xq" />
+    <EmbeddedResource Include="Queries\Xpp\FormInitDataAccess.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ArtifactsWithAttribute.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ExtensionClassesWithEventHandlers.xq" />
+    <EmbeddedResource Include="Queries\Xpp\RelopsOnEnums.xq" />
+    <EmbeddedResource Include="Queries\Xpp\UselessHookables.xq" />
+    <EmbeddedResource Include="Queries\Xpp\UselessReplaceableAttribute.xq" />
+    <EmbeddedResource Include="Queries\Xpp\RecursiveMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ArtifactsByAttribute.xq" />
+    <EmbeddedResource Include="Queries\CSharp\Classes.xq" />
+    <EmbeddedResource Include="Queries\CSharp\Complexity.xq" />
+    <EmbeddedResource Include="Queries\CSharp\EmptyFinallys.xq" />
+    <EmbeddedResource Include="Queries\CSharp\EmptyStatements.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Mismatched Labels.xq" />
+    <EmbeddedResource Include="Queries\Xpp\NeedlessStringConcatenations.xq" />
+    <EmbeddedResource Include="Queries\Xpp\SimplifyIfsToReturn.xq" />
+    <EmbeddedResource Include="Queries\Xpp\StringLiteralConcatenation.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CatchAllWithEmptyHandlers.xq" />
+    <EmbeddedResource Include="Queries\Xpp\AssignToTableField.xq" />
+    <EmbeddedResource Include="Queries\Xpp\InheritanceDepth.xq" />
+    <EmbeddedResource Include="Queries\Xpp\StaticHandlerMethodInExtensions.xq" />
+    <EmbeddedResource Include="Queries\Xpp\AbstractClassWithNoAbstractMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\TypeDependencies.xq" />
+    <EmbeddedResource Include="Queries\Xpp\ClassMetrics.xq" />
+    <EmbeddedResource Include="Queries\Xpp\EditAndDisplayMethods.xq" />
+    <EmbeddedResource Include="Queries\Xpp\BulkEnumerationReferences.xq" />
+    <EmbeddedResource Include="Queries\Xpp\TryFinallyWithoutCatch.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassInterfaceImplementationsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassMethodsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassFieldsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassInheritanceCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassMetricsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractInterfaceInheritanceCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractInterfacesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractPackageDependenciesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractTableFieldsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractTableMetricsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CallsSummary.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractCallsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractCallsApplicationPlatformCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractCallsApplicationFoundationCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractCallsApplicationSuiteCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractFormsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\OverallMetrics.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassDelegatesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractInterfaceMethodsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractTablesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractQueriesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractFormMetricsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractFormsMethodsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractTableMethodsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractQueryMethodsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractQueryMetricsCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractQueryDataSourcesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassAttributesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractInterfaceAttributesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractClassMethodAttributesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\AttributesNotEndingInAttribute.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractPackagesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractPackageDependenciesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractClassMetricsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractClassFieldsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractClassDelegatesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractClassInheritanceProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractClassInterfaceImplementationsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\MethodLinesDistribution.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractInterfaceAttributesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractInterfacesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractQueryDataSourcesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractQueryDefProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractTableFieldsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractTableDefProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractInterfaceInheritanceProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractInterfaceMethodsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractMethodsProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractMethodAttributesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractTableMethodAttributesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractFormMethodAttributesCSV.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\ExtractAttributesProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\clauses.pl" />
+    <None Include="Queries\Xpp\Prolog Extractors\ExtractFormsDefProlog.xq" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\startswipl.cmd" />
+    <EmbeddedResource Include="Queries\Xpp\Prolog Extractors\loadall.pl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <Resource Include="Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <Resource Include="Images\SplashScreen with socrates.jpg" />
+    <Resource Include="Images\Newer D365fo logo, inverted.png" />
+    <Resource Include="Images\fatter-eye-inverted.png" />
+    <Resource Include="Images\fatter-eye.png" />
+    <Resource Include="Images\Copy_16x.png" />
+    <Resource Include="Images\Cut_16x.png" />
+    <Resource Include="Images\Paste_16x.png" />
+    <Resource Include="Images\Undo_16x.png" />
+    <Resource Include="Images\Redo_16x.png" />
+    <Resource Include="Images\SelectAll_16x.png" />
+    <Resource Include="Images\Save_16x.png" />
+    <Resource Include="Images\Run_16x.png" />
+    <Resource Include="Images\IncreaseFontSize_16x.png" />
+    <Resource Include="Images\DecreaseFontSize_16x.png" />
+    <Resource Include="Images\Add_16x.png" />
+    <Resource Include="Images\CloseDocumentGroup_16x.png" />
+    <Resource Include="Images\NewQuery_16x.png" />
+    <Resource Include="Images\OpenFolder_16x.png" />
+    <Resource Include="Images\SaveAs_16x.png" />
+    <Resource Include="Images\ConnectToDatabase_16x.png" />
+    <Resource Include="Images\CloudRun_16x.png" />
+    <Resource Include="Images\Checkmark_16x.png" />
+    <Resource Include="Images\Hourglass_16x.png" />
+    <Resource Include="Images\Cancel_16x.png" />
+    <Resource Include="Images\Document_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Queries\Xpp\CSV Extractors\ExtractPackagesCSV.xq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Checkmark_green_12x_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SplashScreen with socrates.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Colorful spinning wheel.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AboutBox">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ApplicationInsights">
+      <Version>2.11.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Buffers">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Numerics.Vectors">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>4.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\OpenFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\newtab.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
