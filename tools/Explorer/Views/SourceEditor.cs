@@ -130,24 +130,6 @@ namespace XppReasoningWpf
             }
         }
 
-        private void SourceEditor_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                if (e.Delta > 0)
-                {
-                    if (Properties.Settings.Default.SourceFontSize < 48)
-                        Properties.Settings.Default.SourceFontSize += 1;
-
-                }
-                else
-                {
-                    if (Properties.Settings.Default.SourceFontSize < 48)
-                        Properties.Settings.Default.SourceFontSize -= 1;
-                }
-            }
-        }
-
         public SourceEditor()
         {
             this.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
@@ -159,7 +141,7 @@ namespace XppReasoningWpf
             // Install the search panel that appears in the upper left corner.
             ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.TextArea);
 
-            this.PreviewMouseWheel += SourceEditor_MouseWheel;
+            this.PreviewMouseWheel += MouseWheelHandler;
             this.IsReadOnly = true;
 
             var fontFamilyBinding = new Binding("SourceFont")
@@ -246,6 +228,24 @@ namespace XppReasoningWpf
 
                 }
             };
+        }
+
+        protected virtual void MouseWheelHandler(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                if (e.Delta > 0)
+                {
+                    if (Properties.Settings.Default.SourceFontSize < 48)
+                        Properties.Settings.Default.SourceFontSize += 1;
+
+                }
+                else
+                {
+                    if (Properties.Settings.Default.SourceFontSize < 48)
+                        Properties.Settings.Default.SourceFontSize -= 1;
+                }
+            }
         }
     }
 }

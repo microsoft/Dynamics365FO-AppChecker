@@ -314,13 +314,10 @@ namespace XppReasoningWpf
 
         private void QueryDirectoryChanged(object sender, FileSystemEventArgs e)
         {
-            // In this simple solution, we reread all the files in the directory
-            IList<QueryEntry> queries = new List<QueryEntry>();
-
             if (e.ChangeType == WatcherChangeTypes.Deleted)
             {
                 // Check if we have one in the model and delete if so.
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
+                var entry = this.Queries.Where(q => q.Path == e.FullPath).FirstOrDefault();
                 if (entry != null)
                 {
                     App.Current.Dispatcher.Invoke(() =>
@@ -336,20 +333,21 @@ namespace XppReasoningWpf
             }
             else if (e.ChangeType == WatcherChangeTypes.Renamed)
             {
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
+                var renamedArgs = e as RenamedEventArgs;
+                var entry = this.Queries.Where(q => q.Path == renamedArgs.OldFullPath).FirstOrDefault();
                 if (entry != null)
                 {
-                    entry.Path = e.Name;
+                    entry.Path = renamedArgs.FullPath;
                 }
             }
             else if (e.ChangeType == WatcherChangeTypes.Changed)
             {
                 // This event may happen when the file is created, or at any time after than
                 // when an existing file is actually changed.
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
+                var entry = this.Queries.Where(q => q.Path == e.FullPath).FirstOrDefault();
                 if (entry == null)
                 {
-                    entry = new QueryEntry() { Path = e.Name, Description = this.GetDescription(e.FullPath) };
+                    entry = new QueryEntry() { Path = e.FullPath, Description = this.GetDescription(e.FullPath) };
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         this.Queries.Add(entry);
@@ -361,6 +359,8 @@ namespace XppReasoningWpf
                     entry.Description = GetDescription(e.FullPath);
                 }
             }
+
+            this.OnPropertyChanged("Queries");
         }
 
         public Model()
