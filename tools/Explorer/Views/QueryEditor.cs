@@ -13,7 +13,6 @@ namespace XppReasoningWpf
     public class QueryEditor : SourceEditor
     {
         private static readonly Snippets snippets = new Snippets();
-        //public Session Session { get; }
 
         public QueryEditor(ViewModels.ViewModel viewModel)
             :this()
@@ -54,7 +53,7 @@ namespace XppReasoningWpf
             ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.TextArea);
 
             this.IsReadOnly = false;
-            this.PreviewMouseWheel += QueryEditor_PreviewMouseWheel;
+            // this.PreviewMouseWheel += QueryEditorMouseWheelHandler;
 
             // Adding to the context menu...
             var contextMenuItems = (this.ContextMenu.ItemsSource as Control[]).ToList();
@@ -62,7 +61,6 @@ namespace XppReasoningWpf
             var templatesMenuItem = new MenuItem
             {
                 Header = "Snippets"
-                // Command = ApplicationCommands.Copy,
             };
             contextMenuItems.Add(templatesMenuItem);
 
@@ -84,7 +82,7 @@ namespace XppReasoningWpf
             this.ContextMenu.ItemsSource = contextMenuItems;
         }
 
-        private void QueryEditor_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        protected override void MouseWheelHandler(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
