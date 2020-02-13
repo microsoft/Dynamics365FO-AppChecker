@@ -7,6 +7,7 @@ namespace XppReasoningWpf
 {
     using ICSharpCode.AvalonEdit.Folding;
     using System.Windows.Data;
+    using System.Windows.Input;
 
     class XppSourceEditor : SourceEditor
     {
@@ -31,5 +32,7 @@ namespace XppReasoningWpf
                 xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
             };
         }
+
+ 
     }
 }
