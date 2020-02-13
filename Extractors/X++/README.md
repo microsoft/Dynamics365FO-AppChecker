@@ -1,5 +1,5 @@
 # How to extract XML from X++ source code and metdata
-There is no extractor per se for the X++ language, because the functionality is already built into the compiler for that langauge. Please use the following flags with calling the X++ compiler:
+There is no extractor per se for the X++ language, because the functionality is already built into the compiler for that language. Please use the following flags to instruct the X++ compiler to create the XML files in the designated directory:
 
 $ xppc.exe -writeAsts -astOutputPath=<OutputDirectory>
 

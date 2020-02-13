@@ -737,14 +737,6 @@ Credits: The application icon was created by alecive and provided under the Crea
             }
         }
 
-        private void LanguagesDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                this.ViewModel.SelectedLanguage = e.AddedItems[0] as string;
-            }
-        }
-
         private void SelectDatabaseMenu_Click(object sender, RoutedEventArgs e)
         {
             MenuItem m = e.OriginalSource as MenuItem;
@@ -758,7 +750,5 @@ Credits: The application icon was created by alecive and provided under the Crea
         {
             e.Cancel = !this.ViewModel.CloseQueryTab(e.TabItem);
         }
-
-
     }
 }

@@ -53,7 +53,6 @@ namespace XppReasoningWpf
             ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.TextArea);
 
             this.IsReadOnly = false;
-            // this.PreviewMouseWheel += QueryEditorMouseWheelHandler;
 
             // Adding to the context menu...
             var contextMenuItems = (this.ContextMenu.ItemsSource as Control[]).ToList();
@@ -71,7 +70,6 @@ namespace XppReasoningWpf
 
                 templatesMenuItem.Items.Add(new MenuItem() {
                     Header = snippetName,
-                    //Tag = snippets.NamedSnippets[snippetName],
                     Command = new RelayCommand(
                         p => {
                             snippet.Insert(this.TextArea);

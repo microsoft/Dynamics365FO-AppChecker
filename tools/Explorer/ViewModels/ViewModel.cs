@@ -246,46 +246,6 @@ namespace XppReasoningWpf.ViewModels
             }
         }
 
-        public ObservableCollection<QueryEntry> Queries
-        {
-            get
-            {
-                return new ObservableCollection<QueryEntry>(this.model.Queries
-                    .Where(q => q.Language == this.SelectedLanguage)
-                    .OrderBy(q => q.Name));
-            }
-            set
-            {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Queries)));
-            }
-        }
-        public ObservableCollection<string> Languages
-        {
-            get { return model.Languages; }
-            set
-            {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Languages)));
-            }
-        }
-
-        string selectedLanguage;
-        public string SelectedLanguage
-        {
-            get { return selectedLanguage; }
-            set
-            {
-                if (value != selectedLanguage)
-                {
-                    if (this.PropertyChanged != null)
-                    {
-                        this.selectedLanguage = value;
-                        this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedLanguage)));
-                        this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(Queries)));
-                    }
-                }
-            }
-        }
-
         public void OpenWindowsDialog()
         {
             var dialog = new XppReasoningWpf.Views.WindowsWindow(view.DetailsTab);
@@ -541,59 +501,10 @@ namespace XppReasoningWpf.ViewModels
                 this.view.ResultsEditor.Text = this.CachedQueryResult[queryEditor];
         }
 
-
-        /// <summary>
-        /// Called when the user selects an entry in the list of queries
-        /// </summary>
-        /// <param name="sender">Not used</param>
-        /// <param name="e">Not used</param>
-        private void QueriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Load the query into the view if the previous one was not modified
-            // Show the source in a new tab in the query tab.
-            if (e.AddedItems.Count > 0)
-            {
-                var query = e.AddedItems[0] as QueryEntry;
-                string path = Path.Combine(this.model.QueriesDirectory, query.Path);
-                var text = File.ReadAllText(path);
-
-                var item = this.CreateNewQueryTabItem(query.Name, query.Path, text);
-                this.view.queryTabPage.SelectedItem = item;
-            }
-        }
-
-        private void OpenQuery(QueryEntry qe)
-        {
-            string path = Path.Combine(this.model.QueriesDirectory, qe.Path);
-            var text = File.ReadAllText(path);
-
-            var item = this.CreateNewQueryTabItem(qe.Name, qe.Path, text);
-            this.view.queryTabPage.SelectedItem = item;
-        }
-
         public ViewModel(MainWindow view, Model model)
         {
             this.view = view;
             this.model = model;
-
-            this.view.QueriesList.KeyDown += (object o, KeyEventArgs a) => {
-                var lv = o as ListView;
-                var qe = lv.SelectedItem as QueryEntry;
-
-                this.OpenQuery(qe);
-            };
-
-            this.view.QueriesList.MouseDoubleClick += (object o, MouseButtonEventArgs a) => {
-                var lv = o as ListView;
-                var qe = lv.SelectedItem as QueryEntry;
-
-                this.OpenQuery(qe);
-            };
-            
-            this.view.Closed += (object sender, EventArgs e) =>
-            {
-                this.model.Watcher.EnableRaisingEvents = false;
-            };
 
             model.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
@@ -605,10 +516,6 @@ namespace XppReasoningWpf.ViewModels
                 {
                     this.Status = model.Status;
                 }
-                else if (e.PropertyName == "Queries")
-                {
-                    this.Queries = model.Queries;
-                }
                 else if (e.PropertyName == "Databases")
                 {
                     this.Databases = model.Databases;
@@ -617,10 +524,6 @@ namespace XppReasoningWpf.ViewModels
                 {
                     this.SelectedDatabase = model.SelectedDatabase;
                     this.UpdateConnectionInfo(model);
-                }
-                else if (e.PropertyName == "Languages")
-                {
-                    this.Languages = model.Languages;
                 }
                 else if (e.PropertyName == "QueryResult")
                 {
