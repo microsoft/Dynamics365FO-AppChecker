@@ -20,8 +20,6 @@ namespace XppReasoningWpf
     /// </summary>
     public class Model : INotifyPropertyChanged
     {
-        public FileSystemWatcher Watcher { get; private set; }
-
         private readonly IDictionary<string, string> jobIdToQuery = new Dictionary<string, string>();
 
         /// <summary>
@@ -157,28 +155,6 @@ namespace XppReasoningWpf
             }
         }
 
-        private ObservableCollection<QueryEntry> queries;
-        public ObservableCollection<QueryEntry> Queries
-        {
-            get { return queries; }
-            set
-            {
-                this.queries = value;
-                this.OnPropertyChanged(nameof(Queries));
-            }
-        }
-
-        private ObservableCollection<string> languages;
-        public ObservableCollection<string> Languages
-        {
-            get { return languages; }
-            set
-            {
-                this.languages = value;
-                this.OnPropertyChanged(nameof(Languages));
-            }
-        }
-
         private string queryResult;
 
         public string QueryResult
@@ -269,118 +245,8 @@ namespace XppReasoningWpf
             return "*** No description found ***";
         }
 
-        public (ObservableCollection<QueryEntry>, ObservableCollection<string>) PopulateQueries()
-        {
-            const string queriesSubDirectoryName = "Queries";
-            var languages = new ObservableCollection<string>();
-            var queries = new ObservableCollection<QueryEntry>();
-
-            // Create the directory with queries and add some examples.
-            // By definition the queries are in the user's documents folder:
-            if (!Directory.Exists(this.QueriesDirectory))
-            {
-                Directory.CreateDirectory(this.QueriesDirectory);
-            }
-
-            var queriesDirectoryName = Path.Combine(this.QueriesDirectory, queriesSubDirectoryName);
-            if (!Directory.Exists(queriesDirectoryName))
-            {
-                Directory.CreateDirectory(queriesDirectoryName);
-                SampleQueries.AddQueries(this.QueriesDirectory);
-            }
-
-            // Load the content of all the queries in the designated directory into the model
-
-            DirectoryInfo root = new DirectoryInfo(queriesDirectoryName);
-            foreach (var directory in root.EnumerateDirectories())
-            {
-                // capture the directory name
-                languages.Add(directory.Name);
-
-                // Iterate over all the files in that directory:
-                foreach (var file in directory.EnumerateFiles("*.xq"))
-                {
-                    queries.Add(new QueryEntry()
-                    {
-                        Path = file.FullName,
-                        Description = this.GetDescription(file.FullName),
-                        Language = directory.Name
-                    });
-                }
-            }
-
-            return (queries, languages);
-        }
-
-        private void QueryDirectoryChanged(object sender, FileSystemEventArgs e)
-        {
-            // In this simple solution, we reread all the files in the directory
-            IList<QueryEntry> queries = new List<QueryEntry>();
-
-            if (e.ChangeType == WatcherChangeTypes.Deleted)
-            {
-                // Check if we have one in the model and delete if so.
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
-                if (entry != null)
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        this.Queries.Remove(entry);
-                    });
-                }
-            }
-            else if (e.ChangeType == WatcherChangeTypes.Created)
-            {
-                // Do nothing. Everything is handled in the Changed handler, since it
-                // is mot guaranteed that the file has been written yet when this is triggered.
-            }
-            else if (e.ChangeType == WatcherChangeTypes.Renamed)
-            {
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
-                if (entry != null)
-                {
-                    entry.Path = e.Name;
-                }
-            }
-            else if (e.ChangeType == WatcherChangeTypes.Changed)
-            {
-                // This event may happen when the file is created, or at any time after than
-                // when an existing file is actually changed.
-                var entry = this.Queries.Where(q => q.Path == e.Name).FirstOrDefault();
-                if (entry == null)
-                {
-                    entry = new QueryEntry() { Path = e.Name, Description = this.GetDescription(e.FullPath) };
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        this.Queries.Add(entry);
-                    });
-                }
-                else
-                {
-                    // It was already in the model, but it has changed, so go read the description again.
-                    entry.Description = GetDescription(e.FullPath);
-                }
-            }
-        }
-
         public Model()
         {
-            (var queries, var languages) = this.PopulateQueries();
-            this.Queries = queries;
-            this.Languages = languages;
-
-            // Calculate the directories ...
-            foreach (var directory in queries.Select(q => Path.GetDirectoryName(q.Path)).Distinct())
-            {
-                this.Watcher = new FileSystemWatcher(directory, "*.xq");
-                this.Watcher.Changed += new FileSystemEventHandler(QueryDirectoryChanged);
-                this.Watcher.Created += new FileSystemEventHandler(QueryDirectoryChanged);
-                this.Watcher.Deleted += new FileSystemEventHandler(QueryDirectoryChanged);
-                this.Watcher.Renamed += new RenamedEventHandler(QueryDirectoryChanged);
-
-                this.Watcher.EnableRaisingEvents = true;
-            }
-
             // Create the ticks that are triggered every 2 seconds.
             // These are used to trigger source folding etc.
             DispatcherTimer tickTimer = new DispatcherTimer()

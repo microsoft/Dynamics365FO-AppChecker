@@ -250,49 +250,15 @@ Licensed under the MIT license.
 
         </StatusBar>
 
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="80*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- The model, language and queries -->
-            <DockPanel Grid.Column="0">
-                <GroupBox DockPanel.Dock="Top" Header="Queries">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="4"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <ComboBox x:Name="LanguagesDropdown" Grid.Row="0" ItemsSource="{Binding Languages}" SelectedValue="{Binding Source={x:Static settings:Settings.Default}, Path=SelectedLanguage}" SelectionChanged="LanguagesDropdown_SelectionChanged"/>
-                        <ListView x:Name="QueriesList" Grid.Row="2" ItemsSource="{Binding Queries}" DockPanel.Dock="Bottom" SelectionMode="Single"  >
-                            <ListBox.ItemTemplate> 
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" ToolTipService.ToolTip="{Binding Path=Description}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListView>
-
-                    </Grid>
-                </GroupBox>
-            </DockPanel>
-
-            <!-- Vertical splitter -->
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
-
             <!-- The editors -->
-            <Grid Grid.Column="2">
+            <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="50*"/>
                 </Grid.RowDefinitions>
-<!--
-                <TabControl x:Name="DetailsTab" Grid.Column="0" />
-                -->
-                <r:TabControl Margin="10" x:Name="DetailsTab" Grid.Column="0" TabStripPlacement="Top" 
+
+                <r:TabControl Margin="4,4,4,4" x:Name="DetailsTab" Grid.Column="0" TabStripPlacement="Top" 
 				              TabItemMinWidth="150" TabItemMaxWidth="300" TabItemMinHeight="30" TabItemMaxHeight="50" VerticalContentAlignment="Center" AllowAddNew="False"
                               TabItemNormalBackground="{StaticResource NormalTabBackground}" 
                               TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
@@ -423,7 +389,6 @@ Licensed under the MIT license.
                     </GroupBox>
                 </Grid>
             </Grid>
-        </Grid>
 
     </DockPanel>
 </Window>

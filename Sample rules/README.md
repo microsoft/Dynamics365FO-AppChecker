@@ -1,0 +1,1 @@
+In this directory you will find sample in different languages. Feel free to contribute your rules, as described in the CONTRIBUTING file. Please nake sure that you describe (in a comment in the rule text) exactly what problem your rule diagnoses.
