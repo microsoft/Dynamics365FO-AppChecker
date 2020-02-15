@@ -1,11 +1,10 @@
 (: Finds methods with missing Update/doUpdate after ForUpdate statement :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/SelectForUpdateAbsent' Version='1.0'>
 {
   for $a in /*
-  for $m in $a/Method 
+  for $m in $a/Method
   for $q in $m//Query
   where $q/data(SelectionHints) = "forupdate"
   let $obj := lower-case($q/data(@BufferName))
@@ -21,6 +20,6 @@
       <Column>{string($q/@StartCol)}</Column>
       <EndLine>{string($q/@EndLine)}</EndLine>
       <EndColumn>{string($q/@EndCol)}</EndColumn>
-    </Diagnostic>  
+    </Diagnostic>
 }
 </Diagnostics>

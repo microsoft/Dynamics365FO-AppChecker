@@ -1,6 +1,5 @@
 (: Get queries not using firstonly, nofetch, or fields explicit selection  :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/SelectUsingFirstOnly' Version='1.0'>
 {

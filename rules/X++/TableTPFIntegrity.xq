@@ -1,8 +1,7 @@
 (: Check usage of AOSAuthorization property for a table in chain of inheritance :)
 (: Verify that both table have either authorization enabled or disabled :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
- 
+
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/TableTPFIntegrity' Version='1.0'>
 {
   for $child in //Table[@SupportInheritance = "true" and @Extends != ""]
@@ -27,6 +26,6 @@
       <Column>{string($child/@StartCol)}</Column>
       <EndLine>{string($child/@EndLine)}</EndLine>
       <EndColumn>{string($child/@EndCol)}</EndColumn>
-    </Diagnostic>  
-} 
+    </Diagnostic>
+}
 </Diagnostics>

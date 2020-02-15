@@ -1,6 +1,5 @@
 (: Finds references To Insert and doInsert in loops :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/InsertInLoop' Version='1.0'>
 {
@@ -22,6 +21,6 @@
       <Column>{string($e/@StartCol)}</Column>
       <EndLine>{string($e/@EndLine)}</EndLine>
       <EndColumn>{string($e/@EndCol)}</EndColumn>
-    </Diagnostic>  
+    </Diagnostic>
 }
 </Diagnostics>

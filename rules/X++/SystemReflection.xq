@@ -1,6 +1,5 @@
 (: Finds references to objects from namespace System.Reflection :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/SystemReflection' Version='1.0'>
 {
@@ -18,6 +17,6 @@
       <Column>{string($m/@StartCol)}</Column>
       <EndLine>{string($m/@EndLine)}</EndLine>
       <EndColumn>{string($m/@EndCol)}</EndColumn>
-    </Diagnostic>  
-} 
+    </Diagnostic>
+}
 </Diagnostics>

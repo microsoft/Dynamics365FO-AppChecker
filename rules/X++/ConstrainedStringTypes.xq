@@ -1,14 +1,13 @@
 (: Find References to all constrained string types :)
 (: @Language Xpp :)
 (: @Category Mandatory :)
-(: @Author pvillads@microsoft.com :)
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ConstrainedStringTypes' Version='1.0'>
 {
   for $a in /(Class | Table | Form | Query)
   for $m in $a//Method
   for $s in $m//StringLengthType
-  return 
+  return
     <Diagnostic>
       <Moniker>ConstrainedStringTypeReference</Moniker>
       <Severity>Error</Severity>
@@ -19,6 +18,6 @@
       <Column>{string($s/@StartCol)}</Column>
       <EndLine>{string($s/@EndLine)}</EndLine>
       <EndColumn>{string($s/@EndCol)}</EndColumn>
-    </Diagnostic> 
+    </Diagnostic>
  }
 </Diagnostics>

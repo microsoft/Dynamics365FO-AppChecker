@@ -2,10 +2,10 @@
 (: to Find methods on class or table types with a complexity level above 30 :)
 (: Error if maximum indentation of the method is above 2, warning otherwise :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
-(: Simple rule of thumb: Count the branching and looping constructs and add 1. The if statements, for, 
-  while, and do/while constructs, each count as one. For the switch/case constructs, each case block counts as one. 
+
+(: Simple rule of thumb: Count the branching and looping constructs and add 1. The if statements, for,
+  while, and do/while constructs, each count as one. For the switch/case constructs, each case block counts as one.
   In if and ladder if constructs, the final else does not count. For switch/case constructs, the default block does not count. :)
 declare function local:MethodComplexity($m as element(Method)) as xs:integer
 {
@@ -17,29 +17,29 @@ declare function local:MethodComplexity($m as element(Method)) as xs:integer
 declare function local:maxIndentationOfStatement($s as element()) as xs:integer
 {
     if (local-name($s) = "CompoundStatement") then
-       local:visitCompoundStatement($s)  
-    else if (local-name($s) = ("WhileStatement", "IfStatement",  
+       local:visitCompoundStatement($s)
+    else if (local-name($s) = ("WhileStatement", "IfStatement",
                                "DoWhileStatement", "ForStatement", "SearchStatement",
                                "SwitchStatement", "ConditionalExpression" )) then
-       local:maxIndentationOfIndentedStatement($s)  
+       local:maxIndentationOfIndentedStatement($s)
      else if (local-name($s) = ("IfThenElseStatement")) then
         local:maxIndentationOfIfThenElseStatement($s)
     else 0
 };
 
-(: This is special because we do not want to have if () then ... else if ... 
+(: This is special because we do not want to have if () then ... else if ...
    to be seen as nested :)
 declare function local:maxIndentationOfIfThenElseStatement($s as element()) as xs:integer
 {
     let $condlevel := local:maxIndentationOfStatement($s/*[1])
     let $thenlevel := local:maxIndentationOfStatement($s/*[2])
-    
+
     let $elselevel := if (local-name($s/*[3]) = 'IfThenElseStatement') then
         local:maxIndentationOfIfThenElseStatement($s/*[3])
     else
         local:maxIndentationOfStatement($s/*[3])
 
-    return fn:max(($condlevel, $thenlevel, $elselevel)) 
+    return fn:max(($condlevel, $thenlevel, $elselevel))
 };
 
 declare function local:maxIndentationOfIndentedStatement($s as element()) as xs:integer
@@ -62,11 +62,11 @@ declare function local:visitMethod($m as element(Method)) as xs:integer
   (: Define thresholds for complexity and indentation: :)
   let $complexityLimit := xs:integer(30)
   let $indentationLimit := xs:integer(2)
-  
+
   for $c in /*
   for $m in $c//Method
   let $cmpl := local:MethodComplexity($m)
-  where $cmpl > $complexityLimit  
+  where $cmpl > $complexityLimit
   order by $cmpl descending
   let $level := local:visitMethod($m)
   return

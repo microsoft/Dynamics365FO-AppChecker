@@ -1,7 +1,7 @@
 (: Identify methods that contain true or false literals in an And or Or expression :)
 (: @Language Xpp :)
 (: @Category Mandatory :)
-(: @Author pvillads@microsoft.com :)
+
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/BooleanWithLiterals' Version='1.0'>
 {
@@ -10,7 +10,7 @@
     let $exprs := $m//OrExpression/BooleanLiteralExpression
                 | $m//AndExpression/BooleanLiteralExpression
     where $exprs
-    return 
+    return
       <Diagnostic>
         <Moniker>BooleanExpressionWithLiteral</Moniker>
         <Severity>Error</Severity>

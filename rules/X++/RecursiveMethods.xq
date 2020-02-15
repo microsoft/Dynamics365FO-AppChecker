@@ -1,6 +1,5 @@
 (: Identify recursive methods :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Diagnostics Category="Best practice" href="docs.microsoft.com/Socratex/RecursiveMethods" Version="1.0">
 {

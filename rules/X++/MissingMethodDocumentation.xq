@@ -1,13 +1,12 @@
 (: Non-private methods on non-private artifacts that do not have any documentation :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 declare namespace functx = "http://www.functx.com";
-declare function functx:trim ( $arg as xs:string? )  as xs:string 
+declare function functx:trim ( $arg as xs:string? )  as xs:string
 {
   replace(replace($arg,'\s+$',''),'^\s+','')
 };
- 
+
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/MissingMethodDocumentation' Version='1.0'>
 {
   for $c in /(Class | Table | Form)[@IsPrivate = "false"]
@@ -23,6 +22,6 @@ declare function functx:trim ( $arg as xs:string? )  as xs:string
       <Column>{string($c/@StartCol)}</Column>
       <EndLine>{string($c/@EndLine)}</EndLine>
       <EndColumn>{string($c/@EndCol)}</EndColumn>
-    </Diagnostic>  
-} 
+    </Diagnostic>
+}
 </Diagnostics>
