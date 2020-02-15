@@ -4,7 +4,6 @@
 (: Calculate the distribution of the lines of code in methods. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 (: Calculate the sequence containing all the line counts :)
 let $seq := 

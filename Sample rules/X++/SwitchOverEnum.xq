@@ -4,7 +4,6 @@
 (: Find switch statments with enumeration switch values :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:IsEnum($typename as xs:string)
 {

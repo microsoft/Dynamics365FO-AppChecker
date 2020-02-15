@@ -4,6 +4,7 @@
 (: Find all empty statements :)
 (: @Category Informational :)
 (: @Language C# :)
+
 <EmptyStatements>
 {
       for $c in //ClassDeclaration

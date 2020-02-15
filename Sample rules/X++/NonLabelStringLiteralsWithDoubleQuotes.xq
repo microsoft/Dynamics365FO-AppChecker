@@ -4,7 +4,6 @@
 (: Find string literals that start with double quotes and are not labels :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

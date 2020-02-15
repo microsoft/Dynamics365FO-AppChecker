@@ -2,6 +2,8 @@
    Licensed under the MIT license. :)
    
 (: Show the occurrence of empty statements :)
+(: @Category BestPractice :)
+(: @Language Xpp :)
 
 <EmptyStatements>
 {

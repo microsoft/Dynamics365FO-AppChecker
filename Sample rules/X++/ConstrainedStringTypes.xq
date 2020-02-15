@@ -4,7 +4,6 @@
 (: Find References to all constrained string types :)
 (: @Language Xpp :)
 (: @Category Mandatory :)
-(: @Author pvillads@microsoft.com :)
 
 <ConstrainedStringTypes Category='Mandatory' href='docs.microsoft.com/Socratex/ConstantConditions' Version='1.0'>
 {

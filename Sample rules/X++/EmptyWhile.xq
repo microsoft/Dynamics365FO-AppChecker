@@ -4,7 +4,6 @@
 (: Catch while loops with empty bodies. :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

@@ -5,7 +5,6 @@
 follow the naming conventions used in the literature. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:MethodComplexity($m as element(Method)) as xs:integer
 {

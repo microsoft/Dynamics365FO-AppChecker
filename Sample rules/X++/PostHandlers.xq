@@ -4,7 +4,6 @@
 (: Names of all class methods that are post handlers. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <PostHandlers>
 {

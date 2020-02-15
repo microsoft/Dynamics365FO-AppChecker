@@ -7,7 +7,6 @@
  expected iterations :)
 (: @Category Performance :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Artifacts>
 {

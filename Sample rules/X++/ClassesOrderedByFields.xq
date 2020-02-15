@@ -4,7 +4,6 @@
 (: Classes with more than 20 fields ordered by their number of fields. :)
 (: @Language Xpp :)
 (: @Category Informational :)
-(: @Author pvillads@microsoft.com :)
 
 <Classes>
 {

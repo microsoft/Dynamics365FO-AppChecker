@@ -4,8 +4,6 @@
 (: Find all empty methods :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

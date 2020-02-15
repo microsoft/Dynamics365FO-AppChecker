@@ -7,7 +7,6 @@
    as its children :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <EmptyIfParts Category='Mandatory' href='docs.microsoft.com/Socratex/EmptyIfParts' Version='1.0'>
 {

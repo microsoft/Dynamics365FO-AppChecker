@@ -4,7 +4,6 @@
 (: Calculates the visibility of all methods on classes and tables. :)
 (: @Language Xpp :)
 (: @Category Informational :)
-(: @Author pvillads@microsoft.com :)
 
 let $results :=
 <Results>

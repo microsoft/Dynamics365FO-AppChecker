@@ -4,7 +4,6 @@
 (: For every attribute, get the artifacts decorated with that attribute :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 let $a := <ArtifactsWithAttribute  Category='Informational' href='docs.microsoft.com/Socratex/ArtifactWithAttribute' Version='1.0'>
 {

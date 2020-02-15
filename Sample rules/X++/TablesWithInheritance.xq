@@ -5,7 +5,7 @@
 (: Both the code and the metadata are shown :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
+
 <Results>
 {
     for $t in Table[@SupportInheritance='True']

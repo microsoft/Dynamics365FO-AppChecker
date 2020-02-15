@@ -2,6 +2,8 @@
 Licensed under the MIT license. :)
 
 (: Finds attribute classes that do not end in Attribute, like MyImportantAttribute :)
+(: @Language Xpp :)
+(: @Category Informational :)
 
 <AttributeClassesNotEndingInAttribute>
 {

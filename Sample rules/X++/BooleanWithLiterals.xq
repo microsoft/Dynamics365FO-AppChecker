@@ -4,7 +4,6 @@
 (: Identify methods that contain true or false literals in an And or Or expression :)
 (: @Language Xpp :)
 (: @Category Mandatory :)
-(: @Author pvillads@microsoft.com :)
 
 <BooleanWithLiterals Category='Mandatory' href='docs.microsoft.com/Socratex/BooleanWithLiterals' Version='1.0'>
 {

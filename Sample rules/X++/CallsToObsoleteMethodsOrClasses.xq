@@ -4,7 +4,6 @@
 (: Finds calls to obsolete methods, and to methods on obsolete classes :)
 (: @Language Xpp :)
 (: @Category Informational :)
-(: @Author pvillads@microsoft.com :)
 
 let $calls := 
 <Calls>

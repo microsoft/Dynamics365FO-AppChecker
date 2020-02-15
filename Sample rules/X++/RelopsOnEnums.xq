@@ -8,7 +8,6 @@
    particular ones. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <EnumComparisons>
 {

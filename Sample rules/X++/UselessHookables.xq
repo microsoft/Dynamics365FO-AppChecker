@@ -6,7 +6,7 @@ which provides no value, since private methods are not hookable by default :)
 
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
+
 <UselessHookables Category='BestPractice' href='docs.microsoft.com/Socratex/UselessHookables' Version='1.0'>
 {
     for $a in /(Class | Table | Query | Form)

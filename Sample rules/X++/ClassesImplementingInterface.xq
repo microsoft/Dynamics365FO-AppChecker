@@ -4,7 +4,6 @@
 (: Find classes that implement a particular interface :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Implementations>
 {

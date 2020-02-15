@@ -5,7 +5,6 @@
 (: Note: This does not find references updated with byref parameters :)
 (: @Language Xpp :)
 (: @Category Informational :)
-(: @Author pvillads@microsoft.com :)
 
 <TableFieldAssignments>
 {

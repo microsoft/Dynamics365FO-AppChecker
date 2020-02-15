@@ -4,7 +4,6 @@
 (: Get artifacts that are extention classes but contain data event handlers :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

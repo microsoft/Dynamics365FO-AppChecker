@@ -4,7 +4,6 @@
 (: Order artifacts in order of lines. Limit to results with more than 1000 lines :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

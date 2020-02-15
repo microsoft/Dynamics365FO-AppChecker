@@ -4,7 +4,6 @@
 (: Identify try / catch / finally statements with empty blocks :)
 (: @Language Xpp :)
 (: @Category BestPractice :)
-(: @Author pvillads@microsoft.com :)
 
 <EmptyCatchOrFinallys Category='BestPractice' href='docs.microsoft.com/Socratex/EmptyCatchOrFinallys' Version='1.0'>
 {

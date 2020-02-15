@@ -4,7 +4,6 @@
 (: Get artifacts decorated with a particular attribute :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <ArtifactsWithAttribute  Category='Informational' href='docs.microsoft.com/Socratex/ArtifactWithAttribute' Version='1.0'>
 {

@@ -4,7 +4,6 @@
 (: Find methods that have inline (local) functions declared :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <LocalFunctions>
 {

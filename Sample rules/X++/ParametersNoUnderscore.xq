@@ -4,7 +4,6 @@
 (: methods with parameters not starting with underscores :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

@@ -4,7 +4,7 @@
 (: Calculate the complexity of methods :) 
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
+
 (:
   Simple rule of thumb: Count the branching and looping constructs and add 1. The if statements, for, 
   while, and do/while constructs, each count as one. For the switch/case constructs, each case block counts as one. 

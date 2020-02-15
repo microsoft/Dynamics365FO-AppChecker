@@ -4,7 +4,6 @@
 (: Abstract classes that have no abstract methods :)
 (: @Language Xpp :)
 (: @Category BestPractice :)
-(: @Author pvillads@microsoft.com :)
 
 <AbstractClassWithNoAbstractMethods Category='BestPractice' href='docs.microsoft.com/Socratex/AbstractClassWithNoAbstractMethods' Version='1.0'>
 {

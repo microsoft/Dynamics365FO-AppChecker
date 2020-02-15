@@ -4,7 +4,6 @@
 (: List of classes that extend SysAttribute :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

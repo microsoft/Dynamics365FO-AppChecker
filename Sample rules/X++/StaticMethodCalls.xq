@@ -4,7 +4,6 @@
 (: Find calls to static methods on a type :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

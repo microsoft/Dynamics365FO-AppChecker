@@ -5,7 +5,6 @@
 (: String operations to take Enumeration(NoYes) to NoYes :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:getEnumerationName($s as xs:string) as xs:string
 {

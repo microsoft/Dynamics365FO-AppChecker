@@ -4,7 +4,6 @@
 (: determines the fields of a particular visibility, here private :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

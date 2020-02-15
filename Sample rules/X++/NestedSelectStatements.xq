@@ -5,7 +5,6 @@
 (: These cases may or may not be good candidates for joins :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <NestedSelects>
 {

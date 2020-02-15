@@ -4,7 +4,6 @@
 (: Identify try / catch / finally statements with empty finally blocks :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <EmptyFinallys>
 {

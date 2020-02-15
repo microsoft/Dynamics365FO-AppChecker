@@ -3,7 +3,6 @@
 
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 let $connectionClasses := <Results>
     <Result Name='Connection'/>    
