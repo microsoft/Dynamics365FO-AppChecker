@@ -1,6 +1,5 @@
 (: Finds tables with no cluster index :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/TableIndex' Version='1.0'>
 {
@@ -17,7 +16,7 @@
       <Line>{string($t/@StartLine)}</Line>
       <Column>{string($t/@StartCol)}</Column>
       <EndLine>{string($t/@EndLine)}</EndLine>
-      <EndColumn>{string($t/@EndCol)}</EndColumn>      
-    </Diagnostic>  
-} 
+      <EndColumn>{string($t/@EndCol)}</EndColumn>
+    </Diagnostic>
+}
 </Diagnostics>

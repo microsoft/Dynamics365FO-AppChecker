@@ -1,7 +1,6 @@
 (: Check for single delete statement in search statement, on the search query buffer :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
- 
+
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/DeleteFromNotUsed' Version='1.0'>
 {
   for $a in /*
@@ -23,6 +22,6 @@
       <Column>{string($qc/@StartCol)}</Column>
       <EndLine>{string($qc/@EndLine)}</EndLine>
       <EndColumn>{string($qc/@EndCol)}</EndColumn>
-    </Diagnostic>  
-} 
+    </Diagnostic>
+}
 </Diagnostics>

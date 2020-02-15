@@ -1,12 +1,11 @@
 (: Finds x++ nested "while select" statements  :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Best practice' href='docs.microsoft.com/Socratex/NestedSearch' Version='1.0'>
 {
   for $a in /*
-  for $m in $a/Method 
-  for $nested in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)//SearchStatement  
+  for $m in $a/Method
+  for $nested in $m//(SearchStatement | DoWhileStatement | ForStatement | WhileStatement)//SearchStatement
   return
     <Diagnostic>
       <Moniker>NestedSearch</Moniker>
@@ -18,6 +17,6 @@
       <Column>{string($nested/@StartCol)}</Column>
       <EndLine>{string($nested/@EndLine)}</EndLine>
       <EndColumn>{string($nested/@EndCol)}</EndColumn>
-    </Diagnostic>  
+    </Diagnostic>
 }
 </Diagnostics>

@@ -1,14 +1,13 @@
 (: Get artifacts that are extention classes but don't have a prefix :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
 
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/ExtensionsWithoutPrefix' Version='1.0'>
 {
   for $a in /Class
-  where $a/AttributeList/Attribute[@Name = "ExtensionOf"] 
+  where $a/AttributeList/Attribute[@Name = "ExtensionOf"]
   let $targetClass := $a/AttributeList/Attribute[@Name = "ExtensionOf"]/AttributeExpression/IntrinsicAttributeLiteral[@FunctionName = "classStr"]/string(@Arg1)
   where $a/@Name = fn:concat($targetClass, "_Extension")
-  return 
+  return
     <Diagnostic>
       <Moniker>ExtensionsWithoutPrefix</Moniker>
       <Severity>Error</Severity>
@@ -18,7 +17,7 @@
       <Line>{string($a/@StartLine)}</Line>
       <Column>{string($a/@StartCol)}</Column>
       <EndLine>{string($a/@EndLine)}</EndLine>
-      <EndColumn>{string($a/@EndCol)}</EndColumn>      
-    </Diagnostic>  
+      <EndColumn>{string($a/@EndCol)}</EndColumn>
+    </Diagnostic>
 }
 </Diagnostics>

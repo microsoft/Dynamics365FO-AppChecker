@@ -1,8 +1,7 @@
 (: Check for unbalanced ttsbegin and ttsCommit/ttsabort statements. :)
-(: The best practice is that each ttsBegin statement should have a matching ttsCommit statement in the same method and scope. :) 
+(: The best practice is that each ttsBegin statement should have a matching ttsCommit statement in the same method and scope. :)
 (: @Language Xpp :)
-(: @Author bertd@microsoft.com :)
- 
+
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/BalancedTtsStatement' Version='1.0'>
 {
 let $scopes := ("IfStatement", "IfThenElseStatement", "WhileStatement", "DoWhileStatement", "ForStatement", "TryStatement", "CatchStatement", "FinallyStatement", "SearchStatement", "SwitchEntryStatement", "Method", "FunctionDeclaration")
@@ -23,6 +22,6 @@ return
       <Column>{string($s/@StartCol)}</Column>
       <EndLine>{string($s/@EndLine)}</EndLine>
       <EndColumn>{string($s/@EndCol)}</EndColumn>
-    </Diagnostic>  
+    </Diagnostic>
 }
 </Diagnostics>
