@@ -4,7 +4,6 @@
 (: Get artifacts decorated with a replaceable attribute that is meaningless :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <UselessReplaceableAttributes  Category='Informational' href='docs.microsoft.com/Socratex/MeaninglessReplaceableAttributes' Version='1.0'>
 {

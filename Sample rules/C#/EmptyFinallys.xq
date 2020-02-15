@@ -4,7 +4,6 @@
 (: Identify try / finally statements with empty finally blocks :)
 (: @Category BestPractice :)
 (: @Language C# :)
-(: @Author pvillads@microsoft.com :)
 
 <EmptyFinallys>
 {

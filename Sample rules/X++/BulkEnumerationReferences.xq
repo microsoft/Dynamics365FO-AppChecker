@@ -1,6 +1,9 @@
 ﻿(: Copyright (c) Microsoft Corporation.
    Licensed under the MIT license. :)
 
+(: @Language Xpp :)
+(: @Category Informational :)
+
 declare function local:SourceLines($s as xs:string, $fromLine as xs:integer, $toLine as xs:integer) as xs:string
 {
 

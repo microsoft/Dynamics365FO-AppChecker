@@ -1,6 +1,9 @@
 ﻿(: Copyright (c) Microsoft Corporation.
    Licensed under the MIT license. :)
 
+(: @Language Xpp :)
+(: @Category Informational :)
+
 let $r := <Calls>
 {
   for $c in /Class

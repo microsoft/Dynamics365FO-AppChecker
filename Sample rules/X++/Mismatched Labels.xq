@@ -3,7 +3,6 @@
 
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:findParmReferences($d, $i as xs:integer, $s as xs:string)
 {

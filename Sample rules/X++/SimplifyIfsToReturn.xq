@@ -5,7 +5,6 @@
 (: These can be simplified to just returning the expression as is or negated  :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <SimplifyIfWithReturns>
 {

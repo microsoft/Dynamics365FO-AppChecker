@@ -5,7 +5,6 @@
 (: The classes arg is the document that describes the inheritance hierarchy. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:f($c, $classes)
 {

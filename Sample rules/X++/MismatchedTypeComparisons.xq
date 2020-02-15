@@ -4,7 +4,6 @@
 (: Find all == expressions where different types are compared. This may cause problems due to loss of precision :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

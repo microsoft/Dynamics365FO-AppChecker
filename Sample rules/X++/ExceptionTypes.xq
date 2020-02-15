@@ -4,7 +4,6 @@
 (: Shows the types of exceptions handled in catch blocks :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Results>
 {

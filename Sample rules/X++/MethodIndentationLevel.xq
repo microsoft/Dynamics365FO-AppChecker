@@ -4,7 +4,6 @@
 (: Find the maximum indentation level of the methods on class or table types :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:visitStatement($s as element()) as xs:integer
 {

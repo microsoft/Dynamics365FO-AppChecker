@@ -5,7 +5,6 @@
    These are eligible to writing to adding the lengths of the addition operands :)
 (: @Category Performance :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <NeedlessStringConcatenations>
 {

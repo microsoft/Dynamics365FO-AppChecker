@@ -4,7 +4,6 @@
 (: Find Edit and display methods :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <EditAndDisplayMethods>
 {

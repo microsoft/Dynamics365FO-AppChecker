@@ -5,7 +5,6 @@
 (: This is wasteful and should be replaced with the complete literal :)
 (: @Category Performance :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <Classes>
 {

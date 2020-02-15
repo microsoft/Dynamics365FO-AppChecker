@@ -5,7 +5,7 @@
 
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
+
 <TODOComments>
 {
   for $c in /*

@@ -4,7 +4,6 @@
 (: Find conditions in if statements that are constants :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <ConstantConditions Category='Mandatory' href='docs.microsoft.com/Socratex/ConstantConditions' Version='1.0'>
 {

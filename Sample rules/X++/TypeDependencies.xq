@@ -4,9 +4,9 @@
 (: This query will determine type dependecies for all classes and tables.
    The predefined types are weeded out, since they are not really interesting :)
 
-(: @Author pvillads@microsoft.com :)
 (: @Category Informational :)
 (: @Language Xpp :)
+
 <TypeDependencies>
 {
     for $c in /(Class | Table | Form | Query)

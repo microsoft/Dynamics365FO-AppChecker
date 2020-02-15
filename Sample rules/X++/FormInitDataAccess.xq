@@ -4,7 +4,6 @@
 (: Forms must not contain data access primitives in the init method :)
 (: @Category Performance :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <DataAccessLoopInInitViolation>
 {

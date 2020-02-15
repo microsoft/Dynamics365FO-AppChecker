@@ -4,7 +4,6 @@
 (: Query for finding self-assignments :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <SimpleSelfAssignments>
 {

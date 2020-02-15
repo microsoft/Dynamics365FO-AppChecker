@@ -4,7 +4,6 @@
 (: Provide interesting metrics for the system. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <OverallMetrics Category='Informational' href='docs.microsoft.com/Socratex/OverallMetrics' Version='1.0'>
     <Models>{count(/Models/Model)}</Models>    

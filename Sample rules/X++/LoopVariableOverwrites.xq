@@ -5,7 +5,6 @@
 (: If the intention is to break out of the loop, use the break statement. :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <LoopVariableOverwrite>
 {

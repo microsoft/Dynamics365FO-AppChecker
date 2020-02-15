@@ -4,7 +4,6 @@
 (: Find places where classes that implement IDisposable are not created in using statements :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:Parents($c, $getClassByName)
 {

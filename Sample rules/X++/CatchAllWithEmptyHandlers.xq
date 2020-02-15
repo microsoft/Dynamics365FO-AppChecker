@@ -4,7 +4,6 @@
 (: Identify catch all catch all handlers that are empty :)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <CatchAllWithEmptyHandlers  Category='BestPractice' href='docs.microsoft.com/Socratex/CatchAllWithEmptyHandlers' Version='1.0'>
 {

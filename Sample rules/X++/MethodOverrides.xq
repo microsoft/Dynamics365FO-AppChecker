@@ -6,7 +6,6 @@
  are set in the variables below. :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:TraverseExtensions($name, $extensions)
 {

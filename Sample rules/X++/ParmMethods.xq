@@ -11,7 +11,6 @@
 :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 declare function local:checkSignature($m as element(Method)) as xs:boolean
 {

@@ -4,6 +4,7 @@
 (: Find all empty statements :)
 (: @Category Informational :)
 (: @Language Xpp :)
+
 <EmptyStatements>
 {
       for $c in /Class

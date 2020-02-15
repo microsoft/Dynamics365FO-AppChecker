@@ -4,7 +4,6 @@
 (: Finds all internal methods :)
 (: @Category Informational :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <InternalMethods>
 {

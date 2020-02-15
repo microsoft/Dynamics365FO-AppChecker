@@ -5,7 +5,6 @@
 (: @Category BestPractice/CAR :)
 (: @Language Xpp :)
 (: @Tags CAR, BP :)
-(: @Author pvillads@microsoft.com :)
 
 <BPErrorFormCaptionIsEmpty>
 {

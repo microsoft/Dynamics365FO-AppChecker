@@ -7,7 +7,6 @@
    easily modified to take into account all methods, including private ones:)
 (: @Category BestPractice :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <ClassesWithUndocumentedMethods Category='BestPractice' href='docs.microsoft.com/Socratex/ClassesWithUndocumentedMethods' Version='1.0'>
 {

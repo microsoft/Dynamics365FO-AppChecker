@@ -5,9 +5,9 @@
 in extension classes. This is not the correct way to use extension classes,
 and doing this will typically make the handler methods available on any
 table, since the first parameter of such handlers is of type Common :)
+
 (: @Language Xpp :)
 (: @Category Informational :)
-(: @Author pvillads@microsoft.com :)
 
 <StaticHandlerMethodsInExtensions>
 {

@@ -5,7 +5,6 @@
 (: @Category BestPractice/CAR :)
 (: @Language Xpp :)
 (: @Tags BP, CAR :)
-(: @Author pvillads@microsoft.com :)
 
 <BPErrorNotAllowedEditMethods Category='Mandatory' href='docs.microsoft.com/Socratex/BPErrorNotAllowedEditMethod' Version='1.0'>
 {

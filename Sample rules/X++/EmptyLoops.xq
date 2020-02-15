@@ -4,7 +4,6 @@
 (: Find loops with no meaningful bodies :)
 (: @Category Mandatory :)
 (: @Language Xpp :)
-(: @Author pvillads@microsoft.com :)
 
 <EmptyLoops Category='BestPractice' href='docs.microsoft.com/Socratex/EmptyLoops' Version='1.0'>
 {
