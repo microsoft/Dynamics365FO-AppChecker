@@ -79,7 +79,11 @@ namespace Wpf.Controls
         public static object CloneElement(object elementToClone)
         {
             string xaml = XamlWriter.Save(elementToClone);
-            return XamlReader.Load(new XmlTextReader(new StringReader(xaml)));
+            return XamlReader.Load(new XmlTextReader(new StringReader(xaml))
+            {
+                XmlResolver = null,
+                DtdProcessing = DtdProcessing.Prohibit
+            });
         }
 
     }

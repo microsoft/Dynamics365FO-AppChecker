@@ -71,6 +71,9 @@ namespace XppReasoningWpf
 
                 using (var xshd_reader = new XmlTextReader(syntaxModeStream))
                 {
+                    xshd_reader.DtdProcessing = DtdProcessing.Prohibit;
+                    xshd_reader.XmlResolver = null;
+
                     syntaxModeStream = null;
                     return ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, HighlightingManager.Instance);
                 }
