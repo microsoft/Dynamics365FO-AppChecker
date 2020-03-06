@@ -1,0 +1,27 @@
+NOTICES AND INFORMATION
+Do Not Translate or Localize
+
+This software incorporates material from third parties. Microsoft makes certain
+open source code available at https://3rdpartysource.microsoft.com, or you may
+send a check or money order for US $5.00, including the product name, the open
+source component name, and version number, to:
+
+Source Code Compliance Team
+Microsoft Corporation
+One Microsoft Way
+Redmond, WA 98052
+USA
+
+Notwithstanding any other terms, you may reverse engineer this software to the
+extent required to debug changes to any libraries licensed under the GNU Lesser
+General Public License.
+
+* The Saxon XLST and XQuery processor from Saxonica Limited is used under the Mozilla Public License 2.0 (www.mozilla.org/MPL).
+
+* The SQL language support for the Editor control were provided by ErikEJ from the SqlQueryStress project (https://github.com/ErikEJ/SqlQueryStress) under the MIT license (attached).
+
+* The *Icons* used in the application are copied from the Visual Studio Image library (https://www.microsoft.com/en-us/download/details.aspx?id=35825) under the license in the enclosed file (Visual Studio 2017 Image Library EULA.pdf)
+
+* The *About screen artwork* was modified from a picture of the Socrates statue at the Louvre museum by Derek Key. The bitmap on https://www.flickr.com/photos/derekskey/9135166134/ is used under the attached Creative Commons 2.0 license.
+
+* The *Editor control* used for editing C# source code and rendering XML is provided by AvalonEdit, http://avalonedit.net/ provided under the MIT license (attached).

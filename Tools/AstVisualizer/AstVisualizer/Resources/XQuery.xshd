@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="XQuery" extensions=".xq" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color foreground="Green" name="Comment" exampleText="&lt;!-- comment --&gt;" />
+  <Color foreground="Blue" name="CData" exampleText="&lt;![CDATA[data]]&gt;" />
+  <Color foreground="Blue" name="DocType" exampleText="&lt;!DOCTYPE rootElement&gt;" />
+  <Color foreground="Blue" name="XmlDeclaration" exampleText='&lt;?xml version="1.0"?&gt;' />
+  <Color foreground="DarkMagenta" name="XmlTag" exampleText='&lt;tag attribute="value" /&gt;' />
+  <Color foreground="Red" name="AttributeName" exampleText='&lt;tag attribute="value" /&gt;' />
+  <Color foreground="Blue" name="AttributeValue" exampleText='&lt;tag attribute="value" /&gt;' />
+  <Color foreground="Teal" name="Entity" exampleText="index.aspx?a=1&amp;amp;b=2" />
+  <Color foreground="Olive" name="BrokenEntity" exampleText="index.aspx?a=1&amp;b=2" />
+
+  <Color foreground="Silver" name="XqComment" exampleText="(: comment :)" fontStyle="italic"/>
+  <Color name="XqExt" exampleText="(# wmh:cache #)" fontStyle="italic"/>
+
+  <RuleSet>
+    <Span color="Comment" multiline="true">
+      <Begin>&lt;!--</Begin>
+      <End>--&gt;</End>
+    </Span>
+    <Span color="CData" multiline="true">
+      <Begin>&lt;!\[CDATA\[</Begin>
+      <End>]]&gt;</End>
+    </Span>
+    <Span color="DocType" multiline="true">
+      <Begin>&lt;!DOCTYPE</Begin>
+      <End>&gt;</End>
+    </Span>
+    <Span color="XmlDeclaration" multiline="true">
+      <Begin>&lt;\?</Begin>
+      <End>\?&gt;</End>
+    </Span>
+    <Span color="XmlTag" multiline="true">
+      <Begin>&lt;(?!\s)</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <Span foreground="black" multiline="true">
+          <Begin>\[</Begin>
+          <End>\]</End>
+          <RuleSet>
+            <Import ruleSet="main"/>
+          </RuleSet>
+        </Span>
+        <Span color="AttributeValue" multiline="true">
+          <Begin>"</Begin>
+          <End>"|(?=&lt;)</End>
+          <RuleSet>
+            <Span foreground="black" multiline="true">
+              <Begin>{(?=(.[^{]))</Begin>
+              <End>}</End>
+              <RuleSet>
+                <Import ruleSet="main"/>
+              </RuleSet>
+            </Span>
+            <Import ruleSet="EntitySet"/>
+          </RuleSet>
+        </Span>
+        <Span color="AttributeValue" multiline="true">
+          <Begin>'</Begin>
+          <End>'|(?=&lt;)</End>
+          <RuleSet>
+            <Span foreground="black" multiline="true">
+              <Begin>{(?=(.[^{]))</Begin>
+              <End>}</End>
+              <RuleSet>
+                <Import ruleSet="main"/>
+              </RuleSet>
+            </Span>
+            <Import ruleSet="EntitySet"/>
+          </RuleSet>
+        </Span>
+        <Rule color="AttributeName">[\d\w_\-\:\.]+(?=(\s*=))</Rule>
+        <Rule color="AttributeValue">=</Rule>
+      </RuleSet>
+    </Span>
+    <Import ruleSet="EntitySet"/>
+    <Import ruleSet="main"/>
+    <Keywords foreground="Blue" fontWeight="bold">
+      <Word>xquery version</Word>
+      <Word>declare construction</Word>
+      <Word>declare option</Word>
+      <Word>declare default order</Word>
+      <Word>declare default collation</Word>
+      <Word>declare namespace</Word>
+      <Word>module namespace</Word>
+      <Word>declare base-uri</Word>
+      <Word>declare default element</Word>
+      <Word>declare default function</Word>
+      <Word>import namespace</Word>
+      <Word>import module</Word>
+      <Word>declare copy-namespaces</Word>
+      <Word>declare variable</Word>
+      <Word>declare function</Word>
+      <Word>declare boundary-space</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet name="main">
+    <Span color="XqComment" multiline="true">
+      <Begin>\(:</Begin>
+      <End>:\)</End>
+    </Span>
+    <Span color="XqExt" multiline="true">
+      <Begin>\(\#</Begin>
+      <End>\#\)</End>
+    </Span>
+    <Rule fontStyle="italic">\$\w[\w\d]*</Rule>
+    <Rule>\w[\w\-]*\:\:</Rule>
+    <Rule fontWeight="bold">\w[\w\d\-_\:\.]*(?=\()</Rule>
+    <Keywords foreground="Blue" fontWeight="bold">
+      <Word>for</Word>
+      <Word>parallel for</Word>
+      <Word>let</Word>
+      <Word>where</Word>
+      <Word>return</Word>
+      <Word>if</Word>
+      <Word>then</Word>
+      <Word>else</Word>
+      <Word>in</Word>
+      <Word>stable order by</Word>
+      <Word>order by</Word>
+      <Word>instance of</Word>
+      <Word>cast as</Word>
+      <Word>castable as</Word>
+      <Word>threat as</Word>
+      <Word>typeswitch</Word>
+      <Word>some</Word>
+      <Word>every</Word>
+      <Word>at</Word>
+      <Word>case</Word>
+      <Word>and</Word>
+      <Word>or</Word>
+      <Word>satisfies</Word>
+      <Word>union</Word>
+      <Word>except</Word>
+      <Word>intersect</Word>
+      <Word>external</Word>
+      <Word>empty greatest</Word>
+      <Word>empty least</Word>
+      <Word>ascending</Word>
+      <Word>descending</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet name="EntitySet">
+    <Rule color="Entity">
+      &amp;
+      [\w\d\#]+
+      ;
+    </Rule>
+
+    <Rule color="BrokenEntity">
+      &amp;
+      [\w\d\#]*
+      #missing ;
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>
