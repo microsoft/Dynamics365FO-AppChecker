@@ -8,6 +8,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Diagnostics;
 using System;
+using System.Linq;
 
 namespace PythonExtractor
 {
@@ -49,7 +50,16 @@ def rverseArray(arr, start, end):
             {
                 File.WriteAllText(pythonFilePath, source);
 
-                string PythonExtractorSource = @"C:\Dev\Dynamics365FO-AppChecker\Extractors\Python\extractor\pythonextractor.py";
+                // Calculate the path to the python extractor. We do this by traversing the
+                // known structure of the source tree for now.
+                var localDllPath = typeof(Extractor).Assembly.Location;
+                var parts = localDllPath.Split(Path.DirectorySeparatorChar);
+
+                // Get rid of all the directories leading to the ast extractor (i.e. this executable).
+                var root = string.Join(Path.DirectorySeparatorChar.ToString(), parts.Take<string>(parts.Length - 6));
+
+                // Add the directory path to the extractor .py file.
+                string PythonExtractorSource = Path.Combine(Path.Combine(Path.Combine(Path.Combine(root, "Extractors"), "Python"), "extractor"), "pythonextractor.py");
 
                 // Start the python extractor.
                 using (var process = new Process())
@@ -58,7 +68,7 @@ def rverseArray(arr, start, end):
                     process.StartInfo.CreateNoWindow = true;
                     process.StartInfo.UseShellExecute= false;
                     process.EnableRaisingEvents = true;
-                    process.StartInfo.Arguments = $"{PythonExtractorSource} --formatxml=False {sourceDirectory} {resultDirectory}";
+                    process.StartInfo.Arguments = $"\"{PythonExtractorSource}\" --formatxml=False \"{sourceDirectory}\" \"{resultDirectory}\"";
                            
                     process.Start();
                     process.WaitForExit();
