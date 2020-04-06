@@ -1,4 +1,4 @@
-(: Identify methods that contain true or false literals in an And or Or expression :)
+(: Identify methods that contain true or false literals in And or Or expressions :)
 <Classes>
 {
     for $c in /*
