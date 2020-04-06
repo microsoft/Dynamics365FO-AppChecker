@@ -2,6 +2,8 @@
 | Project | Status |
 | --- | --- |
 | Explorer | ![Build.Socratex](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.Socratex/badge.svg)|
+| Ast Visualizer | ![Build.AStVisualizer](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.AStVisualizer/badge.svg) |
+
 
 # Application checker 
 The Dynamics Application checker is a set of technologies that allow customers to gain insight into their application code (i.e. source and metadata) in ways that have not been possible before. The technology is based on representing both source code and metadata in XML and providing rich search facilities by using the XQuery language to express declarative queries over the source code. The current implementation runs inside a BaseX repository running locally on the developer's box. You can find more information about installing BaseX here: https://docs.microsoft.com/en-us/dynamics365/unified-operations/dev-itpro/dev-tools/install-basex
