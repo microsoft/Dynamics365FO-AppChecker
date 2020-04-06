@@ -35,7 +35,7 @@ jobs:
     - name: Build BaseXInterface with MSBuild
       run: msbuild tools\BaseXInterface\BaseXInterface.csproj
     - name: Build Explorer with MSBuild
-      run: msbuild tools\BaseXInterface\Explorer.csproj      
+      run: msbuild "tools\Explorer\Socratex Explorer.csproj"
       
     # Runs a single command using the runners shell
     - name: Run a one-line script
