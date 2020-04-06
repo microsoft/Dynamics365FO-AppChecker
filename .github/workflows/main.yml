@@ -1,0 +1,43 @@
+# This is a workflow to build the AST Explorer application
+
+name: Build.Socratex
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    
+    - name: Setup Nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+
+    - name: Restore Packages for BaseXInterface project
+      run: nuget restore tools\BaseXInterface\BaseXInterface.csproj
+     
+    - name: Restore Packages for Explorer project
+      run: nuget restore tools\Explorer\BaseXInterface.csproj
+     
+    - name: Setup msbuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+     
+    - name: Build BaseXInterface with MSBuild
+      uses: msbuild tools\BaseXInterface\BaseXInterface.cspeoj
+    - name: Build Explorer with MSBuild
+      uses: msbuild tools\BaseXInterface\BaseXInterface.cspeoj      
+      
+    # Runs a single command using the runners shell
+    - name: Run a one-line script
+      run: echo Hello, world!
+
