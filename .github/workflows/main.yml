@@ -33,9 +33,9 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
      
     - name: Build BaseXInterface with MSBuild
-      uses: msbuild tools\BaseXInterface\BaseXInterface.cspeoj
+      run: msbuild tools\BaseXInterface\BaseXInterface.csproj
     - name: Build Explorer with MSBuild
-      uses: msbuild tools\BaseXInterface\BaseXInterface.cspeoj      
+      run: msbuild tools\BaseXInterface\Explorer.csproj      
       
     # Runs a single command using the runners shell
     - name: Run a one-line script
