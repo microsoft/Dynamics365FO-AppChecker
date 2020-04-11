@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: windows-latest # Should run on any platform supporting python
 
     steps:
     - uses: actions/checkout@v2
@@ -13,9 +13,9 @@ jobs:
     - name: Set up Python 3.x
       uses: actions/setup-python@v1
       with:
-        python-version: '3.x'
+        python-version: '3.x' # Version 3 required.
 
-#    - name: Install dependencies
+#    - name: Install dependencies # There are no dependencies at this time.
 #      run: |
 #        python -m pip install --upgrade pip
 #        pip install -r requirements.txt
