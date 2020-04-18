@@ -37,7 +37,17 @@ namespace AstVisualizer
             this.Model = new Model();
             this.DataContext = new ViewModel(this, this.Model);
 
+            // Set up handlers to manage the cursor position in the status bar:
             this.SourceEditor.TextArea.Caret.PositionChanged += EditorPositionChanged;
+            this.ResultsEditor.TextArea.Caret.PositionChanged += EditorPositionChanged;
+            this.QueryEditor.TextArea.Caret.PositionChanged += EditorPositionChanged;
+            this.QueryResultsEditor.TextArea.Caret.PositionChanged += EditorPositionChanged;
+
+            // Install a find facility in the text editors
+            ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.SourceEditor.TextArea);
+            ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.ResultsEditor.TextArea);
+            ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.QueryEditor.TextArea);
+            ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.QueryResultsEditor.TextArea);
         }
 
         private void ResultsEditor_MouseWheel(object sender, MouseWheelEventArgs e)
