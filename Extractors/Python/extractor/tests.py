@@ -185,7 +185,7 @@ def foo():
         functionDefinitionNode = root.find("Statements/FunctionDefinition[@Name='foo']/Returns/Name[@Id='str']")
         assert functionDefinitionNode != None
 
-    def testAsyncFunctionDefWithPredefReturn(self):
+    def testAsyncFunctionDefWithPredefReturnNone(self):
         root = createTree('''async def foo() -> None: pass''')
 
         functionDefinitionNode = root.find("Statements/AsyncFunctionDefinition[@Name='foo']")
@@ -193,12 +193,12 @@ def foo():
 
         # There are no parameters:
         argumentsNode = functionDefinitionNode.find("Arguments")
-        assert argumentsNode is None
+        assert argumentsNode != None
 
-        functionDefinitionNode = root.find("Statements/FunctionDefinition[@Name='foo']/Returns[@Type='None']")
+        functionDefinitionNode = root.find("Statements/AsyncFunctionDefinition[@Name='foo']/Returns/NameConstant[@Name='None']")
         assert functionDefinitionNode != None
 
-    def testAsyncFunctionDefWithPredefReturn(self):
+    def testAsyncFunctionDefWithPredefReturnStr(self):
         root = createTree('''async def foo() -> str: pass''')
 
         functionDefinitionNode = root.find("Statements/AsyncFunctionDefinition[@Name='foo']")
@@ -208,7 +208,7 @@ def foo():
         argumentsNode = functionDefinitionNode.find("Arguments")
         assert argumentsNode != None
 
-        functionDefinitionNode = root.find("Statements/AsyncFunctionDefinition[@Name='foo']/Returns[@Name='str']")
+        functionDefinitionNode = root.find("Statements/AsyncFunctionDefinition[@Name='foo']/Returns/Name[@Id='str']")
         assert functionDefinitionNode != None
 
 class ImportTest(unittest.TestCase):
