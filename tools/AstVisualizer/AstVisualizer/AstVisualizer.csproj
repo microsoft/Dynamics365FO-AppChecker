@@ -152,7 +152,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <EmbeddedResource Include="Resources\XQuery.xshd" />
-    <EmbeddedResource Include="Resources\Sql.xshd" />
+    <EmbeddedResource Include="Resources\Go.xshd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -198,6 +198,10 @@
     <ProjectReference Include="..\CSharpExtractor\CSharpExtractor.csproj">
       <Project>{021b9d7b-3ec7-4fc4-876f-b7beebe697bd}</Project>
       <Name>CSharpExtractor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoExtractor\GoExtractor.csproj">
+      <Project>{af7b05b7-f6ec-4a22-8201-18787e94f396}</Project>
+      <Name>GoExtractor</Name>
     </ProjectReference>
     <ProjectReference Include="..\LanguageExtractorInterfaces\LanguageExtractorInterfaces.csproj">
       <Project>{4ea94338-8bfb-479a-adfe-cac195e861d4}</Project>

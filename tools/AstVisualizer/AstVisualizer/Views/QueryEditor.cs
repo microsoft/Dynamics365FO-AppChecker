@@ -39,7 +39,7 @@ namespace AstVisualizer
             };
             this.SetBinding(ShowLineNumbersProperty, showLineNumbersBinding);
 
-            this.SyntaxHighlighting = this.LoadHighlightDefinition("XQuery.xshd");
+            this.SyntaxHighlighting = ViewModel.LoadHighlightDefinition("XQuery.xshd");
 
             this.Options = new TextEditorOptions
             {

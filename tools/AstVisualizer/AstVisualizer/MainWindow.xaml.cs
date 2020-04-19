@@ -7,7 +7,11 @@ using System.Windows.Input;
 
 namespace AstVisualizer
 {
+    using ICSharpCode.AvalonEdit.Highlighting;
     using LanguageExtractorInterfaces;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml

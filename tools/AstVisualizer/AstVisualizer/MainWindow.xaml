@@ -141,9 +141,7 @@ Licensed under the MIT license.
                        
                         <!-- TODO Use 'VB' as syntax highlighting for VB.NET -->
                         <avalonedit:TextEditor x:Name="SourceEditor" Grid.Row="1" Margin="8"
-                                               
-                                    SyntaxHighlighting="{Binding Source={x:Static settings:Settings.Default}, Path=CurrentLanguage, Converter={StaticResource HighlightingDefinitionConverter}}"                                               
-                                               
+                                                                       
                                     ShowLineNumbers="{Binding Source={x:Static settings:Settings.Default}, Path=ShowLineNumbers}"
                                     FontSize="{Binding Source={x:Static settings:Settings.Default}, Path=SourceFontSize}" 
                                     FontFamily="{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}"
