@@ -13,4 +13,5 @@ jobs:
     - name: Test
       run: |
         cd Extractors\Go
+        go get github.com/beevik/etree
         go test
