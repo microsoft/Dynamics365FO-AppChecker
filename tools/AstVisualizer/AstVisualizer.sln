@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSqlExtractor", "TSqlExtrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PythonExtractor", "PythonExtractor\PythonExtractor.csproj", "{FE5B110F-2424-4968-AC7A-93142B9D3B3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoExtractor", "GoExtractor\GoExtractor.csproj", "{AF7B05B7-F6EC-4A22-8201-18787E94F396}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

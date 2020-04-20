@@ -10,10 +10,12 @@ namespace AstVisualizer
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
     using System.Xml.Linq;
+    using ICSharpCode.AvalonEdit.Highlighting;
     using LanguageExtractorInterfaces;
     using Microsoft.Win32;
     using Saxon.Api;
@@ -42,18 +44,53 @@ namespace AstVisualizer
         private readonly MainWindow view;
         private readonly Model model;
 
+        /// <summary>
+        /// Loads the highlighting mode from the embedded resource
+        /// </summary>
+        /// <param name="mode">The name of the mode to load.</param>
+        /// <returns>The Hightlighting definition for the given language, or null 
+        /// if there is no highlighting definition by the given name.
+        /// </returns>
+        public static IHighlightingDefinition LoadHighlightDefinition(string mode)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            Stream syntaxModeStream = null;
+            try
+            {
+                syntaxModeStream = assembly.GetManifestResourceStream("AstVisualizer.Resources." + mode);
+
+                using (var xshd_reader = new XmlTextReader(syntaxModeStream)
+                {
+                    XmlResolver = null,
+                    DtdProcessing = DtdProcessing.Prohibit
+                })
+                {
+                    syntaxModeStream = null;
+                    return ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, HighlightingManager.Instance);
+                }
+            }
+            finally
+            {
+                if (syntaxModeStream != null)
+                    syntaxModeStream.Dispose();
+
+            }
+        }
+
         public ViewModel(MainWindow v, Model model)
         {
             this.view = v;
             this.model = model;
+
+            // Register the types for hightlighting. C#, VB.NET and TSQL are defined 
+            // internally by the editor, so they do not need to be registered.
+            HighlightingManager.Instance.RegisterHighlighting("Go", new[] { ".go" }, LoadHighlightDefinition("Go.xshd"));
 
             Properties.Settings.Default.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
                 // Save all the user's settings
                 Properties.Settings.Default.Save();
             };
-
-            var language = AstVisualizer.Properties.Settings.Default.CurrentLanguage;
 
             ExitCommand = new RelayCommand(
                 p => { Application.Current.Shutdown(); });
@@ -372,6 +409,8 @@ namespace AstVisualizer
                 .Where(l => l.Metadata.Name == Properties.Settings.Default.CurrentLanguage)
                 .Select(l => l.Metadata).FirstOrDefault();
 
+            // Set the highlighting to the registered language
+            this.view.SourceEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(extractorData.Name);
             this.view.SourceEditor.Text = extractorData.Sample;
         }
     }
