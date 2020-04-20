@@ -1,0 +1,16 @@
+name: Go Extractor
+
+on: push
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: |
+        cd Extractors\Go
+        go test
