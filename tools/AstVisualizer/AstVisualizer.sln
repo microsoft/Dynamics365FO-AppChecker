@@ -1,0 +1,54 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstVisualizer", "AstVisualizer\AstVisualizer.csproj", "{1CFCBBB5-6FCC-4EEB-99DE-B3DDCF0C1C33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageExtractorInterfaces", "LanguageExtractorInterfaces\LanguageExtractorInterfaces.csproj", "{4EA94338-8BFB-479A-ADFE-CAC195E861D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExtractor", "CSharpExtractor\CSharpExtractor.csproj", "{021B9D7B-3EC7-4FC4-876F-B7BEEBE697BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSqlExtractor", "TSqlExtractor\TSqlExtractor.csproj", "{BE939319-8ED9-45AF-A45B-DF8C2FABE560}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PythonExtractor", "PythonExtractor\PythonExtractor.csproj", "{FE5B110F-2424-4968-AC7A-93142B9D3B3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoExtractor", "GoExtractor\GoExtractor.csproj", "{AF7B05B7-F6EC-4A22-8201-18787E94F396}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CFCBBB5-6FCC-4EEB-99DE-B3DDCF0C1C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CFCBBB5-6FCC-4EEB-99DE-B3DDCF0C1C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CFCBBB5-6FCC-4EEB-99DE-B3DDCF0C1C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CFCBBB5-6FCC-4EEB-99DE-B3DDCF0C1C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA94338-8BFB-479A-ADFE-CAC195E861D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA94338-8BFB-479A-ADFE-CAC195E861D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA94338-8BFB-479A-ADFE-CAC195E861D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA94338-8BFB-479A-ADFE-CAC195E861D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{021B9D7B-3EC7-4FC4-876F-B7BEEBE697BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{021B9D7B-3EC7-4FC4-876F-B7BEEBE697BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{021B9D7B-3EC7-4FC4-876F-B7BEEBE697BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{021B9D7B-3EC7-4FC4-876F-B7BEEBE697BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE939319-8ED9-45AF-A45B-DF8C2FABE560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE939319-8ED9-45AF-A45B-DF8C2FABE560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE939319-8ED9-45AF-A45B-DF8C2FABE560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE939319-8ED9-45AF-A45B-DF8C2FABE560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5B110F-2424-4968-AC7A-93142B9D3B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7B05B7-F6EC-4A22-8201-18787E94F396}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F891F73D-468E-460F-99DB-EA5CB2D63C5D}
+	EndGlobalSection
+EndGlobal
