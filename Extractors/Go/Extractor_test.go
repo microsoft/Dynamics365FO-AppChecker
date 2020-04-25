@@ -3,9 +3,13 @@ package main
 // Test the walker functionality
 
 import (
+	"fmt"
 	"go/ast"
+	"go/importer"
 	"go/parser"
 	"go/token"
+	"go/types"
+	"log"
 	"testing"
 
 	"github.com/beevik/etree"
@@ -39,28 +43,63 @@ func createExpressionDocument(snippet string, t *testing.T) *etree.Document {
 	return doc
 }
 
-func TestComment(t *testing.T) {
-	doc := createFileDocument(`
-// This is the package comment.
-package main
+func TestTypeResolution(t *testing.T) {
+	fset := token.NewFileSet()
 
-// This comment is associated with the hello constant.
-const hello = "Hello, World!" // line comment 1
+	const hello = `package main
 
-// This comment is associated with the foo variable.
-var foo = hello // line comment 2
+	import "fmt"
 
-// This comment is associated with the main function.
-func main() {
-	fmt.Println(hello) // line comment 3
-}`, t)
+	func main() {
+		s := "Hello, world" + " Banana"
+		fmt.Println(s)
+	}`
 
-	doc.Indent(2)
-	s, _ := doc.WriteToString()
-	// fmt.Print(s)
+	// Parse the input string, []byte, or io.Reader,
+	// recording position information in fset.
+	// ParseFile returns an *ast.File, a syntax tree.
+	f, err := parser.ParseFile(fset, "hello.go", hello, 0)
+	if err != nil {
+		log.Fatal(err) // parse error
+	}
 
-	// TODO
+	// A Config controls various options of the type checker.
+	// The defaults work fine except for one setting:
+	// we must specify how to deal with imports.
+	conf := types.Config{Importer: importer.Default()}
+
+	info := &types.Info{
+		Defs: make(map[*ast.Ident]types.Object),
+		Uses: make(map[*ast.Ident]types.Object),
+	}
+
+	// Type-check the package containing only file f.
+	// Check returns a *types.Package.
+	pkg, err := conf.Check("cmd/hello", fset, []*ast.File{f}, info)
+	if err != nil {
+		log.Fatal(err) // type error
+	}
+
+	for id, obj := range info.Defs {
+		fmt.Printf("%s: %q defines %v\n",
+			fset.Position(id.Pos()), id.Name, obj)
+	}
+	for id, obj := range info.Uses {
+		fmt.Printf("%s: %q uses %v\n",
+			fset.Position(id.Pos()), id.Name, obj)
+	}
+
+	// Look up some the s variable:
+	info.Defs["s"]
+
+	fmt.Printf("Package  %q\n", pkg.Path())
+	fmt.Printf("Name:    %s\n", pkg.Name())
+	fmt.Printf("Imports: %s\n", pkg.Imports())
+	fmt.Printf("Scope:   %s\n", pkg.Scope())
+
+	ast.Print(fset, f)
 }
+
 func TestCommentGroup(t *testing.T) {
 
 }

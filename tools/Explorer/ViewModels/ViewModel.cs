@@ -709,6 +709,7 @@ namespace XppReasoningWpf.ViewModels
                     // user comes back to the query editor.
                     this.CachedQueryResult[queryEditor] = result;
 
+#if !NETCOREAPP
                     // Log the fact that a query has been evaluated to telemetry.
                     (Application.Current as App).Telemetry?.TrackEvent(
                         "QueryExecution", new Dictionary<string, string>()
@@ -717,7 +718,7 @@ namespace XppReasoningWpf.ViewModels
                             ["ExecutionTime"] = queryExecutionTime.ElapsedMilliseconds.ToString()
                         }
                     );
-
+#endif
                     this.model.QueryResult = result;
                 },
 
@@ -770,6 +771,7 @@ namespace XppReasoningWpf.ViewModels
                    // user comes back to the query editor.
                    this.CachedQueryResult[queryEditor] = result;
 
+#if !NETCOREAPP
                    // Log the fact that a query has been evaluated to telemetry.
                    (Application.Current as App).Telemetry?.TrackEvent(
                       "CheckQuery", new Dictionary<string, string>()
@@ -778,7 +780,7 @@ namespace XppReasoningWpf.ViewModels
                           ["ExecutionTime"] = queryCheckTime.ElapsedMilliseconds.ToString()
                       }
                   );
-
+#endif
                    this.model.QueryResult = result;
                },
 

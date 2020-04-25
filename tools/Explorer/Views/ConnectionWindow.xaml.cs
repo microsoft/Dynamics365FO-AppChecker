@@ -53,9 +53,11 @@ namespace XppReasoningWpf
                 this.model.CreateServer(
                     Properties.Settings.Default.Server, Properties.Settings.Default.Port, this.Username, this.Password);
 
+#if !NETCOREAPP
                 var telemetry = (Application.Current as App).Telemetry;
                 if (telemetry != null)
                     telemetry.Context.User.AccountId = this.Username;
+#endif
             }
             else
             {
