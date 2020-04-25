@@ -18,6 +18,8 @@ namespace XppReasoningWpf
         /// Specifies whether or not telemetry information should be sent to the 
         /// endpoint defined by the key below.
         /// </summary>
+
+#if !NETCOREAPP
         private bool SendTelemetry = false;
 
         public TelemetryClient Telemetry { get; private set; }
@@ -45,12 +47,14 @@ namespace XppReasoningWpf
                 this.Telemetry.TrackEvent("Application Start");
             }
         }
-
+#endif
         protected override void OnExit(ExitEventArgs e)
         {
+#if !NETCOREAPP
             // Send outstanding events to the cloud.
             this.Telemetry?.Flush();
-            
+#endif
+
             // Allow time for flushing:
             System.Threading.Thread.Sleep(1000);
 
