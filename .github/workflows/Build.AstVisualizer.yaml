@@ -28,6 +28,6 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
      
     - name: Build AstVisualizer with MSBuild
-      run: msbuild tools\AstVisualizer\AstVisualizer.sln
+      run: msbuild tools\AstVisualizer\AstVisualizer\AstVisualizer.csproj
 
       
