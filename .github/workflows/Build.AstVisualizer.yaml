@@ -22,12 +22,12 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Restore Packages for AstVisualizer project
-      run: nuget restore tools\AstVisualizer\AstVisualizer\AstVisualizer.csproj
+      run: nuget restore tools\AstVisualizer\AstVisualizer.sln
          
     - name: Setup msbuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
      
     - name: Build AstVisualizer with MSBuild
-      run: msbuild tools\AstVisualizer\AstVisualizer\AstVisualizer.csproj
+      run: msbuild tools\AstVisualizer\AstVisualizer.sln
 
       
