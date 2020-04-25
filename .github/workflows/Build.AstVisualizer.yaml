@@ -1,6 +1,6 @@
 # This is a workflow to build the AST Visualizer application
 
-name: Build.AStVisualizer
+name: Build.AstVisualizer
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events for any branch.
@@ -22,12 +22,12 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Restore Packages for AstVisualizer project
-      run: nuget restore tools\AstVisualizer\AstVisualizer.sln
+      run: nuget restore tools\AstVisualizer\AstVisualizer\AstVisualizer.csproj
          
     - name: Setup msbuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
      
     - name: Build AstVisualizer with MSBuild
-      run: msbuild tools\AstVisualizer\AstVisualizer.sln
+      run: msbuild tools\AstVisualizer\AstVisualizer\AstVisualizer.csproj
 
       

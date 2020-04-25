@@ -89,9 +89,6 @@ func TestTypeResolution(t *testing.T) {
 			fset.Position(id.Pos()), id.Name, obj)
 	}
 
-	// Look up some the s variable:
-	info.Defs["s"]
-
 	fmt.Printf("Package  %q\n", pkg.Path())
 	fmt.Printf("Name:    %s\n", pkg.Name())
 	fmt.Printf("Imports: %s\n", pkg.Imports())
