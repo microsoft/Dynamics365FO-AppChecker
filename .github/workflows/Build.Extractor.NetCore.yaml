@@ -1,0 +1,33 @@
+# This is a workflow to build the AST Explorer application in .NET Core
+
+name: Build.Explorer
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events for any branch.
+on: [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    
+  - uses: actions/setup-dotnet@v1
+    with:
+       dotnet-version: '3.1.100' # SDK Version to use.
+
+  -name: Build and publish
+   Run: dotnet publish “tools\Socratex Explorer.sln”  -r win-x64 --self-contained true -o "tools\explorer\publish.netcore" -c release -p:PublishSingleFile=true
+
+  -name: Copy to deployment
+  -uses: actions/upload-artifact@v1
+   with:
+      name: SocrateX.Explorer.netcore
+      path: "tools\explorer\publish.netcore"
+   
