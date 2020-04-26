@@ -15,19 +15,21 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    -uses: actions/checkout@v2
-    
-    -uses: actions/setup-dotnet@v1
-     with:
-       dotnet-version: '3.1' # SDK Version to use.
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        - name: Checkout the code...
+          uses: actions/checkout@v2
 
-    -name: Build and publish
-     Run: dotnet publish “tools\Socratex Explorer.sln”  -r win-x64 --self-contained true -o "tools\explorer\publish.netcore" -c release -p:PublishSingleFile=true
+        - name: Setup .NET core
+          uses: actions/setup-dotnet@v1
+          with:
+             dotnet-version: '3.1' # SDK Version to use.
 
-    -name: Copy to deployment
-    -uses: actions/upload-artifact@v1
-     with:
-       name: SocrateX.Explorer.netcore
-       path: "tools\explorer\publish.netcore"
+        - name: Build and publish
+          run: dotnet publish “tools\\Socratex Explorer.sln”  -r win-x64 --self-contained true -o "tools\\explorer\\publish.netcore" -c release -p:PublishSingleFile=true
+
+        - name: Upload compiled app so it can be downloaded.
+          uses: actions/upload-artifact@v1
+          with:
+             name: SocrateX.Explorer.netcore
+             path: "tools\explorer\\publish.netcore"
        
