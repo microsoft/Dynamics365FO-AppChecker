@@ -25,11 +25,11 @@ jobs:
              dotnet-version: '3.1.100' # SDK Version to use.
 
         - name: Build and publish
-          run: dotnet publish “tools\\Socratex Explorer.sln”  -r win-x64 --self-contained true -o "tools\\explorer\\publish.netcore" -c release -p:PublishSingleFile=true
+          run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true  "tools\Explorer\Socratex Explorer.netcore.csproj"
 
         - name: Upload compiled app so it can be downloaded.
           uses: actions/upload-artifact@v1
           with:
              name: SocrateX.Explorer.netcore
-             path: "tools\explorer\\publish.netcore"
+             path: "tools\\Explorer\\bin\\Release\\netcoreapp3.1\\win-x64\\publish"
        
