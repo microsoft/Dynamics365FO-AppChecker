@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,7 +7,24 @@
     <RootNamespace>XppReasoningWpf</RootNamespace>
     <AssemblyName>SocrateX</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateResourceMSBuildArchitecture Condition=" '$(GenerateResourceMSBuildArchitecture)' == '' ">CurrentArchitecture</GenerateResourceMSBuildArchitecture>
+    <GenerateResourceMSBuildRuntime Condition=" '$(GenerateResourceMSBuildRuntime)' == '' ">CurrentRuntime</GenerateResourceMSBuildRuntime>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>Alecive-Flatwoken-Apps-File-Xml.ico</PackageIcon>
+    <RepositoryUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</RepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Images\Alecive-Flatwoken-Apps-File-Xml.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AboutBox" version="2.0.0" />
     <PackageReference Include="AvalonEdit" version="6.0.1" />

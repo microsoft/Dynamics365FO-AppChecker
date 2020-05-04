@@ -238,9 +238,9 @@ namespace XppReasoningWpf
                         var parts = name.Split(':');
                         var kind = parts[0];
 
-                        if (kind == "class" || kind == "table" || kind == "interface")
+                        if (kind == "class" || kind == "table" || kind == "interface" || kind == "map" || kind == "view")
                         {
-                            string xquery = string.Format(@"for $c in (/Class | /Table | /Interface)[@Artifact='{0}'] where position()=1", name) + " return <Source Language='{$c/@Language}'>{$c/@Source}</Source>";
+                            string xquery = string.Format(@"for $c in (/Class | /Table | /Interface | /Map | /View)[@Artifact='{0}'] where position()=1", name) + " return <Source Language='{$c/@Language}'>{$c/@Source}</Source>";
                             sourceDoc = await this.GetSourceDocAsync(xquery);
                         }
                         else if (kind == "form")
@@ -303,6 +303,8 @@ namespace XppReasoningWpf
             return string.Compare(name, "Class", StringComparison.OrdinalIgnoreCase) == 0
                 || string.Compare(name, "Table", StringComparison.OrdinalIgnoreCase) == 0
                 || string.Compare(name, "Query", StringComparison.OrdinalIgnoreCase) == 0
+                || string.Compare(name, "Map", StringComparison.OrdinalIgnoreCase) == 0
+                || string.Compare(name, "View", StringComparison.OrdinalIgnoreCase) == 0
                 || string.Compare(name, "Form", StringComparison.OrdinalIgnoreCase) == 0;
         }
 
@@ -462,7 +464,11 @@ namespace XppReasoningWpf
                                             int sl = -1, sc = -1, el = -1, ec = -1;
                                             FindPositionsInSelf(positionElement, ref sl, ref sc, ref el, ref ec);
 
-                                            if (kind == "form" || kind == "query" || kind == "table" || kind == "class" || kind == "dataentity")
+                                            if (kind == "form" 
+                                             || kind == "query" 
+                                             || kind == "table" || kind == "map" || kind == "view"
+                                             || kind == "class"
+                                             || kind == "dataentity")
                                             {
                                                 this.ShowSourceAt(artifact, "X++", sl, sc, el, ec);
                                                 return;
