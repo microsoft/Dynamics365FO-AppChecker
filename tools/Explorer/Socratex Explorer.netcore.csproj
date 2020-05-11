@@ -12,6 +12,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>Alecive-Flatwoken-Apps-File-Xml.ico</PackageIcon>
     <RepositoryUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</RepositoryUrl>
+    <ApplicationIcon>Alecive-Flatwoken-Apps-File-Xml.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
