@@ -119,10 +119,12 @@ namespace AstVisualizer
                 {
                     var (e, l) = this.Language;
 
-                    SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.FileName = "document"; // Default file name
-                    dlg.DefaultExt = e; // Default file extension
-                    dlg.Filter = l + "  Files |*" + e; // Filter files by extension
+                    SaveFileDialog dlg = new SaveFileDialog
+                    {
+                        FileName = "document", // Default file name
+                        DefaultExt = e, // Default file extension
+                        Filter = l + "  Files |*" + e // Filter files by extension
+                    };
 
                     // Show save file dialog box
                     Nullable<bool> result = dlg.ShowDialog();
@@ -139,9 +141,11 @@ namespace AstVisualizer
             OpenAstCommand = new RelayCommand(
                 p =>
                 {
-                    OpenFileDialog dlg = new OpenFileDialog();
-                    dlg.DefaultExt = ".xml"; // Default file extension
-                    dlg.Filter = "XML Files |*.xml"; // Filter files by extension
+                    OpenFileDialog dlg = new OpenFileDialog
+                    {
+                        DefaultExt = ".xml", // Default file extension
+                        Filter = "XML Files |*.xml" // Filter files by extension
+                    };
 
                     // Show open file dialog box
                     Nullable<bool> result = dlg.ShowDialog();
@@ -156,10 +160,12 @@ namespace AstVisualizer
             SaveAstCommand = new RelayCommand(
                 p =>
                 {
-                    SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.FileName = "document"; // Default file name
-                    dlg.DefaultExt = ".xml"; // Default file extension
-                    dlg.Filter = "XML Files |*.xml"; // Filter files by extension
+                    SaveFileDialog dlg = new SaveFileDialog
+                    {
+                        FileName = "document", // Default file name
+                        DefaultExt = ".xml", // Default file extension
+                        Filter = "XML Files |*.xml" // Filter files by extension
+                    };
 
                     // Show save file dialog box
                     Nullable<bool> result = dlg.ShowDialog();
@@ -175,9 +181,11 @@ namespace AstVisualizer
             OpenQueryCommand = new RelayCommand(
                 p =>
                 {
-                    OpenFileDialog dlg = new OpenFileDialog();
-                    dlg.DefaultExt = ".xq"; // Default file extension
-                    dlg.Filter = "xq Files |*.xq"; // Filter files by extension
+                    OpenFileDialog dlg = new OpenFileDialog
+                    {
+                        DefaultExt = ".xq", // Default file extension
+                        Filter = "xq Files |*.xq" // Filter files by extension
+                    };
 
                     // Show open file dialog box
                     Nullable<bool> result = dlg.ShowDialog();
@@ -212,10 +220,12 @@ namespace AstVisualizer
             SaveQueryResultsCommand = new RelayCommand(
                 p =>
                 {
-                    SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.FileName = "document"; // Default file name
-                    dlg.DefaultExt = ".xml"; // Default file extension
-                    dlg.Filter = "XML Files |*.xml"; // Filter files by extension
+                    SaveFileDialog dlg = new SaveFileDialog
+                    {
+                        FileName = "document", // Default file name
+                        DefaultExt = ".xml", // Default file extension
+                        Filter = "XML Files |*.xml" // Filter files by extension
+                    };
 
                     // Show save file dialog box
                     Nullable<bool> result = dlg.ShowDialog();

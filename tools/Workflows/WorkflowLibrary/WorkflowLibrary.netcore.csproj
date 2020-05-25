@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>WorkflowLibrary</AssemblyName>
+    <RootNamespace>WorkflowLibrary</RootNamespace>
+    <PackageLicenseFile>..\MIT License.md</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BaseXInterface\BaseXInterface.netcore.csproj" />
+  </ItemGroup>
+
+</Project>

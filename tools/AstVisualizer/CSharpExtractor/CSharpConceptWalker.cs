@@ -22,12 +22,12 @@ namespace CSharpExtractor
     /// </summary>
     class CSharpConceptWalker : CSharpSyntaxWalker
     {
-        private XDocument document;
-        private CSharpCompilation compilation;
-        private SyntaxTree tree;
-        private SemanticModel semanticModel;
+        private readonly XDocument document;
+        private readonly CSharpCompilation compilation;
+        private readonly SyntaxTree tree;
+        private readonly SemanticModel semanticModel;
         private SymbolDisplayFormat symbolDisplayFormat;
-        private IDictionary<string, string> classBaseList = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> classBaseList = new Dictionary<string, string>();
 
         /// <summary>
         /// Indicates whether or not the source should be included in the node defining classes and 
