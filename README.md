@@ -2,7 +2,7 @@
 | Project | Status |
 | --- | --- |
 | Explorer .NET Framework | ![Build.Socratex](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.Socratex/badge.svg)|
-| Explorer .NET Core ![Build.Explorer.netcore](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.Explorer.netcore/badge.svg)
+| Explorer .NET Core | ![Build.Explorer.netcore](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.Explorer.netcore/badge.svg) |
 | Ast Visualizer| ![Build.AStVisualizer](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.AStVisualizer/badge.svg) |
 | Python Extractor | ![Python Extractor](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Python%20Extractor/badge.svg)|
 | Go Extractor| ![Go Extractor](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Go%20Extractor/badge.svg) |
