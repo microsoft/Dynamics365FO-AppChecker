@@ -14,7 +14,7 @@ let $packages := ('applicationfoundation', 'applicationplatform', '', 'applicati
         'directory', 'calendar', 'dimensions', 'currency',
         'unitofmeasure', 'measurement', 'sourcedocumentationtypes', 'sourcedocumentation',
         'ledger', 'electronicreportingdotnetutils', 'contactperson', 'datasharing',
-        'policy', 'electronicreportingcore', 'banktypes', 'project', 
+        'policy', 'electronicreportingcore', 'banktypes', 'project',
         'electronicreportingmapping', 'tax', 'subledger', 'personnelcore',
         'electronicreportingforax', 'businessprocess', 'casemanagement', 'generalledger',
         'electronicreporting', 'personnelmanagement', 'financialreporting', 'fiscalbooks',
@@ -25,16 +25,18 @@ let $r := <MethodsOnClasses>
 {
     for $a in /Class[lower-case(@Package)=$packages]
     for $m in $a/Method
-    let $visibility := if (lower-case($m/@IsPrivate) = 'true') then "private" 
-                  else if (lower-case($m/@IsProtected) = 'true') then 'protected' 
-                  else if (lower-case($m/@IsPublic) = 'true') then "public" 
+    let $visibility := if (lower-case($m/@IsPrivate) = 'true') then "private"
+                  else if (lower-case($m/@IsProtected) = 'true') then 'protected'
+                  else if (lower-case($m/@IsPublic) = 'true') then "public"
                   else if (lower-case($m/@IsInternal) = 'true') then "internal"
                   else "public"
     return <Record>
         <Artifact>{lower-case($a/@Artifact)}</Artifact>
+        <Class>{lower-case($a/@Name)}</Class>
         <Method>{lower-case($m/@Name)}</Method>
-        <IsAbstract>{lower-case($m/@IsAbstract)}</IsAbstract>        
-		<IsFinal>{lower-case($m/@IsFinal)}</IsFinal>
+        <IsAbstract>{lower-case($m/@IsAbstract)}</IsAbstract>
+        <IsFinal>{lower-case($m/@IsFinal)}</IsFinal>
+        <IsStatic>{lower-case($m/@IsStatic)}</IsStatic>
         <Visibility>{string($visibility)}</Visibility>
         <CMP>{local:MethodComplexity($m)}</CMP>
         <LOC>{$m/@EndLine - $m/@StartLine + 1}</LOC>
