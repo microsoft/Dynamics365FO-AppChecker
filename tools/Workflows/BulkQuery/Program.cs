@@ -34,7 +34,25 @@
         {
             if (args == null || !args.Any())
             {
-                Console.WriteLine("No scripts provided");
+                Console.WriteLine("No script arguments provided");
+                return;
+            }
+            
+            if (string.IsNullOrEmpty(server))
+            {
+                Console.WriteLine("No server name or URL provided");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                Console.WriteLine("No password provided");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(database))
+            {
+                Console.WriteLine("No database name provided");
                 return;
             }
 
@@ -42,33 +60,47 @@
 
             var files = new List<string>();
 
-            foreach (var arg in args)
+            try
             {
-                var p = Path.GetDirectoryName(arg);
-                var l = Directory.EnumerateFiles(p, Path.GetFileName(arg));
-                files.AddRange(l);
-            }
-
-            if (outputDirectory == null)
-                outputDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            if (verbose)
-            {
-                Console.WriteLine("Server      {0}", server);
-                Console.WriteLine("Database    {0}", database);
-                Console.WriteLine("Username    {0}", username);
-                Console.WriteLine("Port        {0}", port);
-                Console.WriteLine("extension   {0}", extension);
-                Console.WriteLine("Target dir  {0}", outputDirectory.ToString());
-                Console.WriteLine();
-                Console.WriteLine("Files");
-                foreach (var file in files)
+                foreach (var arg in args)
                 {
-                    Console.WriteLine("    {0}", file);
+                    var p = Path.GetDirectoryName(arg);
+                    var l = Directory.EnumerateFiles(p, Path.GetFileName(arg));
+                    files.AddRange(l);
                 }
-            }
 
-            Extract(s, database, files, outputDirectory, extension, verbose);
+                if (!files.Any())
+                {
+                    Console.WriteLine("No scripts selected");
+                    return;
+                }
+
+                if (outputDirectory == null)
+                    outputDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+                if (verbose)
+                {
+                    Console.WriteLine("Server      {0}", server);
+                    Console.WriteLine("Database    {0}", database);
+                    Console.WriteLine("Username    {0}", username);
+                    Console.WriteLine("Port        {0}", port);
+                    Console.WriteLine("extension   {0}", extension);
+                    Console.WriteLine("Target dir  {0}", outputDirectory.ToString());
+                    Console.WriteLine();
+                    Console.WriteLine("Files");
+                    foreach (var file in files)
+                    {
+                        Console.WriteLine("    {0}", file);
+                    }
+                }
+
+                Extract(s, database, files, outputDirectory, extension, verbose);
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("An problem happened during execution. Please review the parameters.");
+                return;
+            }
         }
 
         private static void Extract(BaseXInterface.BaseXServer server, string database, IEnumerable<string> scripts, DirectoryInfo outputDirectory, string extension, bool verbose)
