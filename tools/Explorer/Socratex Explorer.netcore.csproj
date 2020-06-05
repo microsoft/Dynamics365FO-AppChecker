@@ -13,7 +13,11 @@
     <PackageIcon>Alecive-Flatwoken-Apps-File-Xml.ico</PackageIcon>
     <RepositoryUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</RepositoryUrl>
     <ApplicationIcon>Alecive-Flatwoken-Apps-File-Xml.ico</ApplicationIcon>
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="ApplicationExitCommand.cs" />
+  </ItemGroup>
   <ItemGroup>
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />

@@ -33,6 +33,9 @@ namespace XppReasoningWpf.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly ICommand exitApplicationCommand;
+        public ICommand ExitApplicationCommand => this.exitApplicationCommand;
+
         private readonly ICommand keyboardExecuteQueryCommand;
         public ICommand KeyboardExecuteQueryCommand => this.keyboardExecuteQueryCommand;
 
@@ -545,6 +548,11 @@ namespace XppReasoningWpf.ViewModels
                     this.OpenQueryFile();
                 }
             );
+
+            this.exitApplicationCommand = new RelayCommand(
+                p => {
+                    Application.Current.Shutdown();
+                });
 
             this.keyboardExecuteQueryCommand = new RelayCommand(
                 p =>

@@ -113,12 +113,20 @@
       <Word>let</Word>
       <Word>where</Word>
       <Word>return</Word>
+      <Word>try</Word>
+      <Word>catch</Word>
+      <Word>when</Word>
       <Word>if</Word>
       <Word>then</Word>
       <Word>else</Word>
       <Word>in</Word>
       <Word>stable order by</Word>
+      <Word>allowing empty</Word>
+      <Word>only end at</Word>
+      <Word>tumbling window</Word>
+      <Word>start at</Word>
       <Word>order by</Word>
+      <Word>group by</Word>
       <Word>instance of</Word>
       <Word>cast as</Word>
       <Word>castable as</Word>
@@ -127,7 +135,9 @@
       <Word>some</Word>
       <Word>every</Word>
       <Word>at</Word>
+      <Word>switch</Word>
       <Word>case</Word>
+      <Word>default</Word>
       <Word>and</Word>
       <Word>or</Word>
       <Word>satisfies</Word>

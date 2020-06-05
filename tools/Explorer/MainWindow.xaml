@@ -62,6 +62,7 @@ Licensed under the MIT license.
         <KeyBinding Command="{Binding SaveCommand}" Gesture='Ctrl+S'/>
         <KeyBinding Command="{Binding CreateNewQueryCommand}" Gesture='Ctrl+N'/>
         <KeyBinding Command="{Binding OpenQueryCommand}" Gesture="Ctrl+O"/>
+        <KeyBinding Command="{Binding ExitApplicationCommand}" Gesture="Alt+F4"/>
     </Window.InputBindings>
 
     <Window.Resources>
@@ -136,7 +137,7 @@ Licensed under the MIT license.
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="External Variables..." Command="{x:Static local:MainWindow.ShowExternalVariablesDialogCommand}" />
-                <MenuItem Header="_Exit" Command="local:MainWindow.ExitCommand"/>
+                <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Command="Cut" >

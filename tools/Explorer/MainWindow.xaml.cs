@@ -31,7 +31,7 @@ namespace XppReasoningWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static ICommand ExitCommand = new ApplicationExitCommand();
+        // public static ICommand ExitCommand = new ApplicationExitCommand();
 
         public static ICommand SaveResultCommand = new RoutedUICommand("Save Result", "SaveResult", typeof(MainWindow));
 
