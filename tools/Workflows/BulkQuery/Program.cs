@@ -15,8 +15,8 @@
         private const int noOfSessions = 4;
 
         /// <summary>
-        /// Downloads a set of files by executing queries against BaseX. The BaseX server is identified with 
-        /// the server URL, the username and password and optionally the port number. The queries to run are 
+        /// Downloads a set of files by executing queries against BaseX. The BaseX server is identified with
+        /// the server URL, the username and password and optionally the port number. The queries to run are
         /// given as arguments to this command. The downloaded files will have the same names as the queries,
         /// with the extension provided.
         /// </summary>
@@ -29,7 +29,7 @@
         /// <param name="outputDirectory">The target directory. If this parameter is not provided, the current working directory is used.</param>
         /// <param name="verbose">Print extra progress information to the console.</param>
         /// <param name="args">The files containing the queries to execute. A list of query files can be provided, including wildcards.</param>
-        public static void Main(string server, string password, string database, 
+        public static void Main(string server, string password, string database,
             string username="admin", DirectoryInfo outputDirectory=null, string extension="xml", int port=1984, bool verbose=false, params string[] args)
         {
             if (args == null || !args.Any())
@@ -37,7 +37,7 @@
                 Console.WriteLine("No script arguments provided");
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(server))
             {
                 Console.WriteLine("No server name or URL provided");
@@ -55,8 +55,6 @@
                 Console.WriteLine("No database name provided");
                 return;
             }
-
-            var s = new BaseXInterface.BaseXServer(server, port, username, password);
 
             var files = new List<string>();
 
@@ -94,11 +92,19 @@
                     }
                 }
 
+                var s = new BaseXInterface.BaseXServer(server, port, username, password);
+
+                if (s == null)
+                {
+                    Console.WriteLine("Unable to connect to server");
+                    return;
+                }
                 Extract(s, database, files, outputDirectory, extension, verbose);
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                Console.WriteLine("An problem happened during execution. Please review the parameters.");
+                Console.WriteLine("A problem happened during execution. Please review the parameters.");
+                Console.WriteLine(e.Message);
                 return;
             }
         }
@@ -117,7 +123,7 @@
                         {
                             if (verbose)
                             {
-                                Console.WriteLine("Extracting {0} into {1}", fn, outputFileName);
+                                Console.WriteLine("{0} -> {1}", fn, outputFileName);
                             }
                             var result = Rule.GetRuleFromFile(fn)
                                 .RunAsString(session)
@@ -130,7 +136,7 @@
                         }
                     }
                 });
-        
+
         }
     }
 }

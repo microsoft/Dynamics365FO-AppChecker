@@ -2,20 +2,19 @@
    Licensed under the MIT license. :)
 
 let $options := map { 'lax': false(), 'header': true() }
-let $packages := ('applicationsuite')
-        
+
 let $r := <Calls>
 {
-  for $c in /(Class | Table | Query | Form)[lower-case(@Package)=$packages]
-  for $m in $c/Method
-  
+  for $c in /(Class | Table | Query | Form | View)
+  for $m in $c//Method
+
   for $call in ($m//(StaticMethodCall | QualifiedCall/(SimpleQualifier | ExpressionQualifier)))
     return
          if (fn:local-name($call) ='StaticMethodCall') then
-             <Call FromClass='{$c/@Artifact}' FromMethod='{$m/@Name}' 
+             <Call FromClass='{$c/@Artifact}' FromMethod='{$m/@Name}'
                    ClassName='{$call/@ClassName}' MethodName= '{$call/@MethodName}' />
          else (: Instance call :)
-             <Call FromClass='{$c/@Artifact}' FromMethod='{$m/@Name}'  
+             <Call FromClass='{$c/@Artifact}' FromMethod='{$m/@Name}'
                    ClassName='{$call/@Type}' MethodName='{$call/../@MethodName}' />
 }
 </Calls>
@@ -26,7 +25,7 @@ let $orderedCalls := <CallsSummary>
     group by $fc := $c/@FromClass
     return <Class Name='{$fc}'>
     {
-      for $m in $c 
+      for $m in $c
       group by $fm := $m/@FromMethod
       return <FromMethod Name='{$fm}' >
       {
@@ -40,7 +39,7 @@ let $orderedCalls := <CallsSummary>
          }
          </ToClass>
       }
-      </FromMethod>      
+      </FromMethod>
     }
     </Class>
 }
@@ -55,8 +54,8 @@ let $records := <Record>
   for $tm in $tc/ToMethod
   return <Record>
      <FromClass>{lower-case($c/@Name)}</FromClass>
-     <FromMethod>{lower-case($fm/@Name)}</FromMethod> 
-     <ToClass>{lower-case($tc/@Name)}</ToClass> 
+     <FromMethod>{lower-case($fm/@Name)}</FromMethod>
+     <ToClass>{lower-case($tc/@Name)}</ToClass>
      <ToMethod>{lower-case($tm/@Name)}</ToMethod>
      <Count>{string($tm/@Count)}</Count>
    </Record>

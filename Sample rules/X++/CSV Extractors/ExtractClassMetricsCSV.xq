@@ -15,28 +15,18 @@ declare function local:MethodComplexity($m as element(Method)) as xs:integer
 };
 
 let $options := map { 'lax': false(), 'header': true() }
-let $packages := ('applicationfoundation', 'applicationplatform', '', 'applicationcommon',
-        'directory', 'calendar', 'dimensions', 'currency',
-        'unitofmeasure', 'measurement', 'sourcedocumentationtypes', 'sourcedocumentation',
-        'ledger', 'electronicreportingdotnetutils', 'contactperson', 'datasharing',
-        'policy', 'electronicreportingcore', 'banktypes', 'project', 
-        'electronicreportingmapping', 'tax', 'subledger', 'personnelcore',
-        'electronicreportingforax', 'businessprocess', 'casemanagement', 'generalledger',
-        'electronicreporting', 'personnelmanagement', 'financialreporting', 'fiscalbooks',
-        'taxengine', 'electronicreportingbusinessdoc', 'personnel', 'retail',
-        'applicationsuite')
-        
+
 let $r := <ClassMetrics>
 {
-    for $a in /Class[lower-case(@Package)=$packages]
+    for $a in /Class
     let $weightedMethodComplexity := sum(for $m in $a/Method return local:MethodComplexity($m))
     order by $weightedMethodComplexity
     return <Record>
-        <Artifact>{lower-case($a/@Artifact)}</Artifact>
-		<Name>{lower-case($a/@Name)}</Name>
         <Package>{lower-case($a/@Package)}</Package>
-        <IsAbstract>{lower-case($a/@IsAbstract)}</IsAbstract>        
-		<IsFinal>{lower-case($a/@IsFinal)}</IsFinal>
+        <Artifact>{lower-case($a/@Artifact)}</Artifact>
+        <Name>{lower-case($a/@Name)}</Name>
+        <IsAbstract>{lower-case($a/@IsAbstract)}</IsAbstract>
+        <IsFinal>{lower-case($a/@IsFinal)}</IsFinal>
         <IsStatic>{lower-case($a/@IsStatic)}</IsStatic>
         <NOAM>{count($a/Method[@IsAbstract="true"])}</NOAM>
         <LOC>{$a/@EndLine - $a/@StartLine + 1}</LOC>

@@ -11,20 +11,10 @@ declare function local:MethodComplexity($m as element(Method)) as xs:integer
 };
 
 let $options := map { 'lax': false(), 'header': true() }
-let $packages := ('applicationfoundation', 'applicationplatform', '', 'applicationcommon',
-        'directory', 'calendar', 'dimensions', 'currency',
-        'unitofmeasure', 'measurement', 'sourcedocumentationtypes', 'sourcedocumentation',
-        'ledger', 'electronicreportingdotnetutils', 'contactperson', 'datasharing',
-        'policy', 'electronicreportingcore', 'banktypes', 'project', 
-        'electronicreportingmapping', 'tax', 'subledger', 'personnelcore',
-        'electronicreportingforax', 'businessprocess', 'casemanagement', 'generalledger',
-        'electronicreporting', 'personnelmanagement', 'financialreporting', 'fiscalbooks',
-        'taxengine', 'electronicreportingbusinessdoc', 'personnel', 'retail',
-        'applicationsuite')
-        
+
 let $r := <FormMetrics>
 {
-    for $a in /Form[lower-case(@Package)=$packages]/Class
+    for $a in /Form/Class
     let $weightedMethodComplexity := sum(for $m in $a/Method return local:MethodComplexity($m))
     order by $weightedMethodComplexity
     return <Record>

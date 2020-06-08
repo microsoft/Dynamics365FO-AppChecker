@@ -9,24 +9,14 @@ declare function local:MethodComplexity($m as element(Method)) as xs:integer
 };
 
 let $options := map { 'lax': false(), 'header': true() }
-let $packages := ('applicationfoundation', 'applicationplatform', '', 'applicationcommon',
-        'directory', 'calendar', 'dimensions', 'currency',
-        'unitofmeasure', 'measurement', 'sourcedocumentationtypes', 'sourcedocumentation',
-        'ledger', 'electronicreportingdotnetutils', 'contactperson', 'datasharing',
-        'policy', 'electronicreportingcore', 'banktypes', 'project', 
-        'electronicreportingmapping', 'tax', 'subledger', 'personnelcore',
-        'electronicreportingforax', 'businessprocess', 'casemanagement', 'generalledger',
-        'electronicreporting', 'personnelmanagement', 'financialreporting', 'fiscalbooks',
-        'taxengine', 'electronicreportingbusinessdoc', 'personnel', 'retail',
-        'applicationsuite')
 
 let $r := <MethodsOnQueries>
 {
-    for $a in /Query[lower-case(@Package)=$packages]/Class
+    for $a in /Query/Class
     for $m in $a/Method
-    let $visibility := if (lower-case($m/@IsPrivate) = 'true') then "private" 
-                  else if (lower-case($m/@IsProtected) = 'true') then 'protected' 
-                  else if (lower-case($m/@IsPublic) = 'true') then "public" 
+    let $visibility := if (lower-case($m/@IsPrivate) = 'true') then "private"
+                  else if (lower-case($m/@IsProtected) = 'true') then 'protected'
+                  else if (lower-case($m/@IsPublic) = 'true') then "public"
                   else if (lower-case($m/@IsInternal) = 'true') then "internal"
                   else "public"
     return <Record>
