@@ -74,19 +74,27 @@ CREATE INDEX ON :Query(Artifact);
 CREATE INDEX ON :View(Name);
 CREATE INDEX ON :View(Artifact);
 
-// Create the packages.
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM $EXPORTDIRECTORY + "ExtractPackagesCSV.csv" AS exts
-CREATE (p:Package {Name: exts.Package, Description: exts.Description, ModelId: exts.ModelId});
-MATCH(p:Package) RETURN COUNT(p) + " packages";
+CREATE INDEX ON :Method(Name);
+CREATE INDEX ON :Method(Package, Artifact, Name);
 
-// Create the reference relationships between the packages
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractPackageDependenciesCSV.csv" AS exts
-MERGE (p:Package{Name: exts.Package})
-MERGE (ref:Package {Name: exts.References})
-CREATE (p)-[:REFERENCES]->(ref);
-MATCH(p:Package)-[r:REFERENCES]->(ref:Package) RETURN COUNT(r) + " package references";
+CREATE INDEX ON :ManagedType(Name);
+CREATE INDEX ON :ManagedType(Artifact);
+CREATE INDEX ON :ManagedMethod(Name);
+CREATE INDEX ON :ManagedMethod(Package, Artifact, Name);
+
+// Create the packages.
+// USING PERIODIC COMMIT 1000
+// LOAD CSV WITH HEADERS FROM $EXPORTDIRECTORY + "ExtractPackagesCSV.csv" AS exts
+// CREATE (p:Package {Name: exts.Package, Description: exts.Description, ModelId: exts.ModelId});
+// MATCH(p:Package) RETURN COUNT(p) + " packages";
+
+// // Create the reference relationships between the packages
+// USING PERIODIC COMMIT 1000
+// LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractPackageDependenciesCSV.csv" AS exts
+// MERGE (p:Package{Name: exts.Package})
+// MERGE (ref:Package {Name: exts.References})
+// CREATE (p)-[:REFERENCES]->(ref);
+// MATCH(p:Package)-[r:REFERENCES]->(ref:Package) RETURN COUNT(r) + " package references";
 
 // Create the classes.
 USING PERIODIC COMMIT 1000
@@ -119,13 +127,13 @@ MATCH(c:Class)-[:FIELD]-(f:ClassMember) RETURN COUNT(f) + " class members";
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractClassmethodsCSV.csv" AS exts
 MATCH (c:Class { Artifact: exts.Artifact })
-CREATE (m:Method {Name: exts.Method,
+CREATE (m:Method {Name: exts.Method, Package: exts.Package, Artifact: exts.Artifact,
           IsStatic: toBoolean(exts.IsStatic), IsFinal: toBoolean(exts.IsFinal), IsAbstract: toBoolean(exts.IsAbstract),
           Visibility: exts.Visibility, CMP: toInteger(exts.CMP), LOC: toInteger(exts.LOC), NOS: toInteger(exts.NOS) })
 MERGE (c)-[:DECLARES]-> (m);
 MATCH(c:Class)-[:DECLARES]-(m:Method) RETURN COUNT(m) + " class methods";
 
-// attributes on class methods.
+// Attributes on class methods.
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractClassMethodAttributesCSV.csv" AS exts
 MATCH (c:Class {Name: exts.Class}) -[:DECLARES]->(m:Method { Name: exts.Method})
@@ -152,8 +160,8 @@ MATCH(c:Class) -[r:HASATTRIBUTE]-> (a:Class) RETURN COUNT(r) + " class attribute
 // Interfaces
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractinterfacesCSV.csv" AS exts
-MATCH(p:Package {Name: exts.Package})
-CREATE (m:Interface {Artifact: exts.Artifact, Name: exts.Name })
+MERGE(p:Package {Name: exts.Package})
+CREATE (m:Interface {Artifact: exts.Artifact, Name: exts.Name, Package: exts.Package })
 MERGE (p) -[:CONTAINS]-> (m);
 MATCH (m:Interface) RETURN COUNT(m) + " interfaces";
 
@@ -161,7 +169,7 @@ MATCH (m:Interface) RETURN COUNT(m) + " interfaces";
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractInterfaceMethodsCSV.csv" AS exts
 MATCH (c:Interface { Artifact: exts.Artifact })
-CREATE (m:Method {Name: exts.Method })
+CREATE (m:Method {Name: exts.Method, Package: exts.Package, Artifact: exts.Artifact })
 MERGE (c)-[:DECLARES]-> (m);
 MATCH (c:Interface) -[:DECLARES]-> (m:Method) RETURN COUNT(m) + " interface methods";
 
@@ -214,10 +222,12 @@ MATCH(t:Table)-[:HASFIELD]->(f:TableField) RETURN COUNT(f) + " table fields";
 // Create table classes linking to tables created above.
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractTableMetricsCSV.csv" AS exts
-CREATE (c:Class {Artifact: exts.Artifact, Name: exts.Name,
+CREATE (c:Class {Artifact: exts.Artifact, Name: exts.Name, Package: exts.Package,
                  LOC: toInteger(exts.LOC), NOM: toInteger(exts.NOM), WMC: toInteger(exts.WMC), NOPM: toInteger(exts.NOPM), NOS: toInteger(exts.NOS) })
 WITH c, exts
-MATCH (t:Table {Artifact: exts.Artifact})
+MERGE (p:Package {Name: exts.Package})
+WITH c, exts
+MATCH (p) -[:CONTAINS]-> (t:Table {Artifact: exts.Artifact})
 MERGE (t) -[:BEHAVIOR]-> (c);
 MATCH(t:Table)-[r:BEHAVIOR]->(c:Class) RETURN COUNT(r) + " table behaviors";
 
@@ -225,7 +235,7 @@ MATCH(t:Table)-[r:BEHAVIOR]->(c:Class) RETURN COUNT(r) + " table behaviors";
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractTableMethodsCSV.csv" AS exts
 MATCH (t:Table{Name: exts.Name}) -[:BEHAVIOR]-> (c:Class)
-CREATE (m:Method {Name: exts.Method,
+CREATE (m:Method {Name: exts.Method, Package: exts.Package, Artifact: exts.Artifact,
                   IsAbstract: toBoolean(exts.IsAbstract), IsFinal: toBoolean(exts.IsFinal), IsStatic: toBoolean(exts.IsStatic),
                   Visibility: exts.Visibility, CMP: toInteger(exts.CMP), LOC: toInteger(exts.LOC), NOS: toInteger(exts.NOS) })
 MERGE (c)-[:DECLARES]->(m);
@@ -239,7 +249,51 @@ MATCH (a:Class) WHERE ((a.Name = exts.Attribute) or (a.Name = exts.Attribute + "
 MERGE (m) -[:HASATTRIBUTE]-> (a);
 MATCH (t:Table) -[:BEHAVIOR]-> (c:Class) -[:DECLARES]-> (m:Method) -[r:HASATTRIBUTE]-> (a:Class) RETURN COUNT(r) + " table method attributes";
 
-// TODO: Views. ExtractViews written.
+// Views (metadata part).
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractViewsCSV.csv" AS exts
+CREATE (t:View {Artifact: exts.Artifact, Name: exts.Name, Package: exts.Package,
+                 Label: exts.Label, TableGroup: exts.TableGroup})
+MERGE (p:Package{Name: exts.Package})
+MERGE (p)-[:CONTAINS]->(t);
+MATCH(t:View) RETURN COUNT(t) + " views";
+
+// View fields
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractViewFieldsCSV.csv" AS exts
+MATCH (t:View{Name: exts.ViewName})
+CREATE (f:ViewField{Name: exts.FieldName, Type: exts.Type, Label: exts.Label,
+                     Mandatory: toBoolean(exts.Mandatory), Visible: toBoolean(exts.Visible), EDT: exts.ExtendedDataType})
+MERGE(t)-[:HASFIELD]->(f);
+MATCH(t:View)-[:HASFIELD]->(f:ViewField) RETURN COUNT(f) + " view fields";
+
+// View behaviors
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractViewMetricsCSV.csv" AS exts
+CREATE (c:Class {Artifact: exts.Artifact, Name: exts.Name,
+                 LOC: toInteger(exts.LOC), NOM: toInteger(exts.NOM), WMC: toInteger(exts.WMC), NOPM: toInteger(exts.NOPM), NOS: toInteger(exts.NOS) })
+WITH c, exts
+MATCH (p:Package {Name:exts.Package}) -[:CONTAINS]-> (t:View {Artifact: exts.Artifact})
+MERGE (t) -[:BEHAVIOR]-> (c);
+MATCH(t:View) -[r:BEHAVIOR]-> (c:Class) RETURN COUNT(r) + " view behaviors";
+
+// Extract the methods on the views
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractViewMethodsCSV.csv" AS exts
+MATCH (t:View{Name: exts.Name}) -[:BEHAVIOR]-> (c:Class)
+CREATE (m:Method {Name: exts.Method, Package: exts.Package, Artifact: exts.Artifact,
+                  IsAbstract: toBoolean(exts.IsAbstract), IsFinal: toBoolean(exts.IsFinal), IsStatic: toBoolean(exts.IsStatic),
+                  Visibility: exts.Visibility, CMP: toInteger(exts.CMP), LOC: toInteger(exts.LOC), NOS: toInteger(exts.NOS) })
+MERGE (c)-[:DECLARES]->(m);
+MATCH (t:View) -[:BEHAVIOR]-> (c:Class) -[r:DECLARES]-> (m:Method) RETURN COUNT(m) + " view methods";
+
+// attributes on view methods.
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractViewMethodAttributesCSV.csv" AS exts
+MATCH (p:Package {Name: exts.Package}) -[:CONTAINS]-> (t:View {Name: exts.View}) -[:BEHAVIOR]-> (c:Class) -[:DECLARES]->(m:Method { Name: exts.Method})
+MATCH (a:Class) WHERE ((a.Name = exts.Attribute) or (a.Name = exts.Attribute + "attribute"))
+MERGE (m) -[:HASATTRIBUTE]-> (a);
+MATCH (t:View) -[:BEHAVIOR]-> (c:Class) -[:DECLARES]-> (m:Method) -[r:HASATTRIBUTE]-> (a:Class) RETURN COUNT(r) + " view method attributes";
 
 // Create the forms metadata artifact
 USING PERIODIC COMMIT 1000
@@ -262,7 +316,8 @@ MATCH (f:Form) -[r:BEHAVIOR]-> (c:Class) RETURN count(r) + " form behaviors";
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractFormsMethodsCSV.csv" AS exts
 MATCH (f:Form{ Artifact: exts.Artifact }) -[:BEHAVIOR] ->(c:Class)
-CREATE (m:Method {Name: exts.Name, IsAbstract: toBoolean(exts.IsAbstract), IsStatic: toBoolean(exts.IsStatic), IsFinal: toBoolean(exts.IsFinal),
+CREATE (m:Method {Name: exts.Name, Package: exts.Package, Artifact: exts.Artifact,
+                  IsAbstract: toBoolean(exts.IsAbstract), IsStatic: toBoolean(exts.IsStatic), IsFinal: toBoolean(exts.IsFinal),
                   Visibility: exts.Visibility, CMP: toInteger(exts.CMP), LOC: toInteger(exts.LOC), NOS: toInteger(exts.NOS) })
 MERGE (c)-[:DECLARES]-> (m);
 MATCH (f:Form) -[:BEHAVIOR]-> (c:Class) -[r:DECLARES]-> (m:Method) RETURN COUNT(m) + " form methods";
@@ -296,7 +351,7 @@ MATCH (t:Query) -[r:BEHAVIOR]-> (c:Class) RETURN COUNT(r) + " query behaviors";
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractQueryMethodsCSV.csv" AS exts
 MATCH (q:Query { Artifact: exts.Artifact }) -[:BEHAVIOR] ->(c:Class)
-CREATE (m:Method {Name: exts.Name,
+CREATE (m:Method {Name: exts.Name, Package: exts.Package, Artifact: exts.Artifact,
                   IsAbstract: toBoolean(exts.IsAbstract), IsStatic: toBoolean(exts.IsStatic), IsFinal: toBoolean(exts.IsFinal),
                   Visibility: exts.Visibility, CMP: toInteger(exts.CMP), LOC: toInteger(exts.LOC), NOS: toInteger(exts.NOS) })
 CREATE (c)-[:DECLARES]-> (m);
@@ -309,3 +364,108 @@ MATCH (q:Query { Artifact: exts.Artifact })
 MERGE (t:Table { Name: exts.Table})
 CREATE (q)-[:CONSUMES]-> (t);
 MATCH (q:Query) -[r:CONSUMES]-> (t:Table) RETURN COUNT(r) + " query table references";
+
+// Now wire in the cross reference information. This information is provided by the cross reference
+// database, not the XML database. Issue the command:
+//
+// $ sqlcmd -S . -d DYNAMICSXREFDB -E -s, -W -I script.sql -o xref.csv
+//
+// where script.sql contains the following select statement
+//  select  source.[Path] as sourcePath, sourceModule.Module as 'SourceModule',
+//         target.[Path] as targetPath, targetModule.Module as targetModule
+//        ,count(target.Path) as cnt
+//  from dbo.[References] as refs
+//  join dbo.[Names] as source on refs.SourceId = source.Id
+//  join dbo.Modules as sourceModule on source.ModuleId = sourceModule.Id
+//  join dbo.[Names] as target on refs.TargetId = target.Id
+//  join dbo.Modules as targetModule on target.ModuleId = targetModule.Id
+//  where refs.kind=1 -- Call. Even references to fields are marked as calls, prompting filtering below.
+//  and (target.Path like '/Classes/%/Methods/%'
+//    or target.Path like '/Tables/%/Methods/%'
+//    or target.Path like '/Queries/%/Methods/%'
+//    or target.Path like '/Forms/%/Methods/%'
+//    or target.Path like '/Views/%/Methods/%')
+//  group by source.Path, sourceModule.Module, target.Path, targetModule.Module
+//
+// This will leave a csv file called xref.csv in the current directory
+
+USING PERIODIC COMMIT 5000
+LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "xref.csv" AS exts
+WITH split(toLower(exts.sourcePath), "/") as sourceParts,
+     split(toLower(exts.targetPath), "/") AS targetParts,
+     toInteger(exts.cnt) AS cnt,
+     toLower(exts.SourceModule) AS sourceModule,
+     toLower(exts.targetModule) AS targetModule
+WITH CASE sourceParts[1]
+    WHEN "classes" THEN ["class", sourceParts[2], sourceParts[4]]
+    WHEN "tables" THEN ["table", sourceParts[2], sourceParts[4]]
+    WHEN "queries" THEN ["query", sourceParts[2], "query$" + sourceParts[4]]
+    WHEN "forms" THEN ["form", sourceParts[2], "form$" + sourceParts[4]]
+    WHEN "views" THEN ["view", sourceParts[2], sourceParts[4]]
+    ELSE [sourceParts[1],  sourceParts[4]]
+END AS sourceTriplet,
+CASE targetParts[1]
+    WHEN "classes" THEN ["class", (targetParts[2]), (targetParts[4])]
+    WHEN "tables" THEN ["table", (targetParts[2]), toLower(targetParts[4])]
+    WHEN "queries" THEN ["query", (targetParts[2]), toLower("query$" + targetParts[4])]
+    WHEN "forms" THEN ["form", (targetParts[2]), toLower("form$" + targetParts[4])]
+    WHEN "views" THEN ["view", (targetParts[2]), toLower(targetParts[4])]
+    ELSE [targetParts[1], targetParts[4]]
+END AS targetTriplet, sourceModule, targetModule, cnt
+WITH sourceModule, sourceTriplet[0] as sourceKind, sourceTriplet[1] as sourceArtifactName, sourceTriplet[2] as sourceMethod,
+     targetModule, targetTriplet[0] as targetKind, targetTriplet[1] as targetArtifactName, targetTriplet[2] as targetMethod,
+     cnt
+//return sourceModule, sourceKind, sourceArtifactName, targetModule, targetKind, targetArtifactName;
+MATCH (sm:Method) WHERE sm.Package = sourceModule and sm.Artifact = sourceKind + ":" + sourceArtifactName and sm.Name = sourceMethod
+MATCH (tm:Method) WHERE tm.Package = targetModule and tm.Artifact = targetKind + ":" + targetArtifactName and tm.Name = targetMethod
+MERGE (sm) -[:CALLS {Weight: cnt}]->(tm);
+MATCH (p1) -[r:CALLS]->(p2) RETURN count(r) +" calls";
+
+// Extract the information that creates the managed types and methods from the cross reference
+// select source.[Path] as sourcePath, sourceModule.Module as sourceModule,
+//        target.[Path] as targetPath, targetModule.Module as targetModule
+//     ,count(target.Path) as cnt
+// from dbo.[References] as refs
+// join dbo.[Names] as source on refs.SourceId = source.Id
+// join dbo.Modules as sourceModule on source.ModuleId = sourceModule.Id
+// join dbo.[Names] as target on refs.TargetId = target.Id
+// join dbo.Modules as targetModule on target.ModuleId = targetModule.Id
+// where refs.kind=1 -- Call. Even references to fields are marked as calls, prompting filtering below.
+// and (target.Path like '/ClrType/%/Methods/%')
+// group by source.Path, sourceModule.Module, target.Path, targetModule.Module
+//
+// Into a file called clrtypes.csv.
+//
+USING PERIODIC COMMIT 5000
+LOAD CSV WITH HEADERS FROM $EXPORTDIRECTORY + "clrtypes.csv" AS exts
+WITH split(toLower(exts.sourcePath), "/") as sourceParts,
+     split(toLower(exts.targetPath), "/") AS targetParts,
+     toInteger(exts.cnt) AS cnt,
+     toLower(exts.sourceModule) AS sourceModule,
+     toLower(exts.targetModule) AS targetModule
+WITH CASE sourceParts[1]
+    WHEN "classes" THEN ["class", sourceParts[2], sourceParts[4]]
+    WHEN "tables" THEN ["table", sourceParts[2], sourceParts[4]]
+    WHEN "queries" THEN ["query", sourceParts[2], "query$" + sourceParts[4]]
+    WHEN "forms" THEN ["form", sourceParts[2], "form$" + sourceParts[4]]
+    WHEN "views" THEN ["view", sourceParts[2], sourceParts[4]]
+    ELSE [sourceParts[1],  sourceParts[4]]
+END AS sourceTriplet,
+CASE targetParts[1]
+    WHEN "clrtype" THEN ["clrtype", (targetParts[2]), (targetParts[4])]
+    ELSE [targetParts[1], targetParts[4]]
+END AS targetTriplet, sourceModule, targetModule, cnt
+WITH sourceModule, sourceTriplet[0] as sourceKind, sourceTriplet[1] as sourceArtifactName, sourceTriplet[2] as sourceMethod,
+     targetModule, targetTriplet[0] as targetKind, targetTriplet[1] as targetArtifactName, targetTriplet[2] as targetMethod,
+     cnt
+// return sourceModule, sourceKind, sourceArtifactName, targetModule, targetKind, targetArtifactName;
+MATCH (sm:Method) WHERE sm.Package = sourceModule and sm.Artifact = sourceKind + ":" + sourceArtifactName and sm.Name = sourceMethod
+MERGE (p:Package {Name: targetModule})
+MERGE (mt:ManagedType {Artifact: targetKind + ":" + targetArtifactName, Name: targetArtifactName})
+MERGE (p) -[:CONTAINS]-> (mt)
+MERGE (mm:ManagedMethod {Artifact: targetArtifactName, Name: targetMethod, Package: p.Name})
+MERGE (mt) -[:DECLARES]-> (mm)
+MERGE (sm) -[:CALLS {Weight: cnt}]-> (mm);
+MATCH (m:ManagedType) RETURN count(m) +" Managed types";
+MATCH (m:ManagedMethod) RETURN count(m) +" Managed methods";
+MATCH (p1:Method) -[r:CALLS]->(p2:ManagedMethod) RETURN count(r) +" calls to managed methods";

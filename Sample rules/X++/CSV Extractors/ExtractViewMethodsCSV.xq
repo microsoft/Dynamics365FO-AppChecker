@@ -1,4 +1,4 @@
-﻿(: Copyright (c) Microsoft Corporation.
+(: Copyright (c) Microsoft Corporation.
    Licensed under the MIT license. :)
 
 (: Extract table method information in CSV format :)
@@ -11,9 +11,9 @@ declare function local:MethodComplexity($m as element(Method)) as xs:integer
 
 let $options := map { 'lax': false(), 'header': true() }
 
-let $r := <MethodsOnTables>
+let $r := <MethodsOnViews>
 {
-    for $a in /Table
+    for $a in /View
     for $m in $a/Method
     let $visibility := if (lower-case($m/@IsPrivate) = 'true') then "private"
                   else if (lower-case($m/@IsProtected) = 'true') then 'protected'
@@ -34,6 +34,6 @@ let $r := <MethodsOnTables>
         <NOS>{count(for $stmt in $a/Method//* where ends-with(name($stmt), "Statement") return $stmt)}</NOS>
      </Record>
 }
-</MethodsOnTables>
+</MethodsOnViews>
 
 return csv:serialize($r, $options)
