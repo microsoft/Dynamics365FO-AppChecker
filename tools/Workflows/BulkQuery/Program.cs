@@ -56,6 +56,11 @@
                 return;
             }
 
+            if (outputDirectory == null)
+            {
+                outputDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+            }
+
             var files = new List<string>();
 
             try
@@ -72,9 +77,6 @@
                     Console.WriteLine("No scripts selected");
                     return;
                 }
-
-                if (outputDirectory == null)
-                    outputDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
                 if (verbose)
                 {
@@ -105,6 +107,7 @@
             {
                 Console.WriteLine("A problem happened during execution. Please review the parameters.");
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return;
             }
         }
