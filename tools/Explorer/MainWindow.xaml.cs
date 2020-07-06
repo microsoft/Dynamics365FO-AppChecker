@@ -756,5 +756,23 @@ Credits: The application icon was created by alecive and provided under the Crea
         {
             e.Cancel = !this.ViewModel.CloseQueryTab(e.TabItem);
         }
+
+        private void QueryGroupBox_Drop(object sender, DragEventArgs e)
+        {
+            // Called when a file is dropped on the query pane
+            string[] droppedFiles = null;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+            }
+
+            if (droppedFiles == null)
+                return;
+
+            foreach (var filename in droppedFiles)
+            {
+                this.ViewModel.OpenFileInTab(filename);
+            }
+        }
     }
 }

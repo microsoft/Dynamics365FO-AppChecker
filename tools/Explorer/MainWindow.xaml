@@ -276,7 +276,7 @@ Licensed under the MIT license.
                         <ColumnDefinition Width="50*"/>
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox x:Name="QueryGroupBox" Grid.Column="0" Header="Queries">
+                    <GroupBox x:Name="QueryGroupBox" Grid.Column="0" Header="Queries" AllowDrop="True" Drop="QueryGroupBox_Drop">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="32"/>

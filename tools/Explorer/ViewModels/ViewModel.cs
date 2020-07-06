@@ -255,6 +255,13 @@ namespace XppReasoningWpf.ViewModels
             dialog.ShowDialog();
         }
 
+        public void OpenFileInTab(string filename)
+        {
+            var name = Path.GetFileNameWithoutExtension(filename);
+            var tab = this.CreateNewQueryTabItem(name, filename, File.ReadAllText(filename));
+            this.view.queryTabPage.SelectedItem = tab;
+        }
+
         private void OpenQueryFile()
         {
             OpenFileDialog dialog = new OpenFileDialog
@@ -272,9 +279,7 @@ namespace XppReasoningWpf.ViewModels
             {
                 foreach (var filename in dialog.FileNames)
                 {
-                    var name = Path.GetFileNameWithoutExtension(filename);
-                    var tab = this.CreateNewQueryTabItem(name, filename, File.ReadAllText(filename));
-                    this.view.queryTabPage.SelectedItem = tab;
+                    this.OpenFileInTab(filename);
                 }
             }
 
