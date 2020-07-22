@@ -1,4 +1,4 @@
-# This is a workflow to build the AST Explorer application
+# Workflow to build the Graph Explorer application
 
 name: Build.GraphExplorer
 
@@ -28,4 +28,4 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
      
     - name: Build Graph Explorer with MSBuild
-      run: msbuild "tools\Graph Explorer\GraphExplorer\SocratexGraphExplorerNeoVis.csproj"
+      run: msbuild "tools\Graph Explorer\GraphExplorer\SocratexGraphExplorerNeoVis.csproj" /property:Configuration=Release /property:Platform=x64
