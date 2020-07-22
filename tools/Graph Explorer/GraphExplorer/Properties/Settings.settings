@@ -1,0 +1,136 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SocratexGraphExplorer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">neo4j</Value>
+    </Setting>
+    <Setting Name="QueryFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="QueryFont" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7687</Value>
+    </Setting>
+    <Setting Name="Server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="AppTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Socratex Graph Explorer</Value>
+    </Setting>
+    <Setting Name="ConnectResultNodes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Configuration" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;DataViz&lt;/title&gt;
+        &lt;style type='text/css'&gt;
+            #viz {
+                width: 750px;
+                height: 600px;
+                border: 1px solid lightgray;
+                font: 12pt arial;
+            }
+        &lt;/style&gt;
+        &lt;script src='https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js'&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;script&gt;
+
+
+        function init()
+        {
+            (async function()
+            {
+                await CefSharp.BindObjectAsync('csObject').then(function(res) 
+                {    // The promise is resolved when the object is available.
+                     // Objects are created in the global context (properties of the window object).
+                     window.csObject.show('banana').then(function(res)
+                     {
+                     })
+                });
+            })();
+        }
+
+        function setVizSize(width, height)
+        {
+            document.getElementById('viz').style.width = width + "px";
+            document.getElementById('viz').style.height = height + "px";
+        }
+
+        function NodeOrEdgeSelected(event) {
+            window.csObject.select(event.nodes[0], event.edges[0]);
+        }
+
+        function draw(cypher) {
+            var config = {
+                container_id: 'viz',
+                server_url: 'bolt://{Server}:{Port}',
+                server_user: '{Username}',
+                server_password: '{Password}',
+                arrows: true, // Shows arrows on edges
+                labels: {
+                    'Class': {
+                        caption: 'Name', // Works. Name of property on Class node
+                        size: 'LOC',
+                        community: 'Package',
+
+                        // This is what gets shown in the tooltip
+                        'title_properties': [
+                            'Name', 'LOC'
+                        ],
+
+                        // 'sizeCypher': 'MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c'
+                        // 'sizeCypher': 'MATCH (n) RETURN n.LOC as c'
+                    },
+                    'Method': {
+                        // This is what gets shown in the tooltip
+                        'title_properties': [
+                            'Method', 'LOC', 'NOS'
+                        ],
+                        caption: 'Method', // Works. Name of property on Method node
+                        size: 'LOC',
+                    }
+                },
+                relationships: {
+                    'EXTENDS': {
+                        caption: true,  // Works
+                    },
+                    'DECLARES': {
+                        caption: true,  // Works
+                    },
+                    'CALLS': {
+                        'title_properties': [
+                            'Count'
+                        ],
+                        caption: true,  // Works
+                        thickness: 'Count', // Need a property name on the edge
+
+                    }
+                },
+                initial_cypher: cypher
+            }
+            var viz = new NeoVis.default(config);
+            viz.registerOnEvent('completed', (e)=&gt;
+            {
+                viz['_network'].on('click', (event)=&gt;
+                {
+                    NodeOrEdgeSelected(event);
+                    console.log(event.nodes[0]);
+                });
+            });
+
+            // Do the actual drawing
+            viz.render();
+        }
+    &lt;/script&gt;
+
+    &lt;body onload='init()' &gt;
+        &lt;div id='viz'&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -53,11 +53,10 @@ namespace XppReasoningWpf
 #if !NETCOREAPP
             // Send outstanding events to the cloud.
             this.Telemetry?.Flush();
-#endif
 
             // Allow time for flushing:
             System.Threading.Thread.Sleep(1000);
-
+#endif
             base.OnExit(e);
 
         }

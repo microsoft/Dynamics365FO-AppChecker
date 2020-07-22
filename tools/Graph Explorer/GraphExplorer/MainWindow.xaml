@@ -1,0 +1,247 @@
+﻿<!-- 
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT license.
+-->
+<Window x:Class="SocratexGraphExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     	xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"        
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:cef="clr-namespace:CefSharp;assembly=CefSharp.Core"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="600" Width="1000">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}" x:Key="toolbarImageStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
+                    <Setter Property="Opacity" Value="0.30"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="toolbarTextStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
+                    <Setter Property="Opacity" Value="0.30"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>        
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SaveQueryCommand}" Gesture='Ctrl+S'/>
+        <KeyBinding Command="{Binding OpenQueryCommand}" Gesture="Ctrl+O"/>
+        <KeyBinding Command="{Binding ApplicationExitCommand}" Gesture="Alt+F4"/>
+    </Window.InputBindings>
+    
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="FileMenu" Header="_File" >
+                <MenuItem Header="Open Cypher Query..."  InputGestureText="Ctrl+O" Command="{Binding OpenQueryCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="Images/OpenFolder_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save Cypher Query" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Save_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save Cypher Query As..." Command="{Binding SaveAsCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="Images/SaveAs_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" />
+                <MenuItem Header="External Variables..." />
+                <Separator></Separator>
+                <MenuItem x:Name="DeveloperToolsMenuItem" Header="Developer tools" Command="{Binding ShowDevToolsCommand}">
+                </MenuItem>
+                <MenuItem Header="_Exit" Command="{Binding ApplicationExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Command="Cut" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/cut_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Copy" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/copy_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Paste">
+                    <MenuItem.Icon>
+                        <Image Source="Images/paste_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Delete">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Cancel_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Undo">
+                    <MenuItem.Icon>
+                        <Image Source="Images/undo_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Redo" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/redo_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="SelectAll" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/SelectAll_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="Tasks">
+                <MenuItem x:Name="ExecuteQueryMenuItem" Header="Execute Query"  Command="{Binding ExecuteQueryCommand}" InputGestureText="F5" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/Run_16x.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="HideNodeQueryMenuItem" Header="Hide Selected"  Command="{Binding HideNodeCommand}"  >
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Window">
+                <MenuItem Header="Close All Documents" Command="{Binding CloseAllWindowsCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="Images/CloseDocumentGroup_16x.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="WindowsMenuItem" Header="Windows..." Command="{Binding WindowsCommand}" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" />
+            </MenuItem>
+        </Menu>
+        <StatusBar  DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
+                <Label Content="{Binding ErrorMessage}" FontFamily="Courier New"/>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="1">
+                <Label Content="{Binding CaretPositionString}"></Label>
+            </StatusBarItem>
+
+        </StatusBar>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="800"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Grid.Column="0" Header="Graph" >
+                    <wpf:ChromiumWebBrowser Grid.Column="0" x:Name="Browser" SizeChanged="Browser_SizeChangedAsync"/>
+                </GroupBox>
+
+                <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+
+                <GroupBox Grid.Column="2" Header="Properties" >
+                    <ListView x:Name="PropertiesGrid" ItemsSource="{Binding NodeProperties}" Padding="0">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}" Width="75"  />
+                                <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="130" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+            
+            <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
+
+            <GroupBox Header="Queries"  Grid.Row="2">
+
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <ToolBar Grid.Row="0">
+
+                        <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/OpenFolder_16x.png"></Image>
+                        </Button>
+                        <Button Command="{Binding SaveQueryCommand}" ToolTip="Save">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
+                        </Button>
+                        <Separator></Separator>
+                        
+                        <Button x:Name="ExecuteQueryButton"    Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" VerticalAlignment="Bottom" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Run_16x.png"></Image>
+                            </StackPanel>
+                        </Button>
+
+                        <Separator></Separator>
+                        <Button Command="Cut" ToolTip="Cut">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cut_16x.png"></Image>
+                        </Button>
+                        <Button Command="Copy" ToolTip="Copy">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
+                        </Button>
+                        <Button Command="Paste" ToolTip="Paste">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Paste_16x.png"></Image>
+                        </Button>
+                        <Button Command="Delete" ToolTip="Delete">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cancel_16x.png"></Image>
+                        </Button>
+                        <Separator/>
+                        <Button Command="Undo" ToolTip="Undo">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Undo_16x.png"></Image>
+                        </Button>
+                        <Button Command="Redo" ToolTip="Redo">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
+                        </Button>
+                        <Separator></Separator>
+                        <Button  x:Name="IncreaseQueryFontSizeButton" Command="{Binding IncreaseQueryFontSize}"  ToolTip="Increase font size">
+                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
+                        </Button>
+                        <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size">
+                            <Image Style="{StaticResource toolbarImageStyle}"  Source="Images/DecreaseFontSize_16x.png"/>
+                        </Button>
+
+                    </ToolBar>
+
+                    <avalonedit:TextEditor x:Name="CypherEditor" Grid.Row="1" Margin="0,5,0,0" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
+                        match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
+                    </avalonedit:TextEditor>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</Window>
