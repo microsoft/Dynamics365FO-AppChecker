@@ -2,12 +2,14 @@
 // Licensed under the MIT license.
 
 using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.ViewModels;
 
 namespace SocratexGraphExplorer.Views
 {
     public class BrowserCSObjects
     {
         private Model Model { get; set; }
+        private EditorViewModel ViewModel { get; set; }
 
         public string show (string message)
         {
@@ -30,20 +32,21 @@ namespace SocratexGraphExplorer.Views
             if (node != 0)
             {
                 cypher = string.Format("MATCH (c) where id(c) = {0} return c limit 1", node);
-                this.Model.SelectedNode = node;
+                this.ViewModel.SelectedNode = node;
             }
             else
             {
                 cypher = string.Format("MATCH (c) -[r]- (d) where id(r) = {0} return r limit 1", edge);
-                this.Model.SelectedEdge = edge;
+                this.ViewModel.SelectedEdge = edge;
             }
             var res = await Model.ExecuteCypherAsync(cypher);
-            this.Model.GeneratePropertyNodeListView(res);
+            this.ViewModel.GeneratePropertyNodeListView(res);
         }
 
-        public BrowserCSObjects(Model model)
+        public BrowserCSObjects(Model model, EditorViewModel viewModel)
         {
             this.Model = model;
+            this.ViewModel = viewModel;
         }
     }
 }

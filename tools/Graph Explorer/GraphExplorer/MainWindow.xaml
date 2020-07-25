@@ -12,7 +12,7 @@ Licensed under the MIT license.
         xmlns:cef="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="600" Width="1000">
+        Title="{Binding Title}" Height="600" Width="1200">
 
     <Window.Resources>
         <Style TargetType="{x:Type Image}" x:Key="toolbarImageStyle">
@@ -108,8 +108,12 @@ Licensed under the MIT license.
                         <Image Source="Images/Run_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="HideNodeQueryMenuItem" Header="Hide Selected"  Command="{Binding HideNodeCommand}"  >
-                </MenuItem>
+                <MenuItem Header="Hide Selected"  Command="{Binding HideNodeCommand}" ToolTip="Remove the selected node from the view" />
+                <MenuItem Header="Show only Selected"  Command="{Binding ShowOnlyNodeCommand}" ToolTip="Show only the selected node" />
+                <MenuItem Header="Show outgoing edges"  Command="{Binding ShowOutgoingEdges}" ToolTip="Show the outgoing edges from the selected node" />
+                <MenuItem Header="Show incoming edges"  Command="{Binding ShowIncomingEdges}" ToolTip="Show the incoming edges to the selected node" />
+                <MenuItem Header="Show edges"  Command="{Binding ShowEdges}" ToolTip="Show both the incoming and outgoing edges to the selected node" />
+
             </MenuItem>
             <MenuItem Header="Window">
                 <MenuItem Header="Close All Documents" Command="{Binding CloseAllWindowsCommand}" >
@@ -164,27 +168,13 @@ Licensed under the MIT license.
 
                 <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
 
-                <GroupBox Grid.Column="2" Header="Properties" >
-                    <ListView x:Name="PropertiesGrid" ItemsSource="{Binding NodeProperties}" Padding="0">
-                        <ListView.Resources>
-                            <Style TargetType="{x:Type GridViewColumnHeader}">
-                                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            </Style>
-                        </ListView.Resources>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}" Width="75"  />
-                                <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="130" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,4,0">
                 </GroupBox>
             </Grid>
             
             <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 
             <GroupBox Header="Queries"  Grid.Row="2">
-
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>

@@ -4,30 +4,18 @@
 using Neo4j.Driver;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SocratexGraphExplorer.Models
 {
-    public class PropertyItem
-    {
-        public string Key { get; set;  }
-        public string Value { get; set; }
-    }
-
     public class Model : INotifyPropertyChanged
     {
         /// <summary>
         /// The driver for accessing the graph database.
         /// </summary>
         private IDriver Driver { get; set; }
-
-        /// <summary>
-        /// The collection of properties for a selected node or edge.
-        /// </summary>
-        public ObservableCollection<PropertyItem> NodeProperties { get; } = new ObservableCollection<PropertyItem>();
 
         /// <summary>
         /// This event is triggered when a property changes.
@@ -124,41 +112,6 @@ namespace SocratexGraphExplorer.Models
                 Properties.Settings.Default.Port = value;
                 this.OnPropertyChanged(nameof(Port));
             }
-        }
-
-        private long selectedNode = 0;
-        public long SelectedNode
-        {
-            get
-            {
-                return this.selectedNode;
-            }
-            set
-            {
-                if (this.selectedNode != value)
-                {
-                    this.selectedNode = value;
-                    this.OnPropertyChanged(nameof(SelectedNode));
-                }
-            }
-        }
-
-        private long selectedEdge = 0;
-        public long SelectedEdge
-        { 
-            get
-            {
-                return this.selectedEdge;
-            }
-            set
-            {
-                if (this.selectedEdge != value)
-                {
-                    this.selectedEdge = value;
-                    this.OnPropertyChanged(nameof(SelectedEdge));
-                }
-            }
-
         }
 
         /// <summary>
@@ -267,81 +220,6 @@ namespace SocratexGraphExplorer.Models
             }
         }
 
-        public HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
-        {
-            if (!records.Any())
-                return null;
-
-            var result = new HashSet<long>();
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                foreach (var record in records)
-                {
-                    foreach (var v in record.Values)
-                    {
-                        if (v.Value is IPath)
-                        {
-                            // There are two nodes connected by an edge:
-                            var path = v.Value as IPath;
-                            // The start and end can be the same, for self referenctial nodes.
-                            result.Add(path.Start.Id);
-                            result.Add(path.End.Id);
-                        }
-                        else if (v.Value is INode)
-                        {
-                            var n = v.Value as INode;
-                            result.Add(n.Id);
-                        }
-                    }
-                }
-            });
-            return result;
-        }
-
-        /// <summary>
-        /// Populate the list of ListView items containing node or edge properties.
-        /// </summary>
-        /// <param name="records"></param>
-        public void GeneratePropertyNodeListView(List<IRecord> records)
-        {
-            if (!records.Any())
-                return;
-
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                this.NodeProperties.Clear();
-                var v = records[0];
-                KeyValuePair<string, object> f = v.Values.FirstOrDefault();
-                INode n = f.Value as INode;
-
-                if (n != null)
-                {
-                    string labelString = string.Empty;
-                    foreach (var label in n.Labels)
-                    {
-                        labelString = ":" + label;
-                    }
-                    this.NodeProperties.Add(new PropertyItem() { Key = "Label", Value = labelString });
-                    this.NodeProperties.Add(new PropertyItem() { Key = "Id", Value = n.Id.ToString() });
-                    foreach (var property in n.Properties)
-                    {
-                        this.NodeProperties.Add(new PropertyItem() { Key = property.Key, Value = property.Value.ToString() });
-                    }
-                }
-                else
-                {
-                    IRelationship r = f.Value as IRelationship;
-
-                    string typeString = ":" + r.Type;
-                    this.NodeProperties.Add(new PropertyItem() { Key = "Type", Value = typeString });
-
-                    foreach (var property in r.Properties)
-                    {
-                        this.NodeProperties.Add(new PropertyItem() { Key = property.Key, Value = property.Value.ToString() });
-                    }
-                }
-            });
-        }
 
  
         //private string GenerateValue(string key, object value)
@@ -477,15 +355,21 @@ namespace SocratexGraphExplorer.Models
         //    return result;
         //}
 
+        /// <summary>
+        /// Execute the cypher string on the current connection. If the cypher is incorrect
+        /// the error message is updated.
+        /// </summary>
+        /// <param name="cypherSource">The cypher source</param>
+        /// <param name="parameters">Any parameters used in the source string</param>
+        /// <returns>The list of results.</returns>
         public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, Dictionary<string, object> parameters=null)
         {
             var session = this.Driver.AsyncSession();
-            IResultCursor cursor;
 
             this.ErrorMessage = "";
             try
             {
-                cursor = await session.RunAsync(cypherSource, parameters);
+                IResultCursor cursor = await session.RunAsync(cypherSource, parameters);
                 return await cursor.ToListAsync();
             }
             catch (Exception e)

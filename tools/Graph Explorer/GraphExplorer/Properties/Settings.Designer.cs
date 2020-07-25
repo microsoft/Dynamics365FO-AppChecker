@@ -164,5 +164,29 @@ namespace SocratexGraphExplorer.Properties {
                 this["Configuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int SourceFontSize {
+            get {
+                return ((int)(this["SourceFontSize"]));
+            }
+            set {
+                this["SourceFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
+        public string SourceFont {
+            get {
+                return ((string)(this["SourceFont"]));
+            }
+            set {
+                this["SourceFont"] = value;
+            }
+        }
     }
 }

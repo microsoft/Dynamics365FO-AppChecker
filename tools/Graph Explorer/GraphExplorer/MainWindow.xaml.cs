@@ -59,7 +59,7 @@ namespace SocratexGraphExplorer
                     {
                         CamelCaseJavascriptNames = false,
                     };
-                    repo.Register("csObject", new Views.BrowserCSObjects(this.model), isAsync: true, options: options);
+                    repo.Register("csObject", new Views.BrowserCSObjects(this.model, this.ViewModel), isAsync: true, options: options);
                 }
             };
 
