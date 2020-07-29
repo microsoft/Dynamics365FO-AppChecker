@@ -3,10 +3,92 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"  
              xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
+             xmlns:settings="clr-namespace:SocratexGraphExplorer.Properties"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="MinHeight" Value="23" />
+            <Setter Property="MaxWidth" Value="200" />
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border TextBlock.Foreground="{TemplateBinding Foreground}"
+                            x:Name="Border"
+                            BorderThickness="00">
+
+                            <ContentPresenter Margin="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
     <Grid>
-        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" Foreground="LightGray">Class information</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="Header" Grid.Row="0" FontSize="24" Foreground="LightGray">Method information</TextBlock>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox x:Name="SourceEditorBox" Grid.Column="0" Header="Source">
+            </GroupBox>
+            <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+            <GroupBox Grid.Column="2" Header="Info">
+                <ListView x:Name="PropertiesGrid" ItemsSource="{Binding Properties}" Padding="0">
+                    <ListView.Resources>
+                        <Style x:Key="HeadingStyle" TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="FontSize" Value="12" />
+                        </Style>
+
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="12"/>
+                            <EventSetter Event="MouseRightButtonUp" Handler="OnMouseRightButtonUp"/>
+                        </Style>
+
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}"  HeaderContainerStyle="{StaticResource HeadingStyle}"/>
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" 
+                                            HeaderContainerStyle="{StaticResource HeadingStyle}">
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+        </Grid>
+
+        <GroupBox Grid.Row="2" Header="Queries">
+
+            <WrapPanel Orientation="Horizontal">
+                <Button Click="ShowBaseClass">Show parent class.</Button>
+                <Button Click="ShowBaseClasses">Show parent classes.</Button>                
+                <Button Click="ShowDerivedClasses">Show derived classes.</Button>
+                <Button Click="ShowImplementedInterfaces">Show interfaces implemented.</Button>
+                <Button Click="ShowMethods">Show methods.</Button>
+                <Button Click="ShowFields">Show fields.</Button>
+            </WrapPanel>
+        </GroupBox>
     </Grid>
 </UserControl>

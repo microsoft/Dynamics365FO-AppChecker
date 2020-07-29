@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SocratexGraphExplorer.Models
@@ -16,6 +17,36 @@ namespace SocratexGraphExplorer.Models
         /// The driver for accessing the graph database.
         /// </summary>
         private IDriver Driver { get; set; }
+
+        /// <summary>
+        /// Backing field for the nodes shown in the graph
+        /// </summary>
+        private HashSet<long> nodesShown;
+
+        /// <summary>
+        /// The nodes shown on the canvas. A property is raised when the value changes.
+        /// </summary>
+        public HashSet<long> NodesShown
+        {
+            get { return this.nodesShown;  }
+            set 
+            { 
+                this.nodesShown = value;
+                this.OnPropertyChanged(nameof(NodesShown));
+            }
+        }
+
+        private List<IRecord> queryResults;
+        public List<IRecord> QueryResults
+        {
+            get { return this.queryResults; }
+            set
+            {
+                this.queryResults = value;
+                this.OnPropertyChanged(nameof(QueryResults));
+            }
+        }
+        
 
         /// <summary>
         /// This event is triggered when a property changes.
@@ -37,6 +68,7 @@ namespace SocratexGraphExplorer.Models
                 return source;
             }
         }
+
         private void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -193,6 +225,15 @@ namespace SocratexGraphExplorer.Models
 #endif
             }
         }
+
+        /// <summary>
+        /// Try to determine if the Neo4j server designated by the parameters provided, is online.
+        /// </summary>
+        /// <param name="server">The URL of the server running the neo4j server.</param>
+        /// <param name="port">The port number.</param>
+        /// <param name="username">The user name</param>
+        /// <param name="password">The password</param>
+        /// <returns></returns>
         public async Task<bool> IsServerOnlineAsync(string server, int port, string username, string password)
         {
             if (string.IsNullOrEmpty(server))
@@ -220,140 +261,250 @@ namespace SocratexGraphExplorer.Models
             }
         }
 
+        /// <summary>
+        /// Generate a HTML text representation from the data returned
+        /// from Neo4j.
+        /// </summary>
+        /// <param name="records">The records fetched from neo4j</param>
+        /// <returns>The HTML representation of the records in human readable form.</returns>
+        public static string GenerateHtml(List<IRecord> records)
+        {
+            void GeneratePath(StringBuilder b, int indent, IPath value)
+            {
+                var indentString = new string(' ', indent);
+                b.AppendLine(indentString + "{");
+                b.Append(indentString + "  start:");
+                GenerateNode(b, indent + 2, value.Start);
+                b.Append(indentString + "  end:");
+                GenerateNode(b, indent + 2, value.End);
+                b.AppendLine(indentString + "  segments: [");
 
- 
-        //private string GenerateValue(string key, object value)
-        //{
-        //    if (value is List<object>)
-        //    {
-        //        var retval = "[";
-        //        bool first = true;
-        //        foreach (var v in value as List<object>)
-        //        {
-        //            if (!first)
-        //                retval += ", ";
-        //            retval += GenerateValue("", v);
-        //            first = false;
-        //        }
-        //        return retval + "]";
-        //    }
-        //    else if (value is string)
-        //    {
-        //        return (string)value;
-        //    }
-        //    else if (value is long)
-        //    {
-        //        return ((long)value).ToString();
-        //    }
-        //    else if (value is double)
-        //    {
-        //        return ((double)value).ToString();
-        //    }
-        //    return "Unknown type: " + value.GetType().FullName ;
-        //}
+                var firstSegment = true;
+                foreach(var relation in value.Relationships)
+                {
+                    if (!firstSegment)
+                        b.AppendLine(",");
+                    else
+                        firstSegment = false;
 
-        //private string GenerateText(List<IRecord> records)
-        //{
-        //    var retval = "";
-        //    foreach (var record in records)
-        //    {
-        //        var keys = record.Values.Keys.GetEnumerator();
-        //        var values = record.Values.Values;
+                    b.AppendLine(indentString + "    {");
+                    b.AppendLine(indentString + "      start: " + relation.StartNodeId.ToString() + ",");
+                    b.AppendLine(indentString + "      relationship: {");
+                    b.AppendLine(indentString + "        id: " + relation.Id.ToString() + ",");
+                    b.AppendLine(indentString + "        type: " + relation.Type + ",");
+                    b.AppendLine(indentString + "        start: " + relation.StartNodeId.ToString() + ",");
+                    b.AppendLine(indentString + "        end: " + relation.EndNodeId.ToString() + ",");
+                    b.AppendLine(indentString + "        properties: {");
 
-        //        foreach (var value in values)
-        //        {
-        //            keys.MoveNext();
-        //            string key = keys.Current;
-        //        }
-        //    }
+                    var first = true;
+                    foreach (var prop in relation.Properties.OrderBy(p => p.Key))
+                    {
+                        if (!first)
+                            b.AppendLine(",");
+                        else
+                            first = false;
+                        b.Append(indentString + "          " + prop.Key + ": " + prop.Value.ToString());
+                    }
+                    b.AppendLine();
+                    b.AppendLine(indentString + "        }");
+                    b.AppendLine(indentString + "      },");
+                    b.AppendLine(indentString + "      end: " + relation.EndNodeId.ToString());
+                    b.Append("    }");
+                }
+                b.AppendLine();
+                b.AppendLine(indentString + "  ],");
+                b.AppendLine(indentString + "  length: " + value.Relationships.Count());
+                b.AppendLine("}");
+            }
 
-        //    return retval;
-        //}
+            void GenerateNode(StringBuilder b, int indent, INode node)
+            {
+                var indentString = new string(' ', indent);
 
-        //private Graph GenerateGraph(List<IRecord> records)
-        //{
-        //    Graph result = new Graph();
+                b.AppendLine(indentString + "{");
+                b.AppendLine(indentString + "  id: " + node.Id.ToString() + ",");
 
-        //    IDictionary<long, INode> nodes = new Dictionary<long, INode>();
-        //    IDictionary<long, IRelationship> relationships = new Dictionary<long, IRelationship>();
+                b.AppendLine(indentString + "  labels: [");
+                bool first = true;
+                foreach (var label in node.Labels)
+                {
+                    if (!first)
+                        b.AppendLine(",");
+                    else
+                        first = false;
+                    b.Append(indentString + "    " + label);
+                }
+                b.AppendLine();
+                b.AppendLine(indentString + "  ],");
 
-        //    this.currentColor = 0;
+                b.AppendLine(indentString + "  properties: {");
+                first = true;
+                foreach (var prop in node.Properties.OrderBy(p => p.Key))
+                {
+                    if (!first)
+                        b.AppendLine(",");
+                    else
+                        first = false;
+                    b.Append(indentString + "    " + prop.Key + ": " + prop.Value.ToString());
+                }
+                b.AppendLine();
+                b.AppendLine(indentString + "  }");
 
-        //    foreach (var record in records)
-        //    {
-        //        var keys = record.Values.Keys.GetEnumerator();
-        //        var values = record.Values.Values;
+                b.AppendLine(indentString + "}");
+            }
 
-        //        foreach (var value in values)
-        //        {
-        //            keys.MoveNext();
-        //            string key = keys.Current;
+            void GenerateRelationship(StringBuilder b, int indent, IRelationship relationship)
+            {
+                var indentString = new string(' ', indent);
 
-        //            if (value is INode)
-        //            {
-        //                INode node = value as INode;
-        //                if (!nodes.ContainsKey(node.Id))
-        //                    nodes.Add(node.Id, node);
-        //            }
-        //            else if (value is IRelationship)
-        //            {
-        //                IRelationship relationship = value as IRelationship;
-        //                if (!relationships.ContainsKey(relationship.Id))
-        //                    relationships.Add(relationship.Id, relationship);
-        //            }
-        //            else if (value is IPath)
-        //            {
-        //                IPath path = value as IPath;
-        //                foreach (var node in path.Nodes)
-        //                {
-        //                    INode n = node as INode;
-        //                    if (!nodes.ContainsKey(n.Id))
-        //                        nodes.Add(n.Id, n);
-        //                }
+                b.AppendLine(indentString + "{");
+                b.AppendLine(indentString + "  id: " + relationship.Id.ToString() + ",");
+                b.AppendLine(indentString + "  type: " + relationship.Type + ",");
+                b.AppendLine(indentString + "  start: " + relationship.StartNodeId.ToString() + ", ");
+                b.AppendLine(indentString + "  end: " + relationship.EndNodeId.ToString() + ", ");
 
-        //                foreach (var relationship in path.Relationships)
-        //                {
-        //                    IRelationship r = relationship as IRelationship;
-        //                    if (!relationships.ContainsKey(r.Id))
-        //                        relationships.Add(r.Id, r);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                this.GenerateValue(key, value);
-        //            }
-        //        }
-        //    }
+                b.AppendLine(indentString + "  properties: {");
+                var first = true;
+                foreach (var prop in relationship.Properties.OrderBy(p => p.Key))
+                {
+                    if (!first)
+                        b.AppendLine(",");
+                    else
+                        first = false;
+                    b.Append(indentString + "    " + prop.Key + ": " + prop.Value.ToString());
+                }
+                b.AppendLine();
+                b.AppendLine(indentString + "  }");
+            }
 
-        //    IDictionary<long, GraphVertex> verticesById = new Dictionary<long, GraphVertex>();
+            void GenerateList(StringBuilder b, List<object> l)
+            {
+                bool first = true;
+                b.Append("[");
+                foreach (var element in l)
+                {
+                    if (!first)
+                        b.Append(", ");
 
-        //    foreach (var node in nodes)
-        //    {
-        //        var labels = node.Value.Labels.ToArray();
-        //        var vertex = new GraphVertex(node.Key, labels, node.Value.Properties);
-        //        verticesById.Add(node.Key, vertex);
+                    Generate(b, 0, element);
+                    first = false;
+                }
+                b.Append("]");
+            }
 
-        //        if (!VertexColors.ContainsKey(vertex.Labels.First()))
-        //        {
-        //            VertexColors[vertex.Labels.First()] = colors[currentColor];
-        //            currentColor += 1;
-        //            currentColor = currentColor % colors.Length;
-        //        }
-        //        vertex.Color = VertexColors[vertex.Labels.First()];
+            void GenerateString(StringBuilder b, string s)
+            {
+                b.Append(s);
+            }
 
-        //        result.AddVertex(vertex);
-        //    }
-        //    foreach (var relationship in relationships)
-        //    {
-        //        var sourceNodeId = relationship.Value.StartNodeId;
-        //        var targetNodeId = relationship.Value.EndNodeId;
-        //        var edge = new GraphEdge(verticesById[sourceNodeId], verticesById[targetNodeId], relationship.Value.Type);
+            void Generate(StringBuilder b, int indent, object value)
+            {
+                if (value is IPath)
+                    GeneratePath(b, indent, value as IPath);
+                else if (value is INode)
+                    GenerateNode(b, indent, value as INode);
+                else if (value is IRelationship)
+                    GenerateRelationship(b, indent, value as IRelationship);
+                else if (value is List<object>)
+                    GenerateList(b, value as List<object>);
+                else
+                    GenerateString(b, value.ToString());
+            }
 
-        //        result.AddEdge(edge);
-        //    }
+            var builder = new StringBuilder();
+            builder.AppendLine("<html>");
+            builder.AppendLine("<style>");
+            builder.AppendLine("    table, th, td {");
+            builder.AppendLine("        border: 1px solid black;");
+            builder.AppendLine("        border-collapse: collapse;");
+            builder.AppendLine("    }");
+            builder.AppendLine("</style>");
+            builder.AppendLine("<body>");
+            builder.AppendLine("<table style='width:100%;'>");
 
-        //    return result;
-        //}
+            builder.AppendLine("  <tr>");
+            if (records.Any())
+            {
+                foreach (var heading in records.First().Keys)
+                {
+                    builder.AppendLine("    <th>" + heading + "</th>");
+                }
+            }
+            builder.AppendLine("  </tr>");
+
+            foreach (var record in records)
+            {
+                builder.AppendLine("  <tr>");
+
+                var keys = record.Values.Keys.GetEnumerator();
+                var values = record.Values.Values;
+
+                foreach (var value in values)
+                {
+                    builder.AppendLine("    <td><pre>");
+
+                    if (value != null)
+                    {
+                        Generate(builder, 0, value);
+
+                        keys.MoveNext();
+                        string key = keys.Current;
+                    }
+                    builder.AppendLine("    </pre></td>");
+                }
+                builder.AppendLine("  </tr>");
+            }
+
+            builder.AppendLine("</table>");
+            builder.AppendLine("</body>");
+            builder.AppendLine("</html>");
+            return builder.ToString();
+        }
+     
+        public static string CommaSeparatedString(IEnumerable<long> set)
+        {
+            string result = string.Empty;
+            bool first = true;
+            foreach (var val in set)
+            {
+                if (!first)
+                    result += ",";
+                result += val.ToString();
+                first = false;
+            }
+            return result;
+        }
+
+        public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
+        {
+            if (!records.Any())
+                return null;
+
+            var result = new HashSet<long>();
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var record in records)
+                {
+                    foreach (var v in record.Values)
+                    {
+                        if (v.Value is IPath)
+                        {
+                            // There are two nodes connected by an edge:
+                            var path = v.Value as IPath;
+                            // The start and end can be the same, for self referenctial nodes.
+                            result.Add(path.Start.Id);
+                            result.Add(path.End.Id);
+                        }
+                        else if (v.Value is INode)
+                        {
+                            var n = v.Value as INode;
+                            result.Add(n.Id);
+                        }
+                    }
+                }
+            });
+            return result;
+        }
 
         /// <summary>
         /// Execute the cypher string on the current connection. If the cypher is incorrect
@@ -366,11 +517,14 @@ namespace SocratexGraphExplorer.Models
         {
             var session = this.Driver.AsyncSession();
 
-            this.ErrorMessage = "";
+            this.ErrorMessage = "Running query...";
             try
             {
                 IResultCursor cursor = await session.RunAsync(cypherSource, parameters);
-                return await cursor.ToListAsync();
+                var res = await cursor.ToListAsync();
+
+                this.ErrorMessage = "Done.";
+                return res;
             }
             catch (Exception e)
             {

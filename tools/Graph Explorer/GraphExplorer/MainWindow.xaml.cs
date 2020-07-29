@@ -89,26 +89,39 @@ namespace SocratexGraphExplorer
 
             this.DataContext = this.ViewModel;
 
-            // Now show the connection dialog
-            var connectionWindow = new Views.ConnectionWindow(this.model);
-            var connectionResult = connectionWindow.ShowDialog();
-
-            // If the user dismissed the dialog, the system should just be shut down,
-            // since there is not a lot that can be done without a connection.
-            if (!(connectionResult.HasValue && connectionResult.Value))
+            string password;
+            if (!model.IsDebugMode)
             {
-                Environment.Exit(0);
-                return;
+                // Now show the connection dialog
+                var connectionWindow = new Views.ConnectionWindow(this.model);
+                var connectionResult = connectionWindow.ShowDialog();
+
+                // If the user dismissed the dialog, the system should just be shut down,
+                // since there is not a lot that can be done without a connection.
+                if (!(connectionResult.HasValue && connectionResult.Value))
+                {
+                    Environment.Exit(0);
+                    return;
+                }
+                password = connectionWindow.Password;
             }
+            else
+            {
+                password = "test";
+            }
+
+            this.model.Password = password;
 
             // Now that the value of the connection parameters have been set,
             // the global connection to the database is established.
-            this.model.CreateNeo4jDriver(connectionWindow.Password);
+            this.model.CreateNeo4jDriver(password);
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.Browser.LoadHtml(this.model.Source);
+            this.TextBrowser.LoadLargeHtmlString("<html><body>No Info</body></html>");
+            this.ViewModel.GraphModeSelected = true;
         }
 
         private async void Browser_SizeChangedAsync(object sender, SizeChangedEventArgs e)
@@ -116,5 +129,6 @@ namespace SocratexGraphExplorer
             if (this.Browser.CanExecuteJavascriptInMainFrame)
                 await this.Browser.EvaluateScriptAsync("setVizSize", e.NewSize.Width - 20, e.NewSize.Height - 20);
         }
+
     }
 }

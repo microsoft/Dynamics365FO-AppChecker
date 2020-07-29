@@ -49,24 +49,29 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0" Header="Source">
-                <avalonedit:TextEditor x:Name="MethodEditor" ShowLineNumbers="True" Padding="0,4,0,0"
-                                FontSize="{Binding Source={x:Static settings:Settings.Default}, Path=SourceFontSize}" 
-                                FontFamily="{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}">
-                </avalonedit:TextEditor>
+            <GroupBox x:Name="SourceEditorBox" Grid.Column="0" Header="Source">
             </GroupBox>
             <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
             <GroupBox Grid.Column="2" Header="Info">
                 <ListView x:Name="PropertiesGrid" ItemsSource="{Binding Properties}" Padding="0">
                     <ListView.Resources>
-                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                        <Style x:Key="HeadingStyle" TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="LightGray"/>
                             <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="FontSize" Value="12" />
                         </Style>
+
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="12"/>
+                            <EventSetter Event="MouseRightButtonUp" Handler="OnMouseRightButtonUp"/>
+                        </Style>
+                        
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}" Width="100"  />
-                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="150" />
+                            <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}" HeaderContainerStyle="{StaticResource HeadingStyle}"/>
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" HeaderContainerStyle="{StaticResource HeadingStyle}">
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -76,7 +81,7 @@
         <GroupBox Grid.Row="2" Header="Queries">
             
             <WrapPanel Orientation="Horizontal">
-                <Button Click="ShowContainingEntityButtonClicked">Show containing entity</Button>
+                <Button Click="ShowDeclaringEntityClicked">Show containing entity</Button>
                 <Button Click="ShowCallersButtonClicked">Show callers</Button>
                 <Button Click="ShowCalleesButtonClicked">Show callees</Button>
             </WrapPanel>

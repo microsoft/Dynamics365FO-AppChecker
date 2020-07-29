@@ -1,80 +1,49 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 
 namespace SocratexGraphExplorer.Views
 {
-    public class PropertyItem
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-    }
-
     /// <summary>
     /// Interaction logic for EmptyInformationControl.xaml
     /// </summary>
     public partial class MethodInformationControl : UserControl
     {
         private Model model;
+        private EditorViewModel viewModel;
         private INode node;
+        private SourceEditor MethodEditor { set; get; }
         private ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
 
         public ObservableCollection<PropertyItem> Properties
         {
             get { return this.properties; }
         }
-
-        private static IHighlightingDefinition LoadHighlightDefinition(string mode)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Stream syntaxModeStream = null;
-            try
-            {
-                syntaxModeStream = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources." + mode);
-
-                using (var xshd_reader = new XmlTextReader(syntaxModeStream))
-                {
-                    xshd_reader.DtdProcessing = DtdProcessing.Prohibit;
-                    xshd_reader.XmlResolver = null;
-
-                    syntaxModeStream = null;
-                    return ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, HighlightingManager.Instance);
-                }
-            }
-            finally
-            {
-                if (syntaxModeStream != null)
-                    syntaxModeStream.Dispose();
-            }
-        }
-
-        public MethodInformationControl(Model model, INode node)
+        
+        public MethodInformationControl(Model model, EditorViewModel viewModel, INode node)
         {
             this.model = model;
+            this.viewModel = viewModel;
             this.node = node;
 
             InitializeComponent();
 
             this.DataContext = this;
-            this.MethodEditor.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
+            this.MethodEditor = new XppSourceEditor(model);
+            this.SourceEditorBox.Content = this.MethodEditor;
+
+            //this.MethodEditor.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
 
             this.Header.Text = string.Format("{0} {1}{2}{3}", node.Labels[0], node.Properties["Class"] as string, (bool)node.Properties["IsStatic"] ? "::" : ".", node.Properties["Method"] as string);
             properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
@@ -88,6 +57,17 @@ namespace SocratexGraphExplorer.Views
             properties.Add(new PropertyItem() { Key = "Static", Value = (node.Properties["IsStatic"].ToString()) });
         }
 
+        /// <summary>
+        /// Called when the user releases the right mouse in the property grid.
+        /// </summary>
+        /// <param name="sender">The control that is selected</param>
+        /// <param name="args">The arguments. Not used.</param>
+        public void OnMouseRightButtonUp(object sender, EventArgs args)
+        {
+            TextBlock control = sender as TextBlock;
+            Clipboard.SetText(control.Text);
+        }
+
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var query = string.Format("match (c) -[:DECLARES]->(m:Method) where id(m)=  {0} return c", node.Id);
@@ -98,7 +78,7 @@ namespace SocratexGraphExplorer.Views
                 var declaringNode = c.First().Values.Values.First() as INode;
                 var base64Source = declaringNode.Properties["base64Source"] as string;
                 var sourceArray = Convert.FromBase64String(base64Source);
-                var source = System.Text.ASCIIEncoding.ASCII.GetString(sourceArray);
+                var source = Encoding.ASCII.GetString(sourceArray);
                 this.MethodEditor.Text = source;
 
                 var startLine = (long)node.Properties["StartLine"];
@@ -138,7 +118,7 @@ namespace SocratexGraphExplorer.Views
 
         }
 
-        private async void ShowContainingEntityButtonClicked(object sender, RoutedEventArgs e)
+        private async void ShowDeclaringEntityClicked(object sender, RoutedEventArgs e)
         {
             var containingEntityQuery = string.Format("match (c) -[:DECLARES]-> (n) where id(n) = {0} return c", node.Id.ToString());
             var containingQueryResult = await model.ExecuteCypherAsync(containingEntityQuery);
@@ -148,14 +128,9 @@ namespace SocratexGraphExplorer.Views
             {
                 var entityId = entityNode.Id;
 
-                //this.shownNodes.Add(entityId);
-                //var nodeIdsString = this.CommaSeparatedString(this.shownNodes);
-
-                //q = "match (n) where id(n) in [" + nodeIdsString + "] "
-                //    + "optional match (n) -[r]- (m) "
-                //    + "where id(n) in [" + nodeIdsString + "] " +
-                //    "  and id(m) in [" + nodeIdsString + "] " +
-                //    "return n,m,r";
+                var nodes = this.model.NodesShown;
+                nodes.Add(entityId);
+                this.model.NodesShown = nodes;
             }
         }
 
@@ -163,16 +138,25 @@ namespace SocratexGraphExplorer.Views
         {
             var callersQuery = string.Format("match (c) -[:CALLS]-> (n) where id(n) = {0} return c", node.Id.ToString());
             var callersQueryResult = await model.ExecuteCypherAsync(callersQuery);
+            var result = Model.HarvestNodeIdsFromGraph(callersQueryResult);
 
-            // Just to get rid of the warning for now
-            await Task.Delay(100);
-
+            if (result != null && result.Any())
+            {
+                var nodes = this.model.NodesShown;
+                nodes.UnionWith(result);
+                this.model.NodesShown = nodes;
+            }
         }
 
         private async void ShowCalleesButtonClicked(object sender, RoutedEventArgs e)
         {
-            // Just to get rid of the warning for now
-            await Task.Delay(100);
+            var calleesQuery = string.Format("match (c) <-[:CALLS]- (n) where id(n) = {0} return c", node.Id.ToString());
+            var calleesQueryResult = await model.ExecuteCypherAsync(calleesQuery);
+            var result = Model.HarvestNodeIdsFromGraph(calleesQueryResult);
+
+            var nodes = this.model.NodesShown;
+            nodes.UnionWith(result);
+            this.model.NodesShown = nodes;
         }
     }   
 }

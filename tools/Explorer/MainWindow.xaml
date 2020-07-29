@@ -251,39 +251,41 @@ Licensed under the MIT license.
 
         </StatusBar>
 
-            <!-- The editors -->
-            <Grid DockPanel.Dock="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="50*"/>
-                </Grid.RowDefinitions>
+        <!-- The editors -->
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
 
-                <r:TabControl Margin="4,4,4,4" x:Name="DetailsTab" Grid.Column="0" TabStripPlacement="Top" 
-				              TabItemMinWidth="150" TabItemMaxWidth="300" TabItemMinHeight="30" TabItemMaxHeight="50" VerticalContentAlignment="Center" AllowAddNew="False"
-                              TabItemNormalBackground="{StaticResource NormalTabBackground}" 
-                              TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
-                              TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}"/>
+            <r:TabControl Margin="4,4,4,4" x:Name="DetailsTab" Grid.Column="0" TabStripPlacement="Top" 
+				            TabItemMinWidth="150" TabItemMaxWidth="300" TabItemMinHeight="30" TabItemMaxHeight="50" VerticalContentAlignment="Center" AllowAddNew="False"
+                            TabItemNormalBackground="{StaticResource NormalTabBackground}" 
+                            TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
+                            TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}">
+            </r:TabControl>
 
 
-                <!-- Horizontal splitter between source editor tab pane and (query, result) views -->
-                <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
+            <!-- Horizontal splitter between source editor tab pane and (query, result) views -->
+            <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="50*"/>
-                    </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="50*"/>
+                </Grid.ColumnDefinitions>
 
-                    <GroupBox x:Name="QueryGroupBox" Grid.Column="0" Header="Queries" AllowDrop="True" Drop="QueryGroupBox_Drop">
-                        <Grid >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="32"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                <GroupBox x:Name="QueryGroupBox" Grid.Column="0" Header="Queries" AllowDrop="True" Drop="QueryGroupBox_Drop">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                            <ToolBar Grid.Row="0">
+                        <ToolBarTray Grid.Row="0">
+                            <ToolBar >
                                 <Button x:Name="NewTabButton" Command="{Binding CreateNewQueryCommand}">
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Document_16x.png" />
                                 </Button>
@@ -293,7 +295,8 @@ Licensed under the MIT license.
                                 <Button Command="{Binding SaveCommand}" ToolTip="Save">
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
                                 </Button>
-                                <Separator></Separator>
+                            </ToolBar>
+                            <ToolBar>
                                 <Button x:Name="ExecuteQueryButton"    Command="{Binding ExecuteQueryCommand}" CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" ToolTip="Execute query" VerticalAlignment="Bottom">
                                     <StackPanel Orientation="Horizontal">
                                         <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Run_16x.png"></Image>
@@ -309,8 +312,8 @@ Licensed under the MIT license.
                                         <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/CloudRun_16x.png"></Image>
                                     </StackPanel>
                                 </Button>
-
-                                <Separator></Separator>
+                            </ToolBar>
+                            <ToolBar>
                                 <Button Command="Cut" ToolTip="Cut">
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cut_16x.png"></Image>
                                 </Button>
@@ -338,31 +341,33 @@ Licensed under the MIT license.
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/DecreaseFontSize_16x.png"/>
                                 </Button>
                             </ToolBar>
+                        </ToolBarTray>
+                        <r:TabControl x:Name="queryTabPage" Grid.Row="1" AddNewTabToEnd="True" AllowAddNew="False" TabStripPlacement="Top"
+                                        TabItemClosing="QueryTabPage_TabItemClosing"
+                                        TabItemNormalBackground="{StaticResource NormalTabBackground}" 
+                                        TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
+                                        TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}" >
+                        </r:TabControl>
+                    </Grid>
 
-                            <r:TabControl x:Name="queryTabPage" Grid.Row="1" AddNewTabToEnd="True" AllowAddNew="False" TabStripPlacement="Top"
-                                          TabItemClosing="QueryTabPage_TabItemClosing"
-                                          TabItemNormalBackground="{StaticResource NormalTabBackground}" 
-                                          TabItemSelectedBackground="{StaticResource SelectedTabBackground}"
-                                          TabItemMouseOverBackground="{StaticResource MouseOverTabBackground}" >
-                            </r:TabControl>
-                        </Grid>
+                </GroupBox>
 
-                    </GroupBox>
+                <!-- Vertical splitter between query and results -->
+                <GridSplitter Grid.Column="1"  HorizontalAlignment="Center" Width="5" Background="Silver"/>
+                <GroupBox  Grid.Column="2" Header="Results">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Vertical splitter between query and results -->
-                    <GridSplitter Grid.Column="1"  HorizontalAlignment="Center" Width="5" Background="Silver"/>
-                    <GroupBox  Grid.Column="2" Header="Results">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="32"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <ToolBar Grid.Row="0" >
+                        <ToolBarTray  Grid.Row="0">
+                            <ToolBar>
                                 <Button Command="{x:Static local:MainWindow.SaveResultCommand}" ToolTip="Save">
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
                                 </Button>
-                                <Separator></Separator>
+                            </ToolBar>
+                            <ToolBar>
                                 <Button Command="Copy" ToolTip="Copy">
                                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
                                 </Button>
@@ -385,11 +390,12 @@ Licensed under the MIT license.
                                 </Button>
 
                             </ToolBar>
-                            <local:ResultsEditor x:Name="ResultsEditor" Grid.Row="1" Text="{Binding QueryResult}" />
-                        </Grid>
-                    </GroupBox>
-                </Grid>
+                        </ToolBarTray>
+                        <local:ResultsEditor x:Name="ResultsEditor" Grid.Row="1" Text="{Binding QueryResult}" />
+                    </Grid>
+                </GroupBox>
             </Grid>
+        </Grid>
 
     </DockPanel>
 </Window>

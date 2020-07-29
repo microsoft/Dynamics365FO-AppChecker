@@ -57,7 +57,6 @@ namespace SocratexGraphExplorer.Views
             {
                 this.model.Username = this.Username;
                 this.model.Server = this.ServerNameControl.Text;
-                this.model.Password = this.Password;
                 this.DialogResult = true;
             }
             else

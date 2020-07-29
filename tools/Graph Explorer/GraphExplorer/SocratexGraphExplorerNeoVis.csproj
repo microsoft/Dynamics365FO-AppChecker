@@ -99,9 +99,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Extensions.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="Views\BraceFoldingStrategy.cs" />
     <Compile Include="Views\BrowserContextMenuHandler.cs" />
     <Compile Include="Views\BrowserCSObjects.cs" />
     <Compile Include="Views\ClassInformationControl.xaml.cs">
@@ -116,6 +118,9 @@
     <Compile Include="Views\EmptyInformationControl.xaml.cs">
       <DependentUpon>EmptyInformationControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PropertyItem.cs" />
+    <Compile Include="Views\SourceEditor.cs" />
+    <Compile Include="Views\XppSourceEditor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -239,6 +244,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Fat Graph White Background.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Fat Graph White Background.png" />
+    <Resource Include="Images\Fat Graph.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Document.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Simple Graph.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

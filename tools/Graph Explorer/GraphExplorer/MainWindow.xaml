@@ -12,7 +12,7 @@ Licensed under the MIT license.
         xmlns:cef="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="600" Width="1200">
+        Title="{Binding Title}" Height="700" Width="1200">
 
     <Window.Resources>
         <Style TargetType="{x:Type Image}" x:Key="toolbarImageStyle">
@@ -25,10 +25,11 @@ Licensed under the MIT license.
         <Style TargetType="{x:Type TextBlock}" x:Key="toolbarTextStyle">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, AncestorLevel=1}, Path=IsEnabled}" Value="False">
-                    <Setter Property="Opacity" Value="0.30"></Setter>
+                    <Setter Property="Opacity" Value="0.3"></Setter>
                 </DataTrigger>
             </Style.Triggers>
-        </Style>        
+        </Style>      
+        
     </Window.Resources>
 
     <Window.InputBindings>
@@ -127,6 +128,19 @@ Licensed under the MIT license.
                 <MenuItem Header="About" />
             </MenuItem>
         </Menu>
+
+        <ToolBarTray DockPanel.Dock="Top" Height="48" >
+            <ToolBar Height="48">
+                <RadioButton Style="{StaticResource {x:Type ToggleButton}}"  Background="#FFEEF5FD" x:Name="GraphModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding GraphModeSelected}" >
+                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Simple Graph.png" />
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource {x:Type ToggleButton}}"  Background="#FFEEF5FD"  x:Name="TextModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding TextModeSelected}">
+                    <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Document.png" />
+                </RadioButton>
+            </ToolBar>
+        </ToolBarTray>
+
         <StatusBar  DockPanel.Dock="Bottom">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -162,8 +176,16 @@ Licensed under the MIT license.
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Grid.Column="0" Header="Graph" >
-                    <wpf:ChromiumWebBrowser Grid.Column="0" x:Name="Browser" SizeChanged="Browser_SizeChangedAsync"/>
+                <GroupBox Grid.Column="0" Header="Graph">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="GraphColumn" Width="*"/>
+                            <ColumnDefinition x:Name="TextColumn" Width="0"/>
+                        </Grid.ColumnDefinitions>
+     
+                        <wpf:ChromiumWebBrowser Grid.Column="0" x:Name="Browser" SizeChanged="Browser_SizeChangedAsync"/>
+                        <wpf:ChromiumWebBrowser Grid.Column="1" x:Name="TextBrowser" />
+                    </Grid>
                 </GroupBox>
 
                 <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
@@ -181,52 +203,49 @@ Licensed under the MIT license.
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <ToolBar Grid.Row="0">
-
-                        <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/OpenFolder_16x.png"></Image>
-                        </Button>
-                        <Button Command="{Binding SaveQueryCommand}" ToolTip="Save">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
-                        </Button>
-                        <Separator></Separator>
-                        
-                        <Button x:Name="ExecuteQueryButton"    Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" VerticalAlignment="Bottom" >
-                            <StackPanel Orientation="Horizontal">
-                                <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Run_16x.png"></Image>
-                            </StackPanel>
-                        </Button>
-
-                        <Separator></Separator>
-                        <Button Command="Cut" ToolTip="Cut">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cut_16x.png"></Image>
-                        </Button>
-                        <Button Command="Copy" ToolTip="Copy">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
-                        </Button>
-                        <Button Command="Paste" ToolTip="Paste">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Paste_16x.png"></Image>
-                        </Button>
-                        <Button Command="Delete" ToolTip="Delete">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cancel_16x.png"></Image>
-                        </Button>
-                        <Separator/>
-                        <Button Command="Undo" ToolTip="Undo">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Undo_16x.png"></Image>
-                        </Button>
-                        <Button Command="Redo" ToolTip="Redo">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
-                        </Button>
-                        <Separator></Separator>
-                        <Button  x:Name="IncreaseQueryFontSizeButton" Command="{Binding IncreaseQueryFontSize}"  ToolTip="Increase font size">
-                            <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
-                        </Button>
-                        <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size">
-                            <Image Style="{StaticResource toolbarImageStyle}"  Source="Images/DecreaseFontSize_16x.png"/>
-                        </Button>
-
-                    </ToolBar>
-
+                    <ToolBarTray Grid.Row="0">
+                        <ToolBar HorizontalAlignment="Right">
+                            <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/OpenFolder_16x.png"></Image>
+                            </Button>
+                            <Button Command="{Binding SaveQueryCommand}" ToolTip="Save">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
+                            </Button>
+                            <Button x:Name="ExecuteQueryButton"    Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" VerticalAlignment="Bottom" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Image  Margin="2" Style="{StaticResource toolbarImageStyle}" Source="Images/Run_16x.png"></Image>
+                                </StackPanel>
+                            </Button>
+                        </ToolBar>
+                        <ToolBar>
+                            <Button Command="Cut" ToolTip="Cut">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cut_16x.png"></Image>
+                            </Button>
+                            <Button Command="Copy" ToolTip="Copy">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Copy_16x.png"></Image>
+                            </Button>
+                            <Button Command="Paste" ToolTip="Paste">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Paste_16x.png"></Image>
+                            </Button>
+                            <Button Command="Delete" ToolTip="Delete">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Cancel_16x.png"></Image>
+                            </Button>
+                            <Separator/>
+                            <Button Command="Undo" ToolTip="Undo">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Undo_16x.png"></Image>
+                            </Button>
+                            <Button Command="Redo" ToolTip="Redo">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
+                            </Button>
+                            <Separator></Separator>
+                            <Button  x:Name="IncreaseQueryFontSizeButton" Command="{Binding IncreaseQueryFontSize}"  ToolTip="Increase font size">
+                                <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
+                            </Button>
+                            <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size">
+                                <Image Style="{StaticResource toolbarImageStyle}"  Source="Images/DecreaseFontSize_16x.png"/>
+                            </Button>
+                        </ToolBar>
+                    </ToolBarTray>
                     <avalonedit:TextEditor x:Name="CypherEditor" Grid.Row="1" Margin="0,5,0,0" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
                         match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
                     </avalonedit:TextEditor>

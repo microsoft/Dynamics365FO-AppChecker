@@ -74,7 +74,7 @@
                 labels: {
                     'Class': {
                         caption: 'Name', // Works. Name of property on Class node
-                        size: 'LOC',
+                        size: 'LOC' ,
                         community: 'Package',
 
                         // This is what gets shown in the tooltip
