@@ -43,12 +43,13 @@ namespace SocratexGraphExplorer.Views
             this.MethodEditor = new XppSourceEditor(model);
             this.SourceEditorBox.Content = this.MethodEditor;
 
-            //this.MethodEditor.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
+            // The method can be placed directly under a toplevel node (that has source)
+            // or it can be the end of a path (forms -> formdatasource -> method, for instance)
 
-            this.Header.Text = string.Format("{0} {1}{2}{3}", node.Labels[0], node.Properties["Class"] as string, (bool)node.Properties["IsStatic"] ? "::" : ".", node.Properties["Method"] as string);
+            this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
             properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
             properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Class", Value = (node.Properties["Class"].ToString()) });
+            properties.Add(new PropertyItem() { Key = "Artifact", Value = (node.Properties["Artifact"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Complexity", Value = (node.Properties["CMP"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Visibility", Value = (node.Properties["Visibility"].ToString()) });
@@ -70,7 +71,12 @@ namespace SocratexGraphExplorer.Views
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var query = string.Format("match (c) -[:DECLARES]->(m:Method) where id(m)=  {0} return c", node.Id);
+            var artifact = node.Properties["Artifact"].ToString();
+
+            var parts = artifact.Split('/');
+            var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
+
+            var query = string.Format("match (p) where p.Artifact='{0}' return p", toplevelArtifact);
             var c = await model.ExecuteCypherAsync(query);
 
             if (c != null)
@@ -110,7 +116,7 @@ namespace SocratexGraphExplorer.Views
             }
 
             var outgoingCallsResult = await outGoingCallsQuery;
-            if (incomingCallsResult != null)
+            if (outgoingCallsResult != null)
             {
                 properties.Add(new PropertyItem() { Key = "Outgoing calls", Value = outgoingCallsResult[0].Values["count"].ToString() });
                 properties.Add(new PropertyItem() { Key = "Called methods", Value = outgoingCallsResult[0].Values["methods"].ToString() });
@@ -120,16 +126,15 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowDeclaringEntityClicked(object sender, RoutedEventArgs e)
         {
-            var containingEntityQuery = string.Format("match (c) -[:DECLARES]-> (n) where id(n) = {0} return c", node.Id.ToString());
+            var containingEntityQuery = string.Format("match p=(c) -[*]-> (n:Method) where id(n) = {0} return p order by length(p) desc limit 1", node.Id.ToString());
             var containingQueryResult = await model.ExecuteCypherAsync(containingEntityQuery);
 
-            var entityNode = containingQueryResult[0].Values["c"] as INode;
-            if (entityNode != null)
-            {
-                var entityId = entityNode.Id;
+            var path = containingQueryResult[0].Values["p"] as IPath;
 
+            if (path != null && path.Nodes.Any())
+            {
                 var nodes = this.model.NodesShown;
-                nodes.Add(entityId);
+                nodes.UnionWith(path.Nodes.Select(n => n.Id));
                 this.model.NodesShown = nodes;
             }
         }

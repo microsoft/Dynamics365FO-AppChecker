@@ -474,6 +474,14 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 child = new SocratexGraphExplorer.Views.ClassInformationControl(this.model, this, node);
             }
+            else if (string.Compare(node.Labels[0], "Table") == 0)
+            {
+                child = new SocratexGraphExplorer.Views.TableInformationControl(this.model, this, node);
+            }
+            else if (string.Compare(node.Labels[0], "Form") == 0)
+            {
+                child = new SocratexGraphExplorer.Views.FormInformationControl(this.model, this, node);
+            }
             else
             {
                 child = new SocratexGraphExplorer.Views.EmptyInformationControl();

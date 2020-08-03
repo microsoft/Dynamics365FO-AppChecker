@@ -136,26 +136,36 @@ namespace SocratexGraphExplorer.Properties {
             "                       \'Name\', \'LOC\'\r\n                        ],\r\n\r\n            " +
             "            // \'sizeCypher\': \'MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETU" +
             "RN sum(r.weight) AS c\'\r\n                        // \'sizeCypher\': \'MATCH (n) RETU" +
-            "RN n.LOC as c\'\r\n                    },\r\n                    \'Method\': {\r\n       " +
-            "                 // This is what gets shown in the tooltip\r\n                    " +
-            "    \'title_properties\': [\r\n                            \'Method\', \'LOC\', \'NOS\'\r\n " +
-            "                       ],\r\n                        caption: \'Method\', // Works. " +
-            "Name of property on Method node\r\n                        size: \'LOC\',\r\n         " +
-            "           }\r\n                },\r\n                relationships: {\r\n            " +
-            "        \'EXTENDS\': {\r\n                        caption: true,  // Works\r\n        " +
-            "            },\r\n                    \'DECLARES\': {\r\n                        capti" +
-            "on: true,  // Works\r\n                    },\r\n                    \'CALLS\': {\r\n   " +
-            "                     \'title_properties\': [\r\n                            \'Count\'\r" +
-            "\n                        ],\r\n                        caption: true,  // Works\r\n " +
-            "                       thickness: \'Count\', // Need a property name on the edge\r\n" +
-            "\r\n                    }\r\n                },\r\n                initial_cypher: cyp" +
-            "her\r\n            }\r\n            var viz = new NeoVis.default(config);\r\n         " +
-            "   viz.registerOnEvent(\'completed\', (e)=>\r\n            {\r\n                viz[\'_" +
-            "network\'].on(\'click\', (event)=>\r\n                {\r\n                    NodeOrEd" +
-            "geSelected(event);\r\n                    console.log(event.nodes[0]);\r\n          " +
-            "      });\r\n            });\r\n\r\n            // Do the actual drawing\r\n            " +
-            "viz.render();\r\n        }\r\n    </script>\r\n\r\n    <body onload=\'init()\' >\r\n        " +
-            "<div id=\'viz\'></div>\r\n    </body>\r\n</html>")]
+            "RN n.LOC as c\'\r\n                    },\r\n                    \'Table\': {\r\n        " +
+            "                caption: \'Name\', \r\n                        size: \'LOC\' ,\r\n      " +
+            "                  community: \'Package\',\r\n\r\n                        // This is wh" +
+            "at gets shown in the tooltip\r\n                        \'title_properties\': [\r\n   " +
+            "                         \'Name\', \'LOC\'\r\n                        ],\r\n            " +
+            "        },\r\n                    \'Form\': {\r\n                        caption: \'Nam" +
+            "e\', \r\n                        size: \'LOC\' ,\r\n                        community: " +
+            "\'Package\',\r\n\r\n                        // This is what gets shown in the tooltip\r" +
+            "\n                        \'title_properties\': [\r\n                            \'Nam" +
+            "e\', \'LOC\'\r\n                        ],\r\n                    },                   " +
+            " \r\n                    \'Method\': {\r\n                        // This is what gets" +
+            " shown in the tooltip\r\n                        \'title_properties\': [\r\n          " +
+            "                  \'Method\', \'LOC\', \'NOS\'\r\n                        ],\r\n          " +
+            "              caption: \'Name\', // Works. Name of property on Method node\r\n      " +
+            "                  size: \'LOC\',\r\n                    }\r\n                },\r\n     " +
+            "           relationships: {\r\n                    \'EXTENDS\': {\r\n                 " +
+            "       caption: true,  // Works\r\n                    },\r\n                    \'DE" +
+            "CLARES\': {\r\n                        caption: true,  // Works\r\n                  " +
+            "  },\r\n                    \'CALLS\': {\r\n                        \'title_properties\'" +
+            ": [\r\n                            \'Count\'\r\n                        ],\r\n          " +
+            "              caption: true,  // Works\r\n                        thickness: \'Coun" +
+            "t\', // Need a property name on the edge\r\n\r\n                    }\r\n              " +
+            "  },\r\n                initial_cypher: cypher\r\n            }\r\n            var viz" +
+            " = new NeoVis.default(config);\r\n            viz.registerOnEvent(\'completed\', (e)" +
+            "=>\r\n            {\r\n                viz[\'_network\'].on(\'click\', (event)=>\r\n      " +
+            "          {\r\n                    NodeOrEdgeSelected(event);\r\n                   " +
+            " console.log(event.nodes[0]);\r\n                });\r\n            });\r\n\r\n         " +
+            "   // Do the actual drawing\r\n            viz.render();\r\n        }\r\n    </script>" +
+            "\r\n\r\n    <body onload=\'init()\' >\r\n        <div id=\'viz\'></div>\r\n    </body>\r\n</ht" +
+            "ml>")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));
@@ -186,6 +196,18 @@ namespace SocratexGraphExplorer.Properties {
             }
             set {
                 this["SourceFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int TextResultsFontSize {
+            get {
+                return ((int)(this["TextResultsFontSize"]));
+            }
+            set {
+                this["TextResultsFontSize"] = value;
             }
         }
     }

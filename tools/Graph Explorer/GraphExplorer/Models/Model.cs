@@ -416,6 +416,7 @@ namespace SocratexGraphExplorer.Models
             builder.AppendLine("<style>");
             builder.AppendLine("    table, th, td {");
             builder.AppendLine("        border: 1px solid black;");
+            builder.AppendLine("        font-size: " + Properties.Settings.Default.TextResultsFontSize.ToString() + ";");
             builder.AppendLine("        border-collapse: collapse;");
             builder.AppendLine("    }");
             builder.AppendLine("</style>");
@@ -463,16 +464,7 @@ namespace SocratexGraphExplorer.Models
      
         public static string CommaSeparatedString(IEnumerable<long> set)
         {
-            string result = string.Empty;
-            bool first = true;
-            foreach (var val in set)
-            {
-                if (!first)
-                    result += ",";
-                result += val.ToString();
-                first = false;
-            }
-            return result;
+            return string.Join(",", set);
         }
 
         public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)

@@ -120,7 +120,25 @@ namespace SocratexGraphExplorer
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.Browser.LoadHtml(this.model.Source);
-            this.TextBrowser.LoadLargeHtmlString("<html><body>No Info</body></html>");
+            this.TextBrowser.LoadLargeHtmlString(@"<html>
+    <head>
+        <style>
+            html, body, .container {
+                height: 100%;
+            }
+            .container {
+                font-size: 24;
+                color: lightgray;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body class='container'>
+        No information
+    </body>
+</html>");
             this.ViewModel.GraphModeSelected = true;
         }
 

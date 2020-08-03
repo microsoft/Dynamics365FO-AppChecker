@@ -85,12 +85,32 @@
                         // 'sizeCypher': 'MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c'
                         // 'sizeCypher': 'MATCH (n) RETURN n.LOC as c'
                     },
+                    'Table': {
+                        caption: 'Name', 
+                        size: 'LOC' ,
+                        community: 'Package',
+
+                        // This is what gets shown in the tooltip
+                        'title_properties': [
+                            'Name', 'LOC'
+                        ],
+                    },
+                    'Form': {
+                        caption: 'Name', 
+                        size: 'LOC' ,
+                        community: 'Package',
+
+                        // This is what gets shown in the tooltip
+                        'title_properties': [
+                            'Name', 'LOC'
+                        ],
+                    },                    
                     'Method': {
                         // This is what gets shown in the tooltip
                         'title_properties': [
                             'Method', 'LOC', 'NOS'
                         ],
-                        caption: 'Method', // Works. Name of property on Method node
+                        caption: 'Name', // Works. Name of property on Method node
                         size: 'LOC',
                     }
                 },
@@ -137,6 +157,9 @@
     </Setting>
     <Setting Name="SourceFont" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
+    </Setting>
+    <Setting Name="TextResultsFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
     </Setting>
   </Settings>
 </SettingsFile>

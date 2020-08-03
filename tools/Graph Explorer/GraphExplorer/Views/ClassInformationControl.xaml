@@ -47,7 +47,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
             <GroupBox x:Name="SourceEditorBox" Grid.Column="0" Header="Source">
             </GroupBox>
@@ -70,7 +70,7 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}"  HeaderContainerStyle="{StaticResource HeadingStyle}"/>
-                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" 
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="200"
                                             HeaderContainerStyle="{StaticResource HeadingStyle}">
                             </GridViewColumn>
                         </GridView>
