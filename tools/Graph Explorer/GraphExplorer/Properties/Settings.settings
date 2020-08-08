@@ -75,20 +75,17 @@
                     'Class': {
                         caption: 'Name', // Works. Name of property on Class node
                         size: 'LOC' ,
-                        community: 'Package',
+                        // community: 1,
 
                         // This is what gets shown in the tooltip
                         'title_properties': [
                             'Name', 'LOC'
                         ],
-
-                        // 'sizeCypher': 'MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETURN sum(r.weight) AS c'
-                        // 'sizeCypher': 'MATCH (n) RETURN n.LOC as c'
                     },
                     'Table': {
                         caption: 'Name', 
                         size: 'LOC' ,
-                        community: 'Package',
+                        // community: 2,
 
                         // This is what gets shown in the tooltip
                         'title_properties': [
@@ -98,7 +95,7 @@
                     'Form': {
                         caption: 'Name', 
                         size: 'LOC' ,
-                        community: 'Package',
+                       //  community: 3,
 
                         // This is what gets shown in the tooltip
                         'title_properties': [
@@ -112,6 +109,7 @@
                         ],
                         caption: 'Name', // Works. Name of property on Method node
                         size: 'LOC',
+                        // community: 4,
                     }
                 },
                 relationships: {
@@ -125,7 +123,7 @@
                         'title_properties': [
                             'Count'
                         ],
-                        caption: true,  // Works
+                        caption: true,  
                         thickness: 'Count', // Need a property name on the edge
 
                     }

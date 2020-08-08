@@ -114,18 +114,10 @@ Licensed under the MIT license.
                 <MenuItem Header="Show outgoing edges"  Command="{Binding ShowOutgoingEdges}" ToolTip="Show the outgoing edges from the selected node" />
                 <MenuItem Header="Show incoming edges"  Command="{Binding ShowIncomingEdges}" ToolTip="Show the incoming edges to the selected node" />
                 <MenuItem Header="Show edges"  Command="{Binding ShowEdges}" ToolTip="Show both the incoming and outgoing edges to the selected node" />
-
             </MenuItem>
-            <MenuItem Header="Window">
-                <MenuItem Header="Close All Documents" Command="{Binding CloseAllWindowsCommand}" >
-                    <MenuItem.Icon>
-                        <Image Source="Images/CloseDocumentGroup_16x.png"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem x:Name="WindowsMenuItem" Header="Windows..." Command="{Binding WindowsCommand}" />
-            </MenuItem>
+            
             <MenuItem Header="Help">
-                <MenuItem Header="About" />
+                <MenuItem Header="About" Command="{Binding AboutCommand}"/>
             </MenuItem>
         </Menu>
 

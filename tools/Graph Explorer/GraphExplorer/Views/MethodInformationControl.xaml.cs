@@ -76,7 +76,7 @@ namespace SocratexGraphExplorer.Views
             var parts = artifact.Split('/');
             var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
-            var query = string.Format("match (p) where p.Artifact='{0}' return p", toplevelArtifact);
+            var query = string.Format("match (p) where p.Artifact='{0}' return p limit 1", toplevelArtifact);
             var c = await model.ExecuteCypherAsync(query);
 
             if (c != null)

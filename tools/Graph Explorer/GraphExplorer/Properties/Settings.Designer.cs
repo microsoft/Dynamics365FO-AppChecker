@@ -131,41 +131,38 @@ namespace SocratexGraphExplorer.Properties {
             "           arrows: true, // Shows arrows on edges\r\n                labels: {\r\n  " +
             "                  \'Class\': {\r\n                        caption: \'Name\', // Works." +
             " Name of property on Class node\r\n                        size: \'LOC\' ,\r\n        " +
-            "                community: \'Package\',\r\n\r\n                        // This is what" +
-            " gets shown in the tooltip\r\n                        \'title_properties\': [\r\n     " +
-            "                       \'Name\', \'LOC\'\r\n                        ],\r\n\r\n            " +
-            "            // \'sizeCypher\': \'MATCH (n) WHERE id(n) = {id} MATCH (n)-[r]-() RETU" +
-            "RN sum(r.weight) AS c\'\r\n                        // \'sizeCypher\': \'MATCH (n) RETU" +
-            "RN n.LOC as c\'\r\n                    },\r\n                    \'Table\': {\r\n        " +
-            "                caption: \'Name\', \r\n                        size: \'LOC\' ,\r\n      " +
-            "                  community: \'Package\',\r\n\r\n                        // This is wh" +
-            "at gets shown in the tooltip\r\n                        \'title_properties\': [\r\n   " +
-            "                         \'Name\', \'LOC\'\r\n                        ],\r\n            " +
-            "        },\r\n                    \'Form\': {\r\n                        caption: \'Nam" +
-            "e\', \r\n                        size: \'LOC\' ,\r\n                        community: " +
-            "\'Package\',\r\n\r\n                        // This is what gets shown in the tooltip\r" +
-            "\n                        \'title_properties\': [\r\n                            \'Nam" +
-            "e\', \'LOC\'\r\n                        ],\r\n                    },                   " +
-            " \r\n                    \'Method\': {\r\n                        // This is what gets" +
+            "                // community: 1,\r\n\r\n                        // This is what gets" +
             " shown in the tooltip\r\n                        \'title_properties\': [\r\n          " +
-            "                  \'Method\', \'LOC\', \'NOS\'\r\n                        ],\r\n          " +
-            "              caption: \'Name\', // Works. Name of property on Method node\r\n      " +
-            "                  size: \'LOC\',\r\n                    }\r\n                },\r\n     " +
-            "           relationships: {\r\n                    \'EXTENDS\': {\r\n                 " +
-            "       caption: true,  // Works\r\n                    },\r\n                    \'DE" +
-            "CLARES\': {\r\n                        caption: true,  // Works\r\n                  " +
-            "  },\r\n                    \'CALLS\': {\r\n                        \'title_properties\'" +
-            ": [\r\n                            \'Count\'\r\n                        ],\r\n          " +
-            "              caption: true,  // Works\r\n                        thickness: \'Coun" +
-            "t\', // Need a property name on the edge\r\n\r\n                    }\r\n              " +
-            "  },\r\n                initial_cypher: cypher\r\n            }\r\n            var viz" +
-            " = new NeoVis.default(config);\r\n            viz.registerOnEvent(\'completed\', (e)" +
-            "=>\r\n            {\r\n                viz[\'_network\'].on(\'click\', (event)=>\r\n      " +
-            "          {\r\n                    NodeOrEdgeSelected(event);\r\n                   " +
-            " console.log(event.nodes[0]);\r\n                });\r\n            });\r\n\r\n         " +
-            "   // Do the actual drawing\r\n            viz.render();\r\n        }\r\n    </script>" +
-            "\r\n\r\n    <body onload=\'init()\' >\r\n        <div id=\'viz\'></div>\r\n    </body>\r\n</ht" +
-            "ml>")]
+            "                  \'Name\', \'LOC\'\r\n                        ],\r\n                   " +
+            " },\r\n                    \'Table\': {\r\n                        caption: \'Name\', \r\n" +
+            "                        size: \'LOC\' ,\r\n                        // community: 2,\r" +
+            "\n\r\n                        // This is what gets shown in the tooltip\r\n          " +
+            "              \'title_properties\': [\r\n                            \'Name\', \'LOC\'\r\n" +
+            "                        ],\r\n                    },\r\n                    \'Form\': " +
+            "{\r\n                        caption: \'Name\', \r\n                        size: \'LOC" +
+            "\' ,\r\n                       //  community: 3,\r\n\r\n                        // This" +
+            " is what gets shown in the tooltip\r\n                        \'title_properties\': " +
+            "[\r\n                            \'Name\', \'LOC\'\r\n                        ],\r\n      " +
+            "              },                    \r\n                    \'Method\': {\r\n         " +
+            "               // This is what gets shown in the tooltip\r\n                      " +
+            "  \'title_properties\': [\r\n                            \'Method\', \'LOC\', \'NOS\'\r\n   " +
+            "                     ],\r\n                        caption: \'Name\', // Works. Name" +
+            " of property on Method node\r\n                        size: \'LOC\',\r\n             " +
+            "           // community: 4,\r\n                    }\r\n                },\r\n        " +
+            "        relationships: {\r\n                    \'EXTENDS\': {\r\n                    " +
+            "    caption: true,  // Works\r\n                    },\r\n                    \'DECLA" +
+            "RES\': {\r\n                        caption: true,  // Works\r\n                    }" +
+            ",\r\n                    \'CALLS\': {\r\n                        \'title_properties\': [" +
+            "\r\n                            \'Count\'\r\n                        ],\r\n             " +
+            "           caption: true,  \r\n                        thickness: \'Count\', // Need" +
+            " a property name on the edge\r\n\r\n                    }\r\n                },\r\n     " +
+            "           initial_cypher: cypher\r\n            }\r\n            var viz = new NeoV" +
+            "is.default(config);\r\n            viz.registerOnEvent(\'completed\', (e)=>\r\n       " +
+            "     {\r\n                viz[\'_network\'].on(\'click\', (event)=>\r\n                {" +
+            "\r\n                    NodeOrEdgeSelected(event);\r\n                    console.lo" +
+            "g(event.nodes[0]);\r\n                });\r\n            });\r\n\r\n            // Do th" +
+            "e actual drawing\r\n            viz.render();\r\n        }\r\n    </script>\r\n\r\n    <bo" +
+            "dy onload=\'init()\' >\r\n        <div id=\'viz\'></div>\r\n    </body>\r\n</html>")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));

@@ -110,7 +110,7 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowBaseClass(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {0} return q", node.Id);
+            var extendsQuery = string.Format("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {0} return q limit 1", node.Id);
             var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 

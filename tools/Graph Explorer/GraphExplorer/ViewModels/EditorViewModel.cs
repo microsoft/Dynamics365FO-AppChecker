@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace SocratexGraphExplorer.ViewModels
 {
@@ -130,18 +132,9 @@ namespace SocratexGraphExplorer.ViewModels
         private readonly ICommand executeQueryCommand;
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
 
-        public ICommand HideNodeCommand => new RelayCommand(
+        public ICommand AboutCommand => new RelayCommand(
             p =>
             {
-                var nodes = this.model.NodesShown;
-                nodes.Remove(this.SelectedNode);
-                this.model.NodesShown = nodes;
-
-                this.SelectedNode = 0;
-            },
-            p =>
-            {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
@@ -156,6 +149,21 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 var nodes = new HashSet<long>() { this.SelectedNode };
                 this.model.NodesShown = nodes;
+                this.SelectedNode = 0;
+            },
+            p =>
+            {
+                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+            }
+        );
+
+        public ICommand HideNodeCommand => new RelayCommand(
+            p =>
+            {
+                var nodes = this.model.NodesShown;
+                nodes.Remove(this.SelectedNode);
+                this.model.NodesShown = nodes;
+
                 this.SelectedNode = 0;
             },
             p =>
@@ -215,7 +223,7 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the edges (both incoming and outgoing) from the current node:
-                var q = "match (f) -[] -> (n) -[]-> (t) where id(n) = " + this.SelectedNode + " return t,f";
+                var q = string.Format("match (f) -[]- (n) where id(n) = {0} return f", this.SelectedNode);
                 var result = await this.model.ExecuteCypherAsync(q);
 
                 var outgoing = Model.HarvestNodeIdsFromGraph(result);
