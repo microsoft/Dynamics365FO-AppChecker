@@ -335,7 +335,6 @@ namespace SocratexGraphExplorer.ViewModels
             this.model = model;
 
             NodeSelected += UpdateNodeInfoPage;
-
             EdgeSelected += UpdateEdgeInfoPage;
 
             this.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>

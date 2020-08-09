@@ -55,7 +55,7 @@ namespace SocratexGraphExplorer.Views
             this.SourceEditorBox.Content = this.ClassEditor;
         }
 
-        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
             properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });

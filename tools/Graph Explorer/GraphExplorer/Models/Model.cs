@@ -192,9 +192,10 @@ namespace SocratexGraphExplorer.Models
 
         public string QueryFont => Properties.Settings.Default.QueryFont;
 
-        public void CreateNeo4jDriver(string password)
+        public IDriver CreateNeo4jDriver(string password)
         {
             this.Driver = GraphDatabase.Driver(string.Format("bolt://{0}:{1}", this.Server, this.Port), AuthTokens.Basic(this.Username, password));
+            return this.Driver;
         }
 
         public Model()
@@ -249,10 +250,15 @@ namespace SocratexGraphExplorer.Models
                     if (driver == null)
                         return false;
 
-                    var session = driver.AsyncSession();
-                    var cursor = await session.RunAsync("match(c) return count(c)");
-                    var list = await cursor.ToListAsync();
-                    return list != null && list.Any();
+                    try
+                    {
+                        await driver.VerifyConnectivityAsync();
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
             }
             catch (Exception )
@@ -469,10 +475,11 @@ namespace SocratexGraphExplorer.Models
 
         public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
         {
-            if (!records.Any())
-                return null;
-
             var result = new HashSet<long>();
+
+            if (!records.Any())
+                return result;
+
             App.Current.Dispatcher.Invoke(() =>
             {
                 foreach (var record in records)
