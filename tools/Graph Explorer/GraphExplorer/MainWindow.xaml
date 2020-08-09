@@ -46,16 +46,12 @@ Licensed under the MIT license.
                         <Image Source="Images/OpenFolder_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save Cypher Query" InputGestureText="Ctrl+S">
+                <MenuItem Header="Save Cypher Query" InputGestureText="Ctrl+S" Command="{Binding SaveQueryCommand}">
                     <MenuItem.Icon>
                         <Image Source="Images/Save_16x.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save Cypher Query As..." Command="{Binding SaveAsCommand}">
-                    <MenuItem.Icon>
-                        <Image Source="Images/SaveAs_16x.png"/>
-                    </MenuItem.Icon>
-                </MenuItem>
+
                 <Separator/>
                 <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" />
                 <MenuItem Header="External Variables..." />
@@ -121,13 +117,13 @@ Licensed under the MIT license.
             </MenuItem>
         </Menu>
 
-        <ToolBarTray DockPanel.Dock="Top" Height="48" >
-            <ToolBar Height="48">
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}"  Background="#FFEEF5FD" x:Name="GraphModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding GraphModeSelected}" >
+        <ToolBarTray DockPanel.Dock="Top" Height="48" Background="#fff0f0f0" >
+            <ToolBar Height="48" Background="#fff0f0f0" >
+                <RadioButton ToolBar.OverflowMode="Never"  Style="{StaticResource {x:Type ToggleButton}}"  Background="#fff0f0f0" x:Name="GraphModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding GraphModeSelected}" >
                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Simple Graph.png" />
                 </RadioButton>
 
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}"  Background="#FFEEF5FD"  x:Name="TextModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding TextModeSelected}">
+                <RadioButton Style="{StaticResource {x:Type ToggleButton}}"  Background="#fff0f0f0"  x:Name="TextModeButton" Padding="4" BorderThickness="0" IsChecked="{Binding TextModeSelected}">
                     <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Document.png" />
                 </RadioButton>
             </ToolBar>

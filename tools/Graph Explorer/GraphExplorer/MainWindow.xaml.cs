@@ -71,8 +71,6 @@ namespace SocratexGraphExplorer
 
             Loaded += MainWindow_Loaded;
 
-            splash.Close(TimeSpan.FromSeconds(0));
-
             this.model = new Models.Model();
             this.ViewModel = new ViewModels.EditorViewModel(this, model);
 
@@ -88,6 +86,8 @@ namespace SocratexGraphExplorer
             // this.Browser.MenuHandler = new BrowserContextMenuHandler(this.ViewModel);
 
             this.DataContext = this.ViewModel;
+
+            splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
             if (!model.IsDebugMode)
@@ -115,6 +115,7 @@ namespace SocratexGraphExplorer
             // Now that the value of the connection parameters have been set,
             // the global connection to the database is established.
             this.model.CreateNeo4jDriver(password);
+
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
