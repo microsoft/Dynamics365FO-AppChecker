@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <None Remove="Images\High Contrast Socrates.png" />
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -31,7 +32,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AboutBox" version="2.0.0" />
     <PackageReference Include="AvalonEdit" version="6.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights" version="2.12.1" />
     <PackageReference Include="System.Buffers" version="4.5.0" />
@@ -42,6 +42,7 @@
   <ItemGroup>
     <Resource Include="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <Resource Include="Alecive-Flatwoken-Apps-File-Xml.ico" />
+    <Resource Include="Images\High Contrast Socrates.png" />
     <Resource Include="Images\SplashScreen with socrates.jpg" />
     <Resource Include="Images\Newer D365fo logo, inverted.png" />
     <Resource Include="Images\fatter-eye-inverted.png" />

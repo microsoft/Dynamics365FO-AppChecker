@@ -8,12 +8,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SocrateX, Source Core Reasoning and Trait Extraction Application")]
-[assembly: AssemblyDescription("An application that allows introspection into large codebases.")]
+[assembly: AssemblyTitle("SocrateX Explorer: Source Core Reasoning and Trait Extraction Application")]
+[assembly: AssemblyDescription("An application that allows introspection into large codebases. The code is represented as data hosted in an XML database and queried with XQuery.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Code Reasoning WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyProduct("Source Code Reasoning ")]
+[assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

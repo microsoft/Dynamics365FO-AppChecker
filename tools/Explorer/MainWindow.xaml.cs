@@ -710,22 +710,7 @@ namespace XppReasoningWpf
 
         private void CommandBinding_AboutBoxExecute(object sender, ExecutedRoutedEventArgs e)
         {
-            var aboutBox = new Gat.Controls.About
-            {
-                IsSemanticVersioning = true,
-                ApplicationLogo  = new BitmapImage(new Uri(@"/Socratex;component/Images/Alecive-Flatwoken-Apps-File-Xml.ico", UriKind.Relative)),
-                PublisherLogo = new BitmapImage(new Uri(@" / Socratex;component/Images/Newer D365fo logo, inverted.png", UriKind.Relative)),
-                HyperlinkText = "https://community.dynamics.com/ax/b/newdynamicsax/",
-                AdditionalNotes = @"This app works by analysing information represented in XML stored in a native XML database (BaseX). The server is available free of charge from basex.org. The server must contain one or more databases populated with XML serialized representations of the ASTs.
-
-Credits: The application icon was created by alecive and provided under the Creative Commons Attribution-Share Alike 4.0 license. " +
-@"The about box control is Copyright (c) 2014 Christoph Gattnar and provided under the MIT license. " +
-@"The editor controls are provided by AvalonEdit, http://avalonedit.net/ provided under the MIT license. " +
-@"The extended tab control was provided by alrh under The Code Project Open License (CPOL) 1.02: https://www.codeproject.com/info/cpol10.aspx " +
-@"The splash screen artwork was created from a picture by Derek Key on https://www.flickr.com/photos/derekskey/9135166134/ and used under the Creative Commons 2.0 license: https://creativecommons.org/licenses/by/2.0/ " +
-@"This tool connects to a running Basex database with code supplied by basex under the BSD license. This app was created by Peter Villadsen."
-            };
-
+            var aboutBox = new XppReasoningWpf.Views.AboutBox();
             aboutBox.Show();
         }
 
