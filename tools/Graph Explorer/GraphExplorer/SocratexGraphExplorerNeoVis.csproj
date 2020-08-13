@@ -103,6 +103,9 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="Views\AboutBox.xaml.cs">
+      <DependentUpon>AboutBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BraceFoldingStrategy.cs" />
     <Compile Include="Views\BrowserContextMenuHandler.cs" />
     <Compile Include="Views\BrowserCSObjects.cs" />
@@ -139,6 +142,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\AboutBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FormInformationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -268,6 +275,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Simple Graph.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\High Contrast Socrates.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

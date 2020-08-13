@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
+using SocratexGraphExplorer.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -133,8 +134,9 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
 
         public ICommand AboutCommand => new RelayCommand(
-            p =>
-            {
+            p => {
+                var aboutBox = new AboutBox();
+                aboutBox.Show();
             }
         );
 

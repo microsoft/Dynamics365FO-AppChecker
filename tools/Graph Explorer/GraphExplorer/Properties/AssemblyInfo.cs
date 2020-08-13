@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GraphXTest")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Socratex Graph Explorer")]
+[assembly: AssemblyDescription("An application that allows introspection into large codebases by using graph paradigms. Source code is represented as graphs in a graph database and queried with a graph query language.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GraphXTest")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("Source Code Reasoning")]
+[assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
