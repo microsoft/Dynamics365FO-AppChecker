@@ -64,7 +64,7 @@ Licensed under the MIT license.
             </StackPanel>
         </GroupBox>
 
-        <Label x:Name="StatusControl" Grid.Row="2" FontSize="12" Foreground="Red" Margin="4,0,4,0"></Label>
+        <Label x:Name="StatusControl" Grid.Row="2" FontSize="12" Margin="4,0,4,0"></Label>
 
         <Grid Row="3" >
             <Grid.RowDefinitions>

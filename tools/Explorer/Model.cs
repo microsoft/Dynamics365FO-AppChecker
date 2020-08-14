@@ -12,6 +12,7 @@ namespace XppReasoningWpf
     using BaseXInterface;
     using System.IO;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Windows.Threading;
 
     /// <summary>
@@ -203,12 +204,12 @@ namespace XppReasoningWpf
             return this.Server.GetSession(database);
         }
 
-        public bool IsServerOnline(string host, int port, string username, string password)
+        public async Task<bool>  IsServerOnlineAsync(string host, int port, string username, string password)
         {
             try
             {
                 var session = new Session(host, port, username, password);
-                session.Execute("show users");
+                await session.ExecuteAsync("show users");
                 session.Close();
             }
             catch (Exception)
