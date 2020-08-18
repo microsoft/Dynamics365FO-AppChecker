@@ -24,11 +24,11 @@ jobs:
              dotnet-version: '3.1.100' # SDK Version to use.
 
         - name: Build and publish
-          run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true  "tools\Graph Explorer\GraphExplorer\SocratexGraphExplorerNeoVis.netcore.csproj"
+          run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true -p:Platform=x64 "tools\Graph Explorer\GraphExplorer\SocratexGraphExplorerNeoVis.netcore.csproj"
 
         - name: Upload compiled app so it can be downloaded.
           uses: actions/upload-artifact@v1
           with:
              name: SocrateX.GraphExplorer.netcore
-             path: "tools\\Explorer\\bin\\Release\\netcoreapp3.1\\win-x64\\publish"
+             path: "tools\\Graph Explorer\\GraphExplorer\\bin\\Release\\netcoreapp3.1\\win-x64\\publish"
       
