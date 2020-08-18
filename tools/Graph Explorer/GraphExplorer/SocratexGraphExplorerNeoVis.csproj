@@ -199,34 +199,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Add_16x.png" />
-    <Resource Include="Images\Cancel_16x.png" />
-    <Resource Include="Images\Checkmark_16x.png" />
-    <Resource Include="Images\Checkmark_green_12x_16x.png" />
-    <Resource Include="Images\CloseDocumentGroup_16x.png" />
     <Resource Include="Images\CloudRun_16x.png" />
     <Resource Include="Images\Colorful spinning wheel.gif" />
     <Resource Include="Images\ConnectToDatabase_16x.png" />
-    <Resource Include="Images\Copy_16x.png" />
-    <Resource Include="Images\Cut_16x.png" />
-    <Resource Include="Images\DecreaseFontSize_16x.png" />
-    <Resource Include="Images\Document_16x.png" />
     <Resource Include="Images\fatter-eye-inverted.png" />
     <Resource Include="Images\fatter-eye.png" />
     <Resource Include="Images\Hourglass_16x.png" />
-    <Resource Include="Images\IncreaseFontSize_16x.png" />
     <Resource Include="Images\Newer D365fo logo, inverted.png" />
     <Resource Include="Images\NewQuery_16x.png" />
     <Resource Include="Images\OpenFile_16x.png" />
     <Resource Include="Images\OpenFolder_16x.png" />
-    <Resource Include="Images\Paste_16x.png" />
-    <Resource Include="Images\Redo_16x.png" />
     <Resource Include="Images\Run_16x.png" />
-    <Resource Include="Images\SaveAs_16x.png" />
-    <Resource Include="Images\Save_16x.png" />
-    <Resource Include="Images\SelectAll_16x.png" />
     <Resource Include="Images\SplashScreen No Logo.png" />
-    <Resource Include="Images\Undo_16x.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\SplashScreen with socrates.png" />
@@ -240,6 +224,12 @@
     </PackageReference>
     <PackageReference Include="CefSharp.Wpf">
       <Version>83.4.20</Version>
+    </PackageReference>
+    <PackageReference Include="MaterialDesignColors">
+      <Version>1.2.6</Version>
+    </PackageReference>
+    <PackageReference Include="MaterialDesignThemes">
+      <Version>3.1.3</Version>
     </PackageReference>
     <PackageReference Include="Neo4j.Driver">
       <Version>4.1.0</Version>

@@ -8,76 +8,67 @@ Licensed under the MIT license.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
-        xmlns:settings="clr-namespace:SocratexGraphExplorer.Properties"        
+        xmlns:settings="clr-namespace:SocratexGraphExplorer.Properties" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource materialDesign:MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+          
         mc:Ignorable="d"
-        Title="Connection Settings" Height="308" Width="300">
-
+        Title="Connection Settings" Height="280" Width="300">
+    <!--        Background="{DynamicResource materialDesign:MaterialDesignPaper}"
+        FontFamily="{DynamicResource materialDesign:MaterialDesignFont}"      -->
+    
     <Window.Resources>
-        <Style TargetType="{x:Type Label}" x:Key="FieldPrompt">
-            <Setter Property="FontSize" Value="10"/>
-            <Setter Property="Margin" Value="-4,0,0,-4"/>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+            <Setter Property="Margin" Value="0 8 0 8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style TargetType="{x:Type Control}" x:Key="Field">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
+        <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource MaterialDesignPasswordBox}">
+            <Setter Property="Margin" Value="0 8 0 16" />
         </Style>
     </Window.Resources>
-    <Grid>
+
+    <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <GroupBox Header="Server" Grid.Row="0">
-            <StackPanel>
-                <Label DockPanel.Dock="Top" Style="{StaticResource FieldPrompt}">Server URL</Label>
-                <TextBox x:Name="ServerNameControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Server}" Style="{StaticResource Field}" />
-                <Label Style="{StaticResource FieldPrompt}">Port</Label>
-                <TextBox x:Name="PortControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Port}" Style="{StaticResource Field}"/>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="Credentials" Grid.Row="1">
-            <StackPanel>
-                <Label Style="{StaticResource FieldPrompt}">Username</Label>
-                <TextBox x:Name="UsernameControl" Text="{Binding Username}"  Style="{StaticResource Field}" TextChanged="UserNameTextChanged" />
-                <Label Style="{StaticResource FieldPrompt}">Password</Label>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <PasswordBox Grid.Column="0" x:Name="PasswordControl"  Style="{StaticResource Field}"                         
-                         VerticalAlignment="Top"
-                         PasswordChanged="TxtPasswordbox_PasswordChanged" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="ServerNetwork" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="ServerNameControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Server}"
+                        materialDesign:HintAssist.Hint="Server URL"
+                        materialDesign:HintAssist.HelperText="Neo4j database user name">
+        </TextBox>
 
-                    <TextBox Grid.Column="0" x:Name="txtVisiblePasswordbox" Style="{StaticResource Field}" 
-                         VerticalAlignment="Top" Visibility="Hidden" />
+        <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Door" VerticalAlignment="Center"/>
+        <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PortControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Port}"
+                        materialDesign:HintAssist.Hint="Port number"
+                        materialDesign:HintAssist.HelperText="The Neo4j port accepting requests"/>
 
-                    <Image Grid.Column="1" x:Name="ImgShowHide" Width="15" Margin="3,1,0,0" 
-                           HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                           MouseLeave="ImgShowHide_MouseLeave"
-                           PreviewMouseDown="ImgShowHide_PreviewMouseDown"
-                           PreviewMouseUp="ImgShowHide_PreviewMouseUp" 
-                           Source="pack://application:,,,/Images/fatter-eye.png"/>
-                </Grid>
+        <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Kind="Account" VerticalAlignment="Center"/>
+        <TextBox  Grid.Row="2"  Grid.Column="1" x:Name="UsernameControl"  Text="{Binding Username}" TextChanged="UserNameTextChanged" 
+                        materialDesign:HintAssist.Hint="Username"
+                        materialDesign:HintAssist.HelperText="Neo4j database user name"/>
+        
+        <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" VerticalAlignment="Center"/>
+        <PasswordBox  Grid.Row="3" Grid.Column="1" x:Name="PasswordControl" 
+                        materialDesign:HintAssist.Hint ="Password"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        materialDesign:HintAssist.HelperText="Neo4j database password" />
 
-            </StackPanel>
-        </GroupBox>
+        <Label Grid.Row="4" Grid.Column="1"   Grid.ColumnSpan="2" x:Name="StatusControl"  Height="32" FontSize="12" ></Label>
 
-        <Label x:Name="StatusControl" Grid.Row="2" FontSize="12" Foreground="Red" Margin="4,0,4,0"></Label>
-
-        <Grid Row="3" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="50*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="1" Margin="4" IsDefault="True" Click="OkButtonClicked">Ok</Button>
-        </Grid>
+        <Button Grid.Row="5" Grid.Column="0"   Grid.ColumnSpan="2" IsDefault="True" Click="OkButtonClicked" >Ok</Button>
 
     </Grid>
 </Window>

@@ -53,14 +53,14 @@
                 <Label Grid.Row="1" Grid.Column="0">Version:</Label>
                 <Label Grid.Row="1" Grid.Column="1" Content="{Binding AssemblyVersion, Mode=OneWay}"></Label>
 
-                <Label Grid.Row="1" Grid.Column="0">Framework:</Label>
-                <Label Grid.Row="1" Grid.Column="1" Content="{Binding FrameworkName, Mode=OneWay}"></Label>
+                <Label Grid.Row="2" Grid.Column="0">Framework:</Label>
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding FrameworkName, Mode=OneWay}"></Label>
                 
-                <Label Grid.Row="2" Grid.Column="0">Copyright:</Label>
-                <Label Grid.Row="2" Grid.Column="1" Content="{Binding Copyright}"></Label>
+                <Label Grid.Row="3" Grid.Column="0">Copyright:</Label>
+                <Label Grid.Row="3" Grid.Column="1" Content="{Binding Copyright}"></Label>
                 
-                <Label Grid.Row="3" Grid.Column="0">Description:</Label>
-                <TextBlock Grid.Row="3" Grid.Column="1" Background="{StaticResource BackgroundBrush}" TextWrapping="WrapWithOverflow" Text="{Binding Description, Mode=OneWay}" Margin="5,5,0,0" ></TextBlock>
+                <Label Grid.Row="4" Grid.Column="0">Description:</Label>
+                <TextBlock Grid.Row="4" Grid.Column="1" Background="{StaticResource BackgroundBrush}" TextWrapping="WrapWithOverflow" Text="{Binding Description, Mode=OneWay}" Margin="5,5,0,0" ></TextBlock>
             </Grid>
         </Grid>
         <ScrollViewer Grid.Row="1" >

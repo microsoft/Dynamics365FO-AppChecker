@@ -17,6 +17,7 @@ namespace SocratexGraphExplorer.Views
     using System.Windows.Media.Imaging;
     using System.Xml;
     using SocratexGraphExplorer.Models;
+    using MaterialDesignThemes.Wpf;
 
     /// <summary>
     /// Base class for all the text editors.s
@@ -58,8 +59,6 @@ namespace SocratexGraphExplorer.Views
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        //protected Model Model { get { return (App.Current.MainWindow as MainWindow).Model; } }
 
         protected IHighlightingDefinition LoadHighlightDefinition(string mode)
         {
@@ -176,57 +175,12 @@ namespace SocratexGraphExplorer.Views
                 ItemsSource = new[]
                 {
                     new MenuItem {
-                        Command = ApplicationCommands.Cut,
-                        Icon = new Image {
-                            Source = new BitmapImage(new Uri("images/Cut_16x.png", UriKind.Relative))
-                        }},
-                    new MenuItem {
                         Command = ApplicationCommands.Copy,
-                        Icon = new Image {
-                                Source = new BitmapImage(new Uri("images/Copy_16x.png", UriKind.Relative))
-                            }},
-                    new MenuItem {
-                        Command = ApplicationCommands.Paste,
-                        Icon = new Image {
-                                Source = new BitmapImage(new Uri("images/Paste_16x.png", UriKind.Relative))
-                        }},
-                    new MenuItem {
-                        Command = ApplicationCommands.Delete,
-                        Icon = new Image {
-                                Source = new BitmapImage(new Uri("images/Cancel_16x.png", UriKind.Relative))
-                        }},
-                    new MenuItem()
-                    {
-                        Header = "Undo",
-                        ToolTip = "Undo",
-                        Icon = new Image
-                        {
-                            Source = new BitmapImage(new Uri("images/undo_16x.png", UriKind.Relative))
-                        },
-                        InputGestureText = "Ctrl+Z",
-                        Command = new RelayCommand(
-                            p => { this.Undo(); },
-                            p => { return this.CanUndo; })
-                    },
-
-                    new MenuItem() {
-                        Header = "Redo",
-                        ToolTip = "Redo",
-                        Icon = new Image
-                        {
-                            Source = new BitmapImage(new Uri("images/redo_16x.png", UriKind.Relative))
-                        },
-                        InputGestureText = "Ctrl+Y",
-                        Command = new RelayCommand(
-                            p => { this.Redo(); },
-                            p => { return this.CanRedo; })
+                        Icon = new PackIcon() { Kind=PackIconKind.ContentCopy },
                     },
                     new MenuItem {
                         Command = ApplicationCommands.SelectAll,
-                        Icon = new Image
-                        {
-                            Source = new BitmapImage(new Uri("images/SelectAll_16x.png", UriKind.Relative))
-                        }
+                        Icon = new PackIcon() { Kind=PackIconKind.SelectAll },
                     }
 
                 }

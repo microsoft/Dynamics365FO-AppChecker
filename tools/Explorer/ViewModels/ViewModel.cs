@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using BaseXInterface;
+using ICSharpCode.SharpDevelop.Editor;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -188,11 +190,28 @@ namespace XppReasoningWpf.ViewModels
             get { return this.model.QueryResult; }
             set
             {
-                // if (this.model.QueryResult != value)
-                {
-                    // this.model.QueryResult = value;
-                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(QueryResult)));
-                }
+                // The query result streams through here. It is not stored in the view model,
+                // only in the model.
+                // The error information from BaseX is not reliable enough to form the basis
+                // of an error squiggley.
+                //string s = value;
+                //var r = Regex.Match(s, @"Stopped at \.,\s(\d+)/(\d+):");
+                //if (r.Success)
+                //{
+                //    Group lineGroup = r.Groups[1];
+                //    Group columnGroup = r.Groups[2];
+                //    int line = int.Parse(lineGroup.Value);
+                //    int column = int.Parse(columnGroup.Value);
+
+                //    QueryEditor queryEditor = this.view.queryTabPage.SelectedContent as QueryEditor;
+
+                //    var startOffset = queryEditor.Document.GetOffset(line, column);
+                //    ITextMarker marker = queryEditor.TextMarkerService.Create(startOffset, 1);
+                //    marker.MarkerTypes = TextMarkerTypes.SquigglyUnderline;
+                //    marker.MarkerColor = Colors.Red;
+                //}
+
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(QueryResult)));
             }
         }
 
