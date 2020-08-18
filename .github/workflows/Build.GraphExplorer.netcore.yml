@@ -24,7 +24,7 @@ jobs:
              dotnet-version: '3.1.100' # SDK Version to use.
 
         - name: Build and publish
-          run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true  "tools\Graph Explorer\GraphExplorer.netcore.csproj"
+          run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true  "tools\Graph Explorer\GraphExplorer\GraphExplorer.netcore.csproj"
 
         - name: Upload compiled app so it can be downloaded.
           uses: actions/upload-artifact@v1
