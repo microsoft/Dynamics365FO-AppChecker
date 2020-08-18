@@ -90,7 +90,7 @@ namespace SocratexGraphExplorer
             splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
-            if (!model.IsDebugMode)
+            if (true || !model.IsDebugMode)
             {
                 // Now show the connection dialog
                 var connectionWindow = new Views.ConnectionWindow(this.model);

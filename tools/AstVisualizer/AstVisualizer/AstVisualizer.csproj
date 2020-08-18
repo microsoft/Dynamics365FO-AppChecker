@@ -98,7 +98,9 @@
     <Compile Include="ViewModel\QueryViewModel.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="Views\BindableEditor.cs" />
+    <Compile Include="Views\ITextMarker.cs" />
     <Compile Include="Views\QueryEditor.cs" />
+    <Compile Include="Views\TextMarkerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindow.xaml.cs">

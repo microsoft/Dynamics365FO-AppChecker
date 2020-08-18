@@ -26,13 +26,17 @@
     <Setting Name="Configuration" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;html&gt;
     &lt;head&gt;
-        &lt;title&gt;DataViz&lt;/title&gt;
-        &lt;style type='text/css'&gt;
+       &lt;style type='text/css'&gt;
             #viz {
                 width: 750px;
                 height: 600px;
                 border: 1px solid lightgray;
                 font: 12pt arial;
+                background: darkgray;
+                margin-top: -8px;
+                margin-bottom: -8px;
+                margin-left: -8px;
+                margin-right: -8px;
             }
         &lt;/style&gt;
         &lt;script src='https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js'&gt;&lt;/script&gt;
@@ -158,6 +162,9 @@
     </Setting>
     <Setting Name="TextResultsFontSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="ShowLineNumbers" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

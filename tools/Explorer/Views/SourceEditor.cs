@@ -6,8 +6,11 @@ using System;
 namespace XppReasoningWpf
 {
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.AddIn;
     using ICSharpCode.AvalonEdit.Highlighting;
+    using ICSharpCode.SharpDevelop.Editor;
     using System.ComponentModel;
+    using System.ComponentModel.Design;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -23,6 +26,8 @@ namespace XppReasoningWpf
     /// </summary>
     public class SourceEditor : TextEditor, INotifyPropertyChanged
     {
+        public ITextMarkerService TextMarkerService { get; set; }
+
         /// <summary>
         /// A bindable Text property
         /// </summary>
@@ -170,6 +175,17 @@ namespace XppReasoningWpf
                 ConvertTabsToSpaces = true,
                 IndentationSize = 4,
             };
+
+            var textMarkerService = new TextMarkerService(this.Document);
+            this.TextArea.TextView.BackgroundRenderers.Add(textMarkerService);
+            this.TextArea.TextView.LineTransformers.Add(textMarkerService);
+            IServiceContainer services = (IServiceContainer)this.Document.ServiceProvider.GetService(typeof(IServiceContainer));
+            if (services != null)
+            {
+                services.AddService(typeof(ITextMarkerService), textMarkerService);
+            }
+
+            this.TextMarkerService = textMarkerService;
 
             this.ContextMenu = new ContextMenu
             {
