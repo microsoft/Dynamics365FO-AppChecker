@@ -86,6 +86,7 @@
     <Compile Include="Views\ExternalVariablesControl.xaml.cs">
       <DependentUpon>ExternalVariablesControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ITextMarker.cs" />
     <Compile Include="Views\ResultsEditor.cs" />
     <Compile Include="Views\QueryEditor.cs" />
     <Compile Include="Views\ConnectionWindow.xaml.cs">
@@ -97,6 +98,7 @@
     <Compile Include="Views\SubmittedQueriesWindow.xaml.cs">
       <DependentUpon>SubmittedQueriesWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TextMarkerService.cs" />
     <Compile Include="Views\WindowsWindow.xaml.cs">
       <DependentUpon>WindowsWindow.xaml</DependentUpon>
     </Compile>
