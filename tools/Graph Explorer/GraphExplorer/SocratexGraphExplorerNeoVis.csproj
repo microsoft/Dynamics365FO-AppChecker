@@ -261,9 +261,6 @@
     <Resource Include="Images\Fat Graph.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Document.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Simple Graph.png" />
   </ItemGroup>
   <ItemGroup>

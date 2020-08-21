@@ -477,7 +477,7 @@ namespace SocratexGraphExplorer.Models
         {
             var result = new HashSet<long>();
 
-            if (!records.Any())
+            if (records == null || !records.Any())
                 return result;
 
             App.Current.Dispatcher.Invoke(() =>

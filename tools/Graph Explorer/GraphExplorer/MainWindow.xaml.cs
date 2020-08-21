@@ -4,6 +4,7 @@
 using CefSharp;
 using SocratexGraphExplorer.Models;
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
@@ -143,10 +144,22 @@ namespace SocratexGraphExplorer
             this.ViewModel.GraphModeSelected = true;
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            try
+            {
+                this.Browser.Dispose();
+            }
+            catch
+            {
+
+            }
+        }
+
         private async void Browser_SizeChangedAsync(object sender, SizeChangedEventArgs e)
         {
             if (this.Browser.CanExecuteJavascriptInMainFrame)
-                await this.Browser.EvaluateScriptAsync("setVizSize", e.NewSize.Width - 20, e.NewSize.Height - 20);
+                await this.Browser.EvaluateScriptAsync("setVizSize", e.NewSize.Width, e.NewSize.Height);
         }
 
     }

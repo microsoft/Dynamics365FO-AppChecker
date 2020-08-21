@@ -10,8 +10,10 @@
     <AssemblyName>SocratexGraphExplorer</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Fat Graph White Background.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Fat Graph White Background.ico" />
     <None Remove="Resources\Xpp-Mode.xshd" />
   </ItemGroup>
     <ItemGroup>
@@ -20,7 +22,7 @@
         <PackageReference Include="CefSharp.Wpf" Version="83.4.20" />
         <PackageReference Include="MaterialDesignColors" Version="1.2.6" />
         <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
-        <PackageReference Include="Neo4j.Driver" Version="4.1.0" />
+        <PackageReference Include="Neo4j.Driver" Version="4.1.1" />
     </ItemGroup>
     <ItemGroup>
         <Resource Include="Images\CloudRun_16x.png" />
@@ -31,10 +33,8 @@
         <Resource Include="Images\OpenFolder_16x.png" />
         <Resource Include="Images\SplashScreen No Logo.png" />
         <Resource Include="Images\SplashScreen with socrates.png" />
-        <Resource Include="Images\Fat Graph White Background.ico" />
         <Resource Include="Fat Graph White Background.ico" />
         <Resource Include="Images\Fat Graph White Background.png" />
-        <Resource Include="Images\Fat Graph.png" />
         <Resource Include="Images\Simple Graph.png" />
         <Resource Include="Images\High Contrast Socrates.png" />
         <EmbeddedResource Include="Resources\Xpp-Mode.xshd" />
