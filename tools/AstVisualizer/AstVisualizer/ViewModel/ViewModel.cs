@@ -13,9 +13,11 @@ namespace AstVisualizer
     using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Media;
     using System.Xml;
     using System.Xml.Linq;
     using ICSharpCode.AvalonEdit.Highlighting;
+    using ICSharpCode.SharpDevelop.Editor;
     using LanguageExtractorInterfaces;
     using Microsoft.Win32;
     using Saxon.Api;
@@ -253,13 +255,22 @@ namespace AstVisualizer
                     (XDocument doc, IEnumerable<IDiagnosticItem> diagnostics) = extractor.Extract(this.view.SourceEditor.Text);
 
                     this.Result = doc != null ? doc.ToString() : "";
+
+                    // Remove all the entries in the error list and the squigglies
                     this.DiagnosticItems.Clear();
+                    this.view.SourceEditorTextMarkerService.RemoveAll(m => true);
 
                     if (diagnostics != null)
                     {
                         foreach (var d in diagnostics)
                         {
                             this.DiagnosticItems.Add(d);
+                            int startOffset = this.view.SourceEditor.Document.GetOffset(d.Line, d.Column);
+                            int endOffset = this.view.SourceEditor.Document.GetOffset(d.EndLine, d.EndColumn);
+                            int length = endOffset - startOffset;
+                            ITextMarker marker = this.view.SourceEditorTextMarkerService.Create(startOffset, length);
+                            marker.MarkerTypes = TextMarkerTypes.SquigglyUnderline;
+                            marker.MarkerColor = d.Severity == "Error" ? Colors.Red : Colors.Green;
                         }
                     }
                 }
