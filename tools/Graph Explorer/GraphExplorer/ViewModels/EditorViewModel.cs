@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using CefSharp;
 using Microsoft.Win32;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
@@ -92,6 +91,8 @@ namespace SocratexGraphExplorer.ViewModels
                 if (value)
                 {
                     this.view.GraphColumn.Width = new GridLength(2, GridUnitType.Star);
+                    this.view.TextColumn.Width = new GridLength(0);
+
                     this.RenderingMode = RenderingMode.Graph;
                 }
                 else
@@ -114,6 +115,7 @@ namespace SocratexGraphExplorer.ViewModels
                 if (value)
                 {
                     this.view.TextColumn.Width = new GridLength(2, GridUnitType.Star);
+                    this.view.GraphColumn.Width = new GridLength(0);
                     this.RenderingMode = RenderingMode.Text;
                 }
                 else
@@ -289,7 +291,7 @@ namespace SocratexGraphExplorer.ViewModels
             get => new RelayCommand(
                 p => 
                 {
-                    this.view.Browser.ShowDevTools();
+                    // TODO this.view.Browser.ShowDevTools();
                 }
             );
         }
@@ -360,7 +362,7 @@ namespace SocratexGraphExplorer.ViewModels
 
                             var res = await this.model.ExecuteCypherAsync(q);
                             var html = Model.GenerateHtml(res);
-                            this.view.TextBrowser.LoadLargeHtmlString(html);
+                            this.view.TextBrowser.NavigateToString(html);
                         }
                     }
                 }
@@ -396,7 +398,7 @@ namespace SocratexGraphExplorer.ViewModels
                     else
                     {
                         var html = Model.GenerateHtml(this.model.QueryResults);
-                        this.view.TextBrowser.LoadLargeHtmlString(html);
+                        this.view.TextBrowser.NavigateToString(html);
                     }
                 }
             };
@@ -428,11 +430,7 @@ namespace SocratexGraphExplorer.ViewModels
                          if (result != null)
                          {
                              // Send the query to the browser:
-                             var response = await v.Browser.EvaluateScriptAsync("draw", v.CypherEditor.Document.Text);
-                             if (!response.Success)
-                             {
-                                 this.model.ErrorMessage = response.Message;
-                             }
+                             var response = await v.Browser.ExecuteScriptAsync(string.Format("draw('{0}');", v.CypherEditor.Document.Text));
                          }
                      }
                  },
@@ -445,9 +443,9 @@ namespace SocratexGraphExplorer.ViewModels
                  });
 
             this.printGraphCommand = new RelayCommand(
-                p=>
+                async p =>
                 {
-                    this.view.Browser.Print();
+                    await this.view.Browser.ExecuteScriptAsync ("printGraph();");
                 }
             );
         }
@@ -464,7 +462,7 @@ namespace SocratexGraphExplorer.ViewModels
                         "  and id(m) in [" + nodeIdsString + "] " +
                         "return n,m,r";
 
-                await view.Browser.EvaluateScriptAsync("draw", q);
+                await view.Browser.ExecuteScriptAsync(string.Format("draw('{0}');", q));
             }
         }
 

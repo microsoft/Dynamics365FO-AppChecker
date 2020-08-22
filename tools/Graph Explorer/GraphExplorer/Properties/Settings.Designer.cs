@@ -112,59 +112,54 @@ namespace SocratexGraphExplorer.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("<html>\r\n    <head>\r\n       <style type=\'text/css\'>\r\n            #viz {\r\n         " +
             "       width: 750px;\r\n                height: 600px;\r\n                border: 1p" +
             "x solid lightgray;\r\n                font: 12pt arial;\r\n                backgroun" +
-            "d: darkgray;\r\n                margin-top: -8px;\r\n                margin-bottom: " +
-            "-8px;\r\n                margin-left: -8px;\r\n                margin-right: -8px;\r\n" +
-            "            }\r\n        </style>\r\n        <script src=\'https://rawgit.com/neo4j-c" +
-            "ontrib/neovis.js/master/dist/neovis.js\'></script>\r\n    </head>\r\n    <script>\r\n\r\n" +
-            "\r\n        function init()\r\n        {\r\n            (async function()\r\n           " +
-            " {\r\n                await CefSharp.BindObjectAsync(\'csObject\').then(function(res" +
-            ") \r\n                {    // The promise is resolved when the object is available" +
-            ".\r\n                     // Objects are created in the global context (properties" +
-            " of the window object).\r\n                     window.csObject.show(\'banana\').the" +
-            "n(function(res)\r\n                     {\r\n                     })\r\n              " +
-            "  });\r\n            })();\r\n        }\r\n\r\n        function setVizSize(width, height" +
-            ")\r\n        {\r\n            document.getElementById(\'viz\').style.width = width + \"" +
-            "px\";\r\n            document.getElementById(\'viz\').style.height = height + \"px\";\r\n" +
-            "        }\r\n\r\n        function NodeOrEdgeSelected(event) {\r\n            window.cs" +
-            "Object.select(event.nodes[0], event.edges[0]);\r\n        }\r\n\r\n        function dr" +
-            "aw(cypher) {\r\n            var config = {\r\n                container_id: \'viz\',\r\n" +
-            "                server_url: \'bolt://{Server}:{Port}\',\r\n                server_us" +
-            "er: \'{Username}\',\r\n                server_password: \'{Password}\',\r\n             " +
-            "   arrows: true, // Shows arrows on edges\r\n                labels: {\r\n          " +
-            "          \'Class\': {\r\n                        caption: \'Name\', // Works. Name of" +
-            " property on Class node\r\n                        size: \'LOC\' ,\r\n                " +
-            "        // community: 1,\r\n\r\n                        // This is what gets shown i" +
-            "n the tooltip\r\n                        \'title_properties\': [\r\n                  " +
-            "          \'Name\', \'LOC\'\r\n                        ],\r\n                    },\r\n   " +
-            "                 \'Table\': {\r\n                        caption: \'Name\', \r\n        " +
-            "                size: \'LOC\' ,\r\n                        // community: 2,\r\n\r\n     " +
-            "                   // This is what gets shown in the tooltip\r\n                  " +
-            "      \'title_properties\': [\r\n                            \'Name\', \'LOC\'\r\n        " +
-            "                ],\r\n                    },\r\n                    \'Form\': {\r\n     " +
-            "                   caption: \'Name\', \r\n                        size: \'LOC\' ,\r\n   " +
-            "                    //  community: 3,\r\n\r\n                        // This is what" +
-            " gets shown in the tooltip\r\n                        \'title_properties\': [\r\n     " +
-            "                       \'Name\', \'LOC\'\r\n                        ],\r\n              " +
-            "      },                    \r\n                    \'Method\': {\r\n                 " +
-            "       // This is what gets shown in the tooltip\r\n                        \'title" +
-            "_properties\': [\r\n                            \'Method\', \'LOC\', \'NOS\'\r\n           " +
-            "             ],\r\n                        caption: \'Name\', // Works. Name of prop" +
-            "erty on Method node\r\n                        size: \'LOC\',\r\n                     " +
-            "   // community: 4,\r\n                    }\r\n                },\r\n                " +
-            "relationships: {\r\n                    \'EXTENDS\': {\r\n                        capt" +
-            "ion: true,  // Works\r\n                    },\r\n                    \'DECLARES\': {\r" +
-            "\n                        caption: true,  // Works\r\n                    },\r\n     " +
-            "               \'CALLS\': {\r\n                        \'title_properties\': [\r\n      " +
-            "                      \'Count\'\r\n                        ],\r\n                     " +
-            "   caption: true,  \r\n                        thickness: \'Count\', // Need a prope" +
-            "rty name on the edge\r\n\r\n                    }\r\n                },\r\n             " +
-            "   initial_cypher: cypher\r\n            }\r\n            var viz = new NeoVis.defau" +
-            "lt(config);\r\n            viz.registerOnEvent(\'completed\', (e)=>\r\n            {\r\n" +
-            "                viz[\'_network\'].on(\'click\', (event)=>\r\n                {\r\n      " +
-            "              NodeOrEdgeSelected(event);\r\n                    console.log(event." +
-            "nodes[0]);\r\n                });\r\n            });\r\n\r\n            // Do the actual" +
-            " drawing\r\n            viz.render();\r\n        }\r\n    </script>\r\n\r\n    <body onloa" +
-            "d=\'init()\' >\r\n        <div id=\'viz\'></div>\r\n    </body>\r\n</html>")]
+            "d: white;\r\n                margin-top: -8px;\r\n                margin-bottom: +8p" +
+            "x;\r\n                margin-left: -8px;\r\n                margin-right: +8px;\r\n   " +
+            "         }\r\n        </style>\r\n        <script src=\'https://rawgit.com/neo4j-cont" +
+            "rib/neovis.js/master/dist/neovis.js\'></script>\r\n    </head>\r\n    <script>\r\n\r\n   " +
+            "     function printGraph()\r\n        { \r\n            window.print(); \r\n         }" +
+            "\r\n\r\n        function setVizSize(width, height)\r\n        {\r\n            document." +
+            "getElementById(\'viz\').style.width = width + \'px\';\r\n            document.getEleme" +
+            "ntById(\'viz\').style.height = height + \'px\';\r\n        }\r\n\r\n        function NodeO" +
+            "rEdgeSelected(event) {\r\n            window.chrome.webview.postMessage({\'node\': e" +
+            "vent.nodes[0], \'edge\': event.edges[0]});\r\n        }\r\n\r\n        function draw(cyp" +
+            "her) {\r\n            var config = {\r\n                container_id: \'viz\',\r\n      " +
+            "          server_url: \'bolt://localhost:7687\',\r\n                server_user: \'ne" +
+            "o4j\',\r\n                server_password: \'test\',\r\n                arrows: true, /" +
+            "/ Shows arrows on edges\r\n                labels: {\r\n                    \'Class\':" +
+            " {\r\n                        caption: \'Name\', // Works. Name of property on Class" +
+            " node\r\n                        size: \'LOC\' ,\r\n                        // communi" +
+            "ty: 1,\r\n\r\n                        // This is what gets shown in the tooltip\r\n   " +
+            "                     \'title_properties\': [\r\n                            \'Name\', " +
+            "\'LOC\'\r\n                        ],\r\n                    },\r\n                    \'" +
+            "Table\': {\r\n                        caption: \'Name\', \r\n                        si" +
+            "ze: \'LOC\' ,\r\n                        // community: 2,\r\n\r\n                       " +
+            " // This is what gets shown in the tooltip\r\n                        \'title_prope" +
+            "rties\': [\r\n                            \'Name\', \'LOC\'\r\n                        ]," +
+            "\r\n                    },\r\n                    \'Form\': {\r\n                       " +
+            " caption: \'Name\', \r\n                        size: \'LOC\' ,\r\n                     " +
+            "  //  community: 3,\r\n\r\n                        // This is what gets shown in the" +
+            " tooltip\r\n                        \'title_properties\': [\r\n                       " +
+            "     \'Name\', \'LOC\'\r\n                        ],\r\n                    },          " +
+            "          \r\n                    \'Method\': {\r\n                        // This is " +
+            "what gets shown in the tooltip\r\n                        \'title_properties\': [\r\n " +
+            "                           \'Method\', \'LOC\', \'NOS\'\r\n                        ],\r\n " +
+            "                       caption: \'Name\', // Works. Name of property on Method nod" +
+            "e\r\n                        size: \'LOC\',\r\n                        // community: 4" +
+            ",\r\n                    }\r\n                },\r\n                relationships: {\r\n" +
+            "                    \'EXTENDS\': {\r\n                        caption: true,  // Wor" +
+            "ks\r\n                    },\r\n                    \'DECLARES\': {\r\n                 " +
+            "       caption: true,  // Works\r\n                    },\r\n                    \'CA" +
+            "LLS\': {\r\n                        \'title_properties\': [\r\n                        " +
+            "    \'Count\'\r\n                        ],\r\n                        caption: true, " +
+            " \r\n                        thickness: \'Count\', // Need a property name on the ed" +
+            "ge\r\n\r\n                    }\r\n                },\r\n                initial_cypher:" +
+            " cypher\r\n            }\r\n\r\n            var viz = new NeoVis.default(config);\r\n   " +
+            "         viz.registerOnEvent(\'completed\', (e)=>\r\n            {\r\n                " +
+            "viz[\'_network\'].on(\'click\', (event)=>\r\n                {\r\n                    No" +
+            "deOrEdgeSelected(event);\r\n                    console.log(event.nodes[0]);\r\n    " +
+            "            });\r\n            });\r\n\r\n            // Do the actual drawing\r\n      " +
+            "      viz.render();\r\n        }\r\n    </script>\r\n\r\n    <body >\r\n        <div id=\'v" +
+            "iz\'></div>\r\n    </body>\r\n</html>")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));

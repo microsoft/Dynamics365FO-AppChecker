@@ -45,8 +45,7 @@ namespace SocratexGraphExplorer.Views
 
         private async void OkButtonClicked(object sender, RoutedEventArgs e)
         {
-            this.StatusControl.Foreground = Brushes.Black;
-            this.StatusControl.Content = "Connecting...";
+            this.StatusControl.Text = "Connecting...";
 
             // Allow this UI change to propagate through the message pump:
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(() => { }));
@@ -69,7 +68,7 @@ namespace SocratexGraphExplorer.Views
                 else
                 {
                     this.StatusControl.Foreground = Brushes.Red;
-                    this.StatusControl.Content = "Unable to connect, or bad credentials provided.";
+                    this.StatusControl.Text = "Unable to connect, or bad credentials provided.";
                 }
             }
             finally
@@ -136,7 +135,7 @@ namespace SocratexGraphExplorer.Views
         /// <param name="e">Not used</param>
         private void UserNameTextChanged(object sender, TextChangedEventArgs e)
         {
-            this.StatusControl.Content = string.Empty;
+            this.StatusControl.Text = string.Empty;
         }
     }
 }

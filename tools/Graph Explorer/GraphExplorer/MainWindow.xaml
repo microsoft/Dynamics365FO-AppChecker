@@ -8,8 +8,7 @@ Licensed under the MIT license.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      	xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"        
-        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-        xmlns:cef="clr-namespace:CefSharp;assembly=CefSharp.Core"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -51,8 +50,6 @@ Licensed under the MIT license.
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem x:Name="DeveloperToolsMenuItem" Header="Developer tools" Command="{Binding ShowDevToolsCommand}">
-                </MenuItem>
                 <MenuItem Header="_Exit" Command="{Binding ApplicationExitCommand}" >
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ExitToApp" />
@@ -178,7 +175,7 @@ Licensed under the MIT license.
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="48"/>
                             <ColumnDefinition x:Name="GraphColumn" Width="*"/>
-                            <ColumnDefinition x:Name="TextColumn" Width="0"/>
+                            <ColumnDefinition x:Name="TextColumn" Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <ToolBarTray Orientation="Vertical" Grid.Column="0">
@@ -191,8 +188,8 @@ Licensed under the MIT license.
                                 </RadioButton>
                             </ToolBar>
                         </ToolBarTray>
-                        <wpf:ChromiumWebBrowser Grid.Column="1" x:Name="Browser" Background="Yellow" SizeChanged="Browser_SizeChangedAsync" Grid.ColumnSpan="2"/>
-                        <wpf:ChromiumWebBrowser Grid.Column="2" x:Name="TextBrowser" />
+                        <wv2:WebView2 Grid.Column="1" x:Name="Browser" />
+                        <wv2:WebView2 Grid.Column="2" x:Name="TextBrowser" />
                     </Grid>
                 </GroupBox>
 

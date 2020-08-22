@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using CefSharp;
+using Microsoft.Web.WebView2.Core;
 using SocratexGraphExplorer.Models;
 using System;
 using System.ComponentModel;
@@ -12,10 +12,6 @@ using System.Windows.Input;
 
 namespace SocratexGraphExplorer
 {
-    // https://github.com/cefsharp/cefsharp/issues/2246
-    // https://github.com/cefsharp/CefSharp/wiki/General-Usage#3-how-do-you-expose-a-net-class-to-javascript
-    // https://github.com/cefsharp/CefSharp/wiki/JavaScript-Binding-API
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -31,38 +27,7 @@ namespace SocratexGraphExplorer
             Thread.Sleep(2000);
 
             InitializeComponent();
-
-            this.Browser.LoadError += (object sender, LoadErrorEventArgs e) =>
-            {
-            };
-
-            this.Browser.LoadingStateChanged += (sender, args) =>
-            {
-                //Wait for the Page to finish loading
-                if (args.IsLoading == false)
-                {
-                    //CefSharpSettings.LegacyJavascriptBindingEnabled = true;
-                    //CefSharpSettings.WcfEnabled = true;
-                    // Browser.JavascriptObjectRepository.Register("csObject", new Views.BrowserCSObjects(), isAsync: true, options: BindingOptions.DefaultBinder);
-
-                    // this.Browser.ExecuteScriptAsync("alert('All Resources Have Loaded');");
-                }
-            };
-
-            // This will be called when JS needs to resolve an object:
-            this.Browser.JavascriptObjectRepository.ResolveObject += (sender, e) =>
-            {
-                var repo = e.ObjectRepository;
-                if (e.ObjectName == "csObject")
-                {
-                    CefSharpSettings.WcfEnabled = true;
-                    BindingOptions options = new BindingOptions()
-                    {
-                        CamelCaseJavascriptNames = false,
-                    };
-                    repo.Register("csObject", new Views.BrowserCSObjects(this.model, this.ViewModel), isAsync: true, options: options);
-                }
-            };
+            InitializeAsync();
 
             this.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
             {
@@ -77,14 +42,6 @@ namespace SocratexGraphExplorer
 
             this.InputBindings.Add(new KeyBinding(ViewModel.ExecuteQueryCommand, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
             this.InputBindings.Add(new KeyBinding(ViewModel.ExecuteQueryCommand, new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl-E")));
-
-            if (!this.model.IsDebugMode)
-            {
-                this.FileMenu.Items.Remove(this.DeveloperToolsMenuItem);
-            }
-
-            // Set up the menu context handler for the browser:
-            // this.Browser.MenuHandler = new BrowserContextMenuHandler(this.ViewModel);
 
             this.DataContext = this.ViewModel;
 
@@ -119,10 +76,49 @@ namespace SocratexGraphExplorer
 
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void InitializeAsync()
         {
-            this.Browser.LoadHtml(this.model.Source);
-            this.TextBrowser.LoadLargeHtmlString(@"<html>
+            // Make sure everything is set up before doing anything with the browser
+            await this.Browser.EnsureCoreWebView2Async(null);
+            await this.TextBrowser.EnsureCoreWebView2Async(null);
+
+            Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>
+            {
+                string message = args.WebMessageAsJson;
+                // The payload will be empty if the user clicked in the empty space
+                // it will be {edge: id} if an edge is selected
+                // it will be {node: id) if a node is selected
+                var item = System.Text.Json.JsonSerializer.Deserialize<ClickedItem>(message);
+
+                string cypher;
+                if (item.node != 0)
+                {
+                    cypher = string.Format("MATCH (c) where id(c) = {0} return c limit 1", item.node);
+                    this.ViewModel.SelectedNode = item.node;
+                }
+                else
+                {
+                    cypher = string.Format("MATCH (c) -[r]- (d) where id(r) = {0} return r limit 1", item.edge);
+                    this.ViewModel.SelectedEdge = item.edge;
+                }
+
+                var res = await this.model.ExecuteCypherAsync(cypher);
+                this.ViewModel.GeneratePropertyNodeListView(res);
+            };
+
+            this.Browser.SizeChanged += async (object sender, SizeChangedEventArgs e) =>
+            {
+                // await this.Browser.EnsureCoreWebView2Async();
+                var snippet = "setVizSize(" + (e.NewSize.Width - 0).ToString() + "," + (e.NewSize.Height - 0).ToString() + ");";
+                await this.Browser.ExecuteScriptAsync(snippet);
+            };
+
+            // The debugger does not work in Edge if the source does not come from a file.
+            // Load the script into a temporary file, and use that file in the URI that
+            // the debugger loads.
+//            this.Browser.Source = new Uri("file:///c:/users/.../test.html");
+            this.Browser.NavigateToString(this.model.Source);
+            this.TextBrowser.NavigateToString(@"<html>
     <head>
         <style>
             html, body, .container {
@@ -142,25 +138,11 @@ namespace SocratexGraphExplorer
     </body>
 </html>");
             this.ViewModel.GraphModeSelected = true;
+
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                this.Browser.Dispose();
-            }
-            catch
-            {
-
-            }
         }
-
-        private async void Browser_SizeChangedAsync(object sender, SizeChangedEventArgs e)
-        {
-            if (this.Browser.CanExecuteJavascriptInMainFrame)
-                await this.Browser.EvaluateScriptAsync("setVizSize", e.NewSize.Width, e.NewSize.Height);
-        }
-
     }
 }

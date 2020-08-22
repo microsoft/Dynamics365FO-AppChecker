@@ -32,48 +32,38 @@
                 height: 600px;
                 border: 1px solid lightgray;
                 font: 12pt arial;
-                background: darkgray;
+                background: white;
                 margin-top: -8px;
-                margin-bottom: -8px;
+                margin-bottom: +8px;
                 margin-left: -8px;
-                margin-right: -8px;
+                margin-right: +8px;
             }
         &lt;/style&gt;
         &lt;script src='https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js'&gt;&lt;/script&gt;
     &lt;/head&gt;
     &lt;script&gt;
 
-
-        function init()
-        {
-            (async function()
-            {
-                await CefSharp.BindObjectAsync('csObject').then(function(res) 
-                {    // The promise is resolved when the object is available.
-                     // Objects are created in the global context (properties of the window object).
-                     window.csObject.show('banana').then(function(res)
-                     {
-                     })
-                });
-            })();
-        }
+        function printGraph()
+        { 
+            window.print(); 
+         }
 
         function setVizSize(width, height)
         {
-            document.getElementById('viz').style.width = width + "px";
-            document.getElementById('viz').style.height = height + "px";
+            document.getElementById('viz').style.width = width + 'px';
+            document.getElementById('viz').style.height = height + 'px';
         }
 
         function NodeOrEdgeSelected(event) {
-            window.csObject.select(event.nodes[0], event.edges[0]);
+            window.chrome.webview.postMessage({'node': event.nodes[0], 'edge': event.edges[0]});
         }
 
         function draw(cypher) {
             var config = {
                 container_id: 'viz',
-                server_url: 'bolt://{Server}:{Port}',
-                server_user: '{Username}',
-                server_password: '{Password}',
+                server_url: 'bolt://localhost:7687',
+                server_user: 'neo4j',
+                server_password: 'test',
                 arrows: true, // Shows arrows on edges
                 labels: {
                     'Class': {
@@ -134,6 +124,7 @@
                 },
                 initial_cypher: cypher
             }
+
             var viz = new NeoVis.default(config);
             viz.registerOnEvent('completed', (e)=&gt;
             {
@@ -149,7 +140,7 @@
         }
     &lt;/script&gt;
 
-    &lt;body onload='init()' &gt;
+    &lt;body &gt;
         &lt;div id='viz'&gt;&lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;</Value>
