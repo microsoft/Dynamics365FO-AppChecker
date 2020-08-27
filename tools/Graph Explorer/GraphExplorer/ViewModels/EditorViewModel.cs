@@ -36,6 +36,9 @@ namespace SocratexGraphExplorer.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// The event is triggered when a node is selected on the browser surface
+        /// </summary>
         public long SelectedNode
         {
             get
@@ -52,6 +55,9 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        /// <summary>
+        /// The event is triggered when an edge is selectged on the drawing surface.
+        /// </summary>
         public long SelectedEdge
         {
             get
@@ -66,7 +72,6 @@ namespace SocratexGraphExplorer.ViewModels
                     this.OnPropertyChanged(nameof(SelectedEdge));
                 }
             }
-
         }
 
         private RenderingMode renderingMode;
@@ -286,16 +291,26 @@ namespace SocratexGraphExplorer.ViewModels
             );
         }
 
-        public ICommand ShowDevToolsCommand
+        public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
-                p => 
+                p=>
                 {
-                    // TODO this.view.Browser.ShowDevTools();
+
                 }
             );
         }
 
+        public ICommand ShowDatabaseParametersCommand
+        {
+            get => new RelayCommand(
+                p => 
+                {
+                    this.ShowDatabaseInfoPanel();
+                }
+            );
+
+        }
         public ICommand SaveQueryCommand
         {
             get => new RelayCommand(
@@ -445,7 +460,7 @@ namespace SocratexGraphExplorer.ViewModels
             this.printGraphCommand = new RelayCommand(
                 async p =>
                 {
-                    await this.view.Browser.ExecuteScriptAsync ("printGraph();");
+                    await this.view.Browser.ExecuteScriptAsync ("this.print();");
                 }
             );
         }
@@ -467,7 +482,7 @@ namespace SocratexGraphExplorer.ViewModels
         }
 
          private void UpdateNodeInfoPage(INode node)
-        {
+         {
             // TODO this should not be hardcoded, but MEF should be used to find a plugin
             // that is able to handle (i.e. create a user control) for the node with the 
             // given label. What happens if there are more labels? Not defined at this time.
@@ -502,6 +517,12 @@ namespace SocratexGraphExplorer.ViewModels
             this.view.ContextualInformation.Content = child;
         }
 
+        private void ShowDatabaseInfoPanel()
+        {
+            UserControl child = new SocratexGraphExplorer.Views.DatabaseInformationControl(this.model, this);
+            this.view.ContextualInformation.Content = child;
+        }
+
         private void UpdateProperties(object nodeOrEdge)
         {
             var n = nodeOrEdge as INode;
@@ -526,7 +547,7 @@ namespace SocratexGraphExplorer.ViewModels
         /// Populate the list of ListView items containing node or edge properties.
         /// </summary>
         /// <param name="records"></param>
-        public void GeneratePropertyNodeListView(List<IRecord> records)
+        public void UpdatePropertyListView(List<IRecord> records)
         {
             if (!records.Any())
                 return;

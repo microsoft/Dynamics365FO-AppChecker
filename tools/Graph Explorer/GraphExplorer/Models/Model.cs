@@ -514,7 +514,7 @@ namespace SocratexGraphExplorer.Models
         /// <returns>The list of results.</returns>
         public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, Dictionary<string, object> parameters=null)
         {
-            var session = this.Driver.AsyncSession();
+            IAsyncSession session = this.Driver.AsyncSession();
 
             this.ErrorMessage = "Running query...";
             try

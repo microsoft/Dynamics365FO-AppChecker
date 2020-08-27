@@ -43,11 +43,6 @@
     &lt;/head&gt;
     &lt;script&gt;
 
-        function printGraph()
-        { 
-            window.print(); 
-         }
-
         function setVizSize(width, height)
         {
             document.getElementById('viz').style.width = width + 'px';

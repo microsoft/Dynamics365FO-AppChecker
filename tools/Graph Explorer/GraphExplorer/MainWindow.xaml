@@ -173,12 +173,12 @@ Licensed under the MIT license.
                 <GroupBox Grid.Column="0" Header="Graph">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="60"/>
                             <ColumnDefinition x:Name="GraphColumn" Width="*"/>
                             <ColumnDefinition x:Name="TextColumn" Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <ToolBarTray Orientation="Vertical" Grid.Column="0">
+                        <ToolBarTray Orientation="Vertical" Grid.Column="0" Margin="-4,0,0,0">
                             <ToolBar ToolBarTray.IsLocked="True">
                                 <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding GraphModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
                                     <materialDesign:PackIcon Kind="Graphql"/>
@@ -186,6 +186,13 @@ Licensed under the MIT license.
                                 <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding TextModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
                                     <materialDesign:PackIcon Kind="Text"/>
                                 </RadioButton>
+                                <Separator/>
+                                <Button Command="{Binding ShowDatabaseParametersCommand}" ToolTip="Show database parameters">
+                                    <materialDesign:PackIcon Kind="Database" />
+                                </Button>
+                                <Button Command="{Binding ShowSettingsCommand}" ToolTip="Show Settings">
+                                    <materialDesign:PackIcon Kind="CogOutline"/>
+                                </Button>
                             </ToolBar>
                         </ToolBarTray>
                         <wv2:WebView2 Grid.Column="1" x:Name="Browser" />

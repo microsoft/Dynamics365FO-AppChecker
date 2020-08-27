@@ -48,7 +48,7 @@ namespace SocratexGraphExplorer
             splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
-            if (true || !model.IsDebugMode)
+            if (!model.IsDebugMode)
             {
                 // Now show the connection dialog
                 var connectionWindow = new Views.ConnectionWindow(this.model);
@@ -82,6 +82,7 @@ namespace SocratexGraphExplorer
             await this.Browser.EnsureCoreWebView2Async(null);
             await this.TextBrowser.EnsureCoreWebView2Async(null);
 
+            // Set up a function to call when the user clicks on something in the graph browser.
             Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>
             {
                 string message = args.WebMessageAsJson;
@@ -90,20 +91,24 @@ namespace SocratexGraphExplorer
                 // it will be {node: id) if a node is selected
                 var item = System.Text.Json.JsonSerializer.Deserialize<ClickedItem>(message);
 
-                string cypher;
                 if (item.node != 0)
                 {
-                    cypher = string.Format("MATCH (c) where id(c) = {0} return c limit 1", item.node);
+                    var cypher = string.Format("MATCH (c) where id(c) = {0} return c limit 1", item.node);
                     this.ViewModel.SelectedNode = item.node;
+                    var nodeResult = await this.model.ExecuteCypherAsync(cypher);
+                    this.ViewModel.UpdatePropertyListView(nodeResult);
+                }
+                else if (item.edge != 0)
+                {
+                    var cypher = string.Format("MATCH (c) -[r]- (d) where id(r) = {0} return r limit 1", item.edge);
+                    this.ViewModel.SelectedEdge = item.edge;
+                    var edgeResult = await this.model.ExecuteCypherAsync(cypher);
+                    this.ViewModel.UpdatePropertyListView(edgeResult);
                 }
                 else
                 {
-                    cypher = string.Format("MATCH (c) -[r]- (d) where id(r) = {0} return r limit 1", item.edge);
-                    this.ViewModel.SelectedEdge = item.edge;
+                    // blank space selected
                 }
-
-                var res = await this.model.ExecuteCypherAsync(cypher);
-                this.ViewModel.GeneratePropertyNodeListView(res);
             };
 
             this.Browser.SizeChanged += async (object sender, SizeChangedEventArgs e) =>
