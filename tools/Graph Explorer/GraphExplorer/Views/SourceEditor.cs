@@ -140,6 +140,8 @@ namespace SocratexGraphExplorer.Views
                 model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
             };
 
+            this.Style = FindResource("SourceEditorStyle") as Style;
+
             // Install the search panel that appears in the upper left corner.
             ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.TextArea);
 

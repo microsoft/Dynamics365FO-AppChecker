@@ -7,7 +7,7 @@ Licensed under the MIT license. -->
   <Properties>
     <Property name="LineComment" value="//"/>
   </Properties>
-  <Digits name = "Digits" bold = "true" italic = "false" color = "Blue"/>
+  <Digits name = "Digits" bold = "true" italic = "false" color = "dodgerblue"/>
   <RuleSets>
     <RuleSet ignorecase = "true">
       <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,   .?</Delimiters>
@@ -27,7 +27,7 @@ Licensed under the MIT license. -->
         <End>*/</End>
       </Span>
       
-      <KeyWords name="XppKeywords" bold="true" italic="false" color ="Blue">
+      <KeyWords name="XppKeywords" bold="true" italic="false" color ="dodgerblue">
         <Key word="while"                />
         <Key word="guid"                 />
         <Key word="int"                  />
@@ -140,7 +140,7 @@ Licensed under the MIT license. -->
         <Key word="var"                  />
       </KeyWords>
 
-      <KeyWords name="intrinsics" bold="true" italic="true" color ="Blue">
+      <KeyWords name="intrinsics" bold="true" italic="true" color ="dodgerblue">
         <Key word="classnum"/>
         <Key word="classstr"/>
         <Key word="configurationkeynum"/>

@@ -308,6 +308,7 @@ namespace SocratexGraphExplorer.ViewModels
                     this.configEditor = new ConfigEditWindow();
                     this.configEditor.DataContext = this;
                     this.configEditor.Show();
+                    this.configEditor.Owner = this.view;
                 }
             );
         }

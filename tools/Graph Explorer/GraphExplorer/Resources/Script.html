@@ -10,7 +10,7 @@
         }
 
         #mynetwork {
-            border: 1px solid lightgray;
+            
         }
     </style>
 
@@ -18,11 +18,8 @@
     <script type="text/javascript" src="Config.js"></script>
 
     <script type='text/javascript'>
-        var network = null;
 
-        function validateStyleDocument(styleText) {
-            return { Valid: true, Description: "DUMMY DESCRIPTION" };
-        }
+        var network = null;
 
         function setGraphSize(width, height) {
             document.getElementById('mynetwork').style.width = width + 'px';
@@ -68,7 +65,7 @@
     </script>
 </head>
 
-<body>
+<body onload="document.body.style.background = graphSurfaceBackgroundColor();">
     <div id='mynetwork'></div>
 </body>
 

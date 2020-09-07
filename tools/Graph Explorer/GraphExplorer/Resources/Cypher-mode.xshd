@@ -7,7 +7,7 @@ Licensed under the MIT license. -->
   <Properties>
     <Property name="LineComment" value="//"/>
   </Properties>
-  <Digits name = "Digits" bold = "true" italic = "false" color = "Blue"/>
+  <Digits name = "Digits" bold = "false" italic = "false" color = "dodgerblue"/>
   <RuleSets>
     <RuleSet ignorecase = "true">
       <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,   .?</Delimiters>
@@ -27,7 +27,7 @@ Licensed under the MIT license. -->
         <End>*/</End>
       </Span>
 
-      <KeyWords name="CypherKeywords" bold="true" italic="false" color ="Blue">
+      <KeyWords name="CypherKeywords" bold="false" italic="false" color ="dodgerblue">
         <Key word="as"/>
         <Key word="call"/>
         <Key word="case"/>

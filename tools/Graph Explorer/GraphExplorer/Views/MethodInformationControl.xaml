@@ -6,6 +6,7 @@
              xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"  
              xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
              xmlns:settings="clr-namespace:SocratexGraphExplorer.Properties"
+             Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
     
@@ -49,7 +50,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
-            <GroupBox x:Name="SourceEditorBox" Grid.Column="0" Header="Source">
+            <GroupBox x:Name="SourceEditorBox" Grid.Column="0" Header="Source" >
             </GroupBox>
             <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
             <GroupBox Grid.Column="2" Header="Info">

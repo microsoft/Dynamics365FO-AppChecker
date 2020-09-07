@@ -10,13 +10,15 @@
     //    Nodes: https://visjs.github.io/vis-network/docs/network/nodes.html
     //    Edges: https://visjs.github.io/vis-network/docs/network/edges.html
 
-    // Give a description that identifies this style document.
-    "description": "Generic (empty) style document",
+    // This function determines the background color of the graph drawing surface.
+    function graphSurfaceBackgroundColor() {
+        return 'lightgrey';
+    }
 
     // The createGraphNode function is used to generate a vis.js node from the node data in
     // the provided parameter. Map the visual characteristics that you want your nodes to 
     // display to the data in the nodes.
-    createGraphNode: (node) => {
+    function createGraphNode(node) {
         //if (node.labels[0] == 'Class') {
         //    var image = "Resources/Class_16x.svg";
         //    return { id: node.id, value: node.properties.WMC, label: node.properties.Name, title: node.properties.$indegree, color: "red", shape: 'image', 'image': image }
@@ -41,14 +43,14 @@
 
         // Minimal implementation.
         return { id: node.id, label: node.properties.Name, title: node.properties.Name };
-    },
+    }
 
     // The createGraphEdge function is used to generate a vis.js edge from the edge data in
     // the provided parameter. Map the visual characteristics that you want your edges to 
     // display to the data in the edges.
-    createGraphEdge: (edge) => {
+    function createGraphEdge(edge) {
         //if (edge.type == 'CALLS') {
-        //    return { id: edge.id, from: edge.from, to: edge.to, value: edge.properties.Count, label: edge.type, title: 'Calls: ' + edge.properties.Count, color: { color: 'black' } };
+        //    return { id: edge.id, from: edge.from, to: edge.to, value: edge.properties.Count, label: edge.type, title: 'Calls: ' + edge.properties.Count, color: { color: 'darkgrey' } };
         //}
         //else {
         //    return { id: edge.id, from: edge.from, to: edge.to, label: edge.type };
@@ -59,28 +61,31 @@
     },
 
     // Provide options that govern other aspects of the graph rendering.
-    options: {
-        interaction: { hover: true, selectConnectedEdges: false },
-        manipulation: {
-            enabled: false, // true enables adding nodes to the graph
-        },
-        nodes: {
-            size: 10, // For nodes that do not have specific size or where no value attribute is provided
-                font: { strokeWidth: 2 }, // This is the amount of space around the text in nodes or edges.
-            shape: 'dot',
+    function options() {
+        return {
+            interaction: { hover: true, selectConnectedEdges: false },
+            manipulation: {
+                enabled: false, // true enables adding nodes to the graph
+            },
+            nodes: {
+                size: 10, // For nodes that do not have specific size or where no value attribute is provided
+                font: { strokeWidth: 0, bold: false }, // strokeWidth is the amount of space around the text in nodes or edges.
+                shape: 'dot',
                 scaling: {
-                min: 10, max: 30,
+                    min: 10, max: 30,
                     label: { // Make sure font size is in this range.
-                    min: 8, max: 24
+                        min: 8, max: 24
+                    }
                 }
-            }
-        },
-        edges: {
-            arrows: "to",
-                shadow: true,
-                    smooth: true,
-                        scaling: {
-                min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14 }
+            },
+            edges: {
+                arrows: "to",
+                shadow: false,
+                smooth: true,
+                font: { strokeWidth: 0, opacity: 1.0 },
+                scaling: {
+                    min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14 }
+                }
             }
         }
     }

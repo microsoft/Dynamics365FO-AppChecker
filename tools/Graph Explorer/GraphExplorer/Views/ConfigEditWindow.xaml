@@ -24,11 +24,11 @@
         <!-- TODO: Introduce setting for fontsize and family -->
         <!-- TODO: Introduce toolbar with Font increase and decreaase -->
         <GroupBox  Grid.Row="0" Header="Style">
-            <avalonedit:TextEditor x:Name="ConfigEditor"  ShowLineNumbers="True" FontFamily="Courier"  FontSize="{Binding QueryEditorFontSize}" />
+            <avalonedit:TextEditor x:Name="ConfigEditor" Style="{DynamicResource SourceEditorStyle}" ShowLineNumbers="True"  FontFamily="Courier"  FontSize="{Binding QueryEditorFontSize}" />
         </GroupBox>
 
         <GroupBox Header="Settings" Grid.Row="1">
-            <CheckBox IsChecked="{Binding IsDarkMode}" Content="Dark mode"/>
+            <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Default ToggleButton Style" Content="Dark Mode" IsChecked="{Binding IsDarkMode}" />
         </GroupBox>
     </Grid>
 </Window>

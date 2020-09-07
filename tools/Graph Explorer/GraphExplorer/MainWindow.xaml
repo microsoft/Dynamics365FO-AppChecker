@@ -265,7 +265,7 @@ Licensed under the MIT license.
                             </Button>
                         </ToolBar>
                     </ToolBarTray>
-                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,5,0,0" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
+                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,5,0,0"  Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
                         match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
                     </avalonedit:TextEditor>
 
