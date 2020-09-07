@@ -60,7 +60,7 @@ namespace SocratexGraphExplorer.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected IHighlightingDefinition LoadHighlightDefinition(string mode)
+        public static IHighlightingDefinition LoadHighlightDefinition(string mode)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream syntaxModeStream = null;

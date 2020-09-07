@@ -82,20 +82,6 @@ CREATE INDEX ON :ManagedType(Artifact);
 CREATE INDEX ON :ManagedMethod(Name);
 CREATE INDEX ON :ManagedMethod(Package, Artifact, Name);
 
-// Create the packages.
-// USING PERIODIC COMMIT 1000
-// LOAD CSV WITH HEADERS FROM $EXPORTDIRECTORY + "ExtractPackagesCSV.csv" AS exts
-// CREATE (p:Package {Name: exts.Package, Description: exts.Description, ModelId: exts.ModelId});
-// MATCH(p:Package) RETURN COUNT(p) + " packages";
-
-// // Create the reference relationships between the packages
-// USING PERIODIC COMMIT 1000
-// LOAD CSV WITH HEADERS FROM  $EXPORTDIRECTORY + "ExtractPackageDependenciesCSV.csv" AS exts
-// MERGE (p:Package{Name: exts.Package})
-// MERGE (ref:Package {Name: exts.References})
-// CREATE (p)-[:REFERENCES]->(ref);
-// MATCH(p:Package)-[r:REFERENCES]->(ref:Package) RETURN COUNT(r) + " package references";
-
 // Create the classes.
 return "Creating Classes";
 USING PERIODIC COMMIT 1000

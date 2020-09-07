@@ -15,6 +15,7 @@ Licensed under the MIT license.
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"
+        xmlns:local="clr-namespace:SocratexGraphExplorer.Views"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
@@ -44,6 +45,16 @@ Licensed under the MIT license.
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Import Style..." Command="{Binding ImportStyleCommand}" ToolTip="Import a style JSON document defining the graph rendering.">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Shape" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Export Style..." Command="{Binding ExportStyleCommand}" ToolTip="Save a generic style. Import the style when it has been modified.">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ShapeOutline" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" >
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="Printer"/>
@@ -160,22 +171,24 @@ Licensed under the MIT license.
                 <!-- Splitter -->
                 <RowDefinition Height="Auto"/>
                 <!-- Queries -->
-                <RowDefinition Height="30*"/>
+                <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="800"/>
+                    <ColumnDefinition Width="218.75"/>
+                    <ColumnDefinition Width="57.566"/>
+                    <ColumnDefinition Width="523.684"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Grid.Column="0" Header="Graph">
+                <GroupBox Grid.Column="0" Header="Graph" Grid.ColumnSpan="3">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition x:Name="GraphColumn" Width="*"/>
-                            <ColumnDefinition x:Name="TextColumn" Width="*"/>
+                            <ColumnDefinition x:Name="TextColumn" Width="0"/>
                         </Grid.ColumnDefinitions>
 
                         <ToolBarTray Orientation="Vertical" Grid.Column="0" Margin="-4,0,0,0">
@@ -200,16 +213,16 @@ Licensed under the MIT license.
                     </Grid>
                 </GroupBox>
 
-                <GridSplitter Grid.Column="1"  VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+                <GridSplitter Grid.Column="3" HorizontalAlignment="Center" Width="5" Background="Silver"/>
 
-                <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,4,0">
+                <GroupBox x:Name="ContextualInformation" Grid.Column="4" Header="Information" Margin="0,0,4,0">
                 </GroupBox>
             </Grid>
 
             <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 
             <GroupBox Header="Queries"  Grid.Row="2">
-                <DockPanel >
+                <DockPanel x:Name="ToolbarAndEditor">
                     <ToolBarTray DockPanel.Dock="Top" x:Name="QueryToolbarTray" Orientation="Horizontal"  >
                         <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ToolBarTray.IsLocked="True">
                             <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
@@ -252,10 +265,10 @@ Licensed under the MIT license.
                             </Button>
                         </ToolBar>
                     </ToolBarTray>
-
-                    <avalonedit:TextEditor x:Name="CypherEditor" Grid.Row="1" Margin="0,5,0,0" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
+                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,5,0,0" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
                         match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
                     </avalonedit:TextEditor>
+
                 </DockPanel>
             </GroupBox>
         </Grid>

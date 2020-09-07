@@ -109,67 +109,6 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<html>\r\n    <head>\r\n       <style type=\'text/css\'>\r\n            #viz {\r\n         " +
-            "       width: 750px;\r\n                height: 600px;\r\n                border: 1p" +
-            "x solid lightgray;\r\n                font: 12pt arial;\r\n                backgroun" +
-            "d: white;\r\n                margin-top: -8px;\r\n                margin-bottom: +8p" +
-            "x;\r\n                margin-left: -8px;\r\n                margin-right: +8px;\r\n   " +
-            "         }\r\n        </style>\r\n        <script src=\'https://rawgit.com/neo4j-cont" +
-            "rib/neovis.js/master/dist/neovis.js\'></script>\r\n    </head>\r\n    <script>\r\n\r\n   " +
-            "     function setVizSize(width, height)\r\n        {\r\n            document.getElem" +
-            "entById(\'viz\').style.width = width + \'px\';\r\n            document.getElementById(" +
-            "\'viz\').style.height = height + \'px\';\r\n        }\r\n\r\n        function NodeOrEdgeSe" +
-            "lected(event) {\r\n            window.chrome.webview.postMessage({\'node\': event.no" +
-            "des[0], \'edge\': event.edges[0]});\r\n        }\r\n\r\n        function draw(cypher) {\r" +
-            "\n            var config = {\r\n                container_id: \'viz\',\r\n             " +
-            "   server_url: \'bolt://localhost:7687\',\r\n                server_user: \'neo4j\',\r\n" +
-            "                server_password: \'test\',\r\n                arrows: true, // Shows" +
-            " arrows on edges\r\n                labels: {\r\n                    \'Class\': {\r\n   " +
-            "                     caption: \'Name\', // Works. Name of property on Class node\r\n" +
-            "                        size: \'LOC\' ,\r\n                        // community: 1,\r" +
-            "\n\r\n                        // This is what gets shown in the tooltip\r\n          " +
-            "              \'title_properties\': [\r\n                            \'Name\', \'LOC\'\r\n" +
-            "                        ],\r\n                    },\r\n                    \'Table\':" +
-            " {\r\n                        caption: \'Name\', \r\n                        size: \'LO" +
-            "C\' ,\r\n                        // community: 2,\r\n\r\n                        // Thi" +
-            "s is what gets shown in the tooltip\r\n                        \'title_properties\':" +
-            " [\r\n                            \'Name\', \'LOC\'\r\n                        ],\r\n     " +
-            "               },\r\n                    \'Form\': {\r\n                        captio" +
-            "n: \'Name\', \r\n                        size: \'LOC\' ,\r\n                       //  c" +
-            "ommunity: 3,\r\n\r\n                        // This is what gets shown in the toolti" +
-            "p\r\n                        \'title_properties\': [\r\n                            \'N" +
-            "ame\', \'LOC\'\r\n                        ],\r\n                    },                 " +
-            "   \r\n                    \'Method\': {\r\n                        // This is what ge" +
-            "ts shown in the tooltip\r\n                        \'title_properties\': [\r\n        " +
-            "                    \'Method\', \'LOC\', \'NOS\'\r\n                        ],\r\n        " +
-            "                caption: \'Name\', // Works. Name of property on Method node\r\n    " +
-            "                    size: \'LOC\',\r\n                        // community: 4,\r\n    " +
-            "                }\r\n                },\r\n                relationships: {\r\n       " +
-            "             \'EXTENDS\': {\r\n                        caption: true,  // Works\r\n   " +
-            "                 },\r\n                    \'DECLARES\': {\r\n                        " +
-            "caption: true,  // Works\r\n                    },\r\n                    \'CALLS\': {" +
-            "\r\n                        \'title_properties\': [\r\n                            \'Co" +
-            "unt\'\r\n                        ],\r\n                        caption: true,  \r\n    " +
-            "                    thickness: \'Count\', // Need a property name on the edge\r\n\r\n " +
-            "                   }\r\n                },\r\n                initial_cypher: cypher" +
-            "\r\n            }\r\n\r\n            var viz = new NeoVis.default(config);\r\n          " +
-            "  viz.registerOnEvent(\'completed\', (e)=>\r\n            {\r\n                viz[\'_n" +
-            "etwork\'].on(\'click\', (event)=>\r\n                {\r\n                    NodeOrEdg" +
-            "eSelected(event);\r\n                    console.log(event.nodes[0]);\r\n           " +
-            "     });\r\n            });\r\n\r\n            // Do the actual drawing\r\n            v" +
-            "iz.render();\r\n        }\r\n    </script>\r\n\r\n    <body >\r\n        <div id=\'viz\'></d" +
-            "iv>\r\n    </body>\r\n</html>")]
-        public string Configuration {
-            get {
-                return ((string)(this["Configuration"]));
-            }
-            set {
-                this["Configuration"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int SourceFontSize {
             get {
@@ -213,6 +152,50 @@ namespace SocratexGraphExplorer.Properties {
             }
             set {
                 this["ShowLineNumbers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\r\n    \"createGraphNode\": (node) => {\r\n        if (node.labels[0] == \'Class\') {\r\n" +
+            "            return { id: node.id, value: node.properties.WMC, label: node.proper" +
+            "ties.Name, title: node.properties.$indegree, color: \"red\" }\r\n        }\r\n        " +
+            "else if (node.labels[0] == \'Method\') {\r\n            return { id: node.id, value:" +
+            " node.properties.LOC, label: node.properties.Name, title: node.properties.$indeg" +
+            "ree, color: \"green\", static: node.properties.IsStatic }\r\n        }\r\n        else" +
+            " {\r\n\r\n        }\r\n        return { id: node.id, label: node.properties.Name };\r\n " +
+            "   },\r\n\r\n    \"createGraphEdge\": (edge) => {\r\n        if (edge.type == \'CALLS\') {" +
+            "\r\n            return { id: edge.id, from: edge.from, to: edge.to, value: edge.pr" +
+            "operties.Count, label: edge.type, title: \'Calls: \' + edge.properties.Count, colo" +
+            "r: {color: \"yellow\" }};\r\n        }\r\n        else {\r\n            return { id: edg" +
+            "e.id, from: edge.from, to: edge.to, label: edge.type };\r\n        }\r\n    },\r\n\r\n  " +
+            "  \"options\":  {\r\n        interaction: { hover: true, selectConnectedEdges: false" +
+            " },\r\n        manipulation: {\r\n            enabled: false, // true enables adding" +
+            " nodes to the graph\r\n        },\r\n        nodes: {\r\n            size: 10, // For " +
+            "nodes that do not have specific size\r\n            font: { strokeWidth: 2 }, // T" +
+            "his is the amount of space around the text in nodes or edges.\r\n            shape" +
+            ": \'dot\',\r\n            scaling: {\r\n                label: { // Make sure font siz" +
+            "e is in this range.\r\n                    min: 8, max: 40\r\n                }\r\n   " +
+            "         }\r\n        },\r\n        edges: {\r\n            arrows: \"to\",\r\n           " +
+            " shadow: true,\r\n            smooth: true,\r\n        }\r\n    }\r\n}")]
+        public string Configuration {
+            get {
+                return ((string)(this["Configuration"]));
+            }
+            set {
+                this["Configuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DarkMode {
+            get {
+                return ((bool)(this["DarkMode"]));
+            }
+            set {
+                this["DarkMode"] = value;
             }
         }
     }

@@ -5,7 +5,10 @@ using Neo4j.Driver;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +16,8 @@ namespace SocratexGraphExplorer.Models
 {
     public class Model : INotifyPropertyChanged
     {
+        public string WebRootPath { private set; get; }
+
         /// <summary>
         /// The driver for accessing the graph database.
         /// </summary>
@@ -53,19 +58,19 @@ namespace SocratexGraphExplorer.Models
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Source
+        /// <summary>
+        /// Returns the Uri of the file containing the html source of the graph surface.
+        /// </summary>
+        public Uri ScriptUri {  get { return new Uri(Path.Combine(this.WebRootPath, "Script.html")); } }
+
+        private string Source
         {
             get {
-                var s = Properties.Settings.Default.Configuration;
+                var assembly = Assembly.GetExecutingAssembly();
+                var scriptTextStream = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources.Script.html");
 
-                // Inject connection information into the configuration.
-                var source = s
-                    .Replace("{Server}", this.Server)
-                    .Replace("{Port}", this.Port.ToString())
-                    .Replace("{Username}", this.Username)
-                    .Replace("{Password}", this.Password);
-
-                return source;
+                using var reader = new StreamReader(scriptTextStream);
+                return reader.ReadToEnd();
             }
         }
 
@@ -116,8 +121,6 @@ namespace SocratexGraphExplorer.Models
                 this.OnPropertyChanged(nameof(Username));
             }
         }
-
-        public string Password { get; set; }
 
         public string Server
         {
@@ -198,11 +201,62 @@ namespace SocratexGraphExplorer.Models
             return this.Driver;
         }
 
+        /// <summary>
+        /// Specifies whether the UI is rendered in dark or light mode.
+        /// </summary>
+        public bool IsDarkMode
+        {
+            get { return Properties.Settings.Default.DarkMode; }
+            set {
+                if (value != Properties.Settings.Default.DarkMode)
+                {
+                    Properties.Settings.Default.DarkMode = value;
+                    this.OnPropertyChanged(nameof(IsDarkMode));
+                }
+            }
+        }
+
         public Model()
         {
             Properties.Settings.Default.PropertyChanged += SettingsChanged;
+
+            // Create the directory where the web artifacts live.
+            this.WebRootPath = CreateTemporaryDirectory();
+
+            // Copy the web page to the web root:
+            var script = this.Source;
+            File.WriteAllText(Path.Combine(this.WebRootPath, "Script.html"), script);
+
+            var configFileName = Path.Combine(this.WebRootPath, "Config.js");
+            File.WriteAllText(configFileName, Properties.Settings.Default.Configuration);
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            // Copy all the embedded resources optionally used for graph adornments
+            var resourcesPath = Path.Combine(this.WebRootPath, "Resources");
+            Directory.CreateDirectory(resourcesPath);
+
+            var resourcePrefix = "SocratexGraphExplorer.Resources.SourcecodeSymbols";
+            foreach (var resource in assembly.GetManifestResourceNames())
+            {
+                // Skip names outside of your desired subfolder
+                if (!resource.StartsWith(resourcePrefix))
+                {
+                    continue;
+                }
+                using Stream input = assembly.GetManifestResourceStream(resource);
+                using Stream output = File.Create(Path.Combine(resourcesPath, resource.Substring(resourcePrefix.Length + 1)));
+                input.CopyTo(output);
+            }
         }
 
+        private static string CreateTemporaryDirectory()
+        {
+            string path = Path.GetRandomFileName();
+            var directory = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), path));
+
+            return directory.ToString();
+        }
         /// <summary>
         /// Called when any of the properties are changed. We choose to save the 
         /// values every time, so changes survive crashes and unexpected closedowns.
@@ -245,26 +299,181 @@ namespace SocratexGraphExplorer.Models
 
             try
             {
-                using (IDriver driver = GraphDatabase.Driver(string.Format("bolt://{0}:{1}", server, port), AuthTokens.Basic(username, password)))
-                {
-                    if (driver == null)
-                        return false;
+                using IDriver driver = GraphDatabase.Driver(string.Format("bolt://{0}:{1}", server, port), AuthTokens.Basic(username, password));
+                if (driver == null)
+                    return false;
 
-                    try
-                    {
-                        await driver.VerifyConnectivityAsync();
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                try
+                {
+                    await driver.VerifyConnectivityAsync();
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
             catch (Exception )
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        public static string GenerateJSON(List<IRecord> records)
+        {
+            var nodes = new Dictionary<long,object>();
+            var edges = new Dictionary<long, object>();
+            var values = new List<object>();
+
+            var inDegrees = new Dictionary<long, long>();  // Map from nodeId onto in degree
+            var outDegrees = new Dictionary<long, long>(); // Map from nodeId onto out degree
+
+            void GenerateRelationship(IRelationship relationship)
+            {
+                if (!edges.ContainsKey(relationship.Id))
+                {
+                    var edge = new Dictionary<string, object>
+                    {
+                        ["id"] = relationship.Id,
+                        ["type"] = relationship.Type,
+                        ["from"] = relationship.StartNodeId,
+                        ["to"] = relationship.EndNodeId
+                    };
+
+                    if (outDegrees.ContainsKey(relationship.StartNodeId))
+                        outDegrees[relationship.StartNodeId] += 1;
+                    else
+                        outDegrees[relationship.StartNodeId] = 1;
+
+                    if (inDegrees.ContainsKey(relationship.EndNodeId))
+                        inDegrees[relationship.EndNodeId] += 1;
+                    else
+                        inDegrees[relationship.EndNodeId] = 1;
+
+                    var props = new Dictionary<string, object>();
+                    foreach (var kvp in relationship.Properties.OrderBy(p => p.Key))
+                    {
+                        props[kvp.Key] = kvp.Value;
+                    }
+                    edge["properties"] = props;
+
+                    edges[relationship.Id] = edge;
+                }
+            }
+
+            void GeneratePath(IPath value)
+            {
+                // Extract the nodes and the bpath between them
+                GenerateNode(value.Start);
+                GenerateNode(value.End);
+
+                foreach (var relationship in value.Relationships)
+                {
+                    GenerateRelationship(relationship);
+                }
+            }
+
+            void GenerateNode(INode node)
+            {
+                if (!nodes.ContainsKey(node.Id))
+                {
+                    var n = new Dictionary<string, object>
+                    {
+                        ["id"] = node.Id,
+                        ["labels"] = node.Labels.ToArray()
+                    };
+
+                    var props = new Dictionary<string, object>();
+                    foreach (var kvp in node.Properties.OrderBy(p => p.Key))
+                    {
+                        props[kvp.Key] = kvp.Value;
+                    }
+
+                    n["properties"] = props;
+                    nodes[node.Id] = n;
+                }
+            }
+
+            void GenerateList(List<object> l)
+            {
+                //var v = new List<object>();
+                //// TODO. Something is wrong here.
+                //foreach (var element in l)
+                //{
+                //    Generate(element);
+                //}
+                values.Add(l);
+            }
+
+            void GenerateObject(object o)
+            {
+                if (o != null)
+                    values.Add(o);
+            }
+
+            void Generate(object value)
+            {
+                if (value is IPath)
+                    GeneratePath(value as IPath);
+                else if (value is INode)
+                    GenerateNode(value as INode);
+                else if (value is IRelationship)
+                    GenerateRelationship(value as IRelationship);
+                else if (value is List<object>)
+                    GenerateList(value as List<object>);
+                else
+                    GenerateObject(value);
+            }
+
+            foreach (var record in records)
+            {
+                var kvps = record.Values;
+
+                foreach (var kvp in kvps)
+                {
+                    Generate(kvp.Value);
+                }
+            }
+
+
+            foreach (var nodeId in nodes.Keys)
+            {
+                var node = nodes[nodeId] as Dictionary<string, object>;
+                var nodeProperties = node["properties"] as Dictionary<string, object>;
+
+                if (inDegrees.ContainsKey(nodeId))
+                {
+                    nodeProperties["$indegree"] = inDegrees[nodeId];
+                }
+                else
+                {
+                    nodeProperties["$indegree"] = 0;
+                }
+
+                if (outDegrees.ContainsKey(nodeId))
+                {
+                    nodeProperties["$outdegree"] = outDegrees[nodeId];
+                }
+                else
+                {
+                    nodeProperties["$outdegree"] = 0;
+                }
+            }
+
+            var result = new Dictionary<string, object>
+            {
+                ["nodes"] = nodes.Values,
+                ["edges"] = edges.Values,
+                ["values"] = values
+            };
+
+            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.Indented);
+            return serialized;
         }
 
         /// <summary>
@@ -275,7 +484,7 @@ namespace SocratexGraphExplorer.Models
         /// <returns>The HTML representation of the records in human readable form.</returns>
         public static string GenerateHtml(List<IRecord> records)
         {
-            void GeneratePath(StringBuilder b, int indent, IPath value)
+            static void GeneratePath(StringBuilder b, int indent, IPath value)
             {
                 var indentString = new string(' ', indent);
                 b.AppendLine(indentString + "{");
@@ -323,7 +532,7 @@ namespace SocratexGraphExplorer.Models
                 b.AppendLine("}");
             }
 
-            void GenerateNode(StringBuilder b, int indent, INode node)
+            static void GenerateNode(StringBuilder b, int indent, INode node)
             {
                 var indentString = new string(' ', indent);
 
@@ -359,7 +568,7 @@ namespace SocratexGraphExplorer.Models
                 b.AppendLine(indentString + "}");
             }
 
-            void GenerateRelationship(StringBuilder b, int indent, IRelationship relationship)
+            static void GenerateRelationship(StringBuilder b, int indent, IRelationship relationship)
             {
                 var indentString = new string(' ', indent);
 
@@ -383,7 +592,7 @@ namespace SocratexGraphExplorer.Models
                 b.AppendLine(indentString + "  }");
             }
 
-            void GenerateList(StringBuilder b, List<object> l)
+            static void GenerateList(StringBuilder b, List<object> l)
             {
                 bool first = true;
                 b.Append("[");
@@ -398,12 +607,12 @@ namespace SocratexGraphExplorer.Models
                 b.Append("]");
             }
 
-            void GenerateString(StringBuilder b, string s)
+            static void GenerateString(StringBuilder b, string s)
             {
                 b.Append(s);
             }
 
-            void Generate(StringBuilder b, int indent, object value)
+            static void Generate(StringBuilder b, int indent, object value)
             {
                 if (value is IPath)
                     GeneratePath(b, indent, value as IPath);
@@ -468,11 +677,6 @@ namespace SocratexGraphExplorer.Models
             return builder.ToString();
         }
      
-        public static string CommaSeparatedString(IEnumerable<long> set)
-        {
-            return string.Join(",", set);
-        }
-
         public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
         {
             var result = new HashSet<long>();
@@ -530,6 +734,14 @@ namespace SocratexGraphExplorer.Models
                 this.ErrorMessage = e.Message;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Called when the application closes down. Do any cleanup here.
+        /// </summary>
+        public void Close()
+        {
+            Directory.Delete(this.WebRootPath, recursive: true);
         }
     }
 }

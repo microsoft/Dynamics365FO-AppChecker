@@ -5,10 +5,17 @@ using Microsoft.Web.WebView2.Core;
 using SocratexGraphExplorer.Models;
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using SocratexGraphExplorer.Views;
+using System.Configuration;
+using System.IO;
+using MaterialDesignColors;
+using System.Linq;
+using MaterialDesignThemes.Wpf;
 
 namespace SocratexGraphExplorer
 {
@@ -18,9 +25,9 @@ namespace SocratexGraphExplorer
     public partial class MainWindow : Window
     {
         public ViewModels.EditorViewModel ViewModel { private set; get; }
-        private Model model;
+        private readonly Model model;
 
-        public MainWindow()
+        public MainWindow(string[] args)
         {
             SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
             splash.Show(false);
@@ -35,7 +42,20 @@ namespace SocratexGraphExplorer
                 this.model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
             };
 
-            Loaded += MainWindow_Loaded;
+            // An file argument can be passed, which is the style .js file. If so,
+            // read this file and store it in the configuration
+            if (args.Length != 0)
+            {
+                var fileName = args[0];
+                try
+                {
+                    var content = File.ReadAllText(fileName);
+                    Properties.Settings.Default.Configuration = content;
+                }
+                catch
+                {
+                }
+            }
 
             this.model = new Models.Model();
             this.ViewModel = new ViewModels.EditorViewModel(this, model);
@@ -68,12 +88,9 @@ namespace SocratexGraphExplorer
                 password = "test";
             }
 
-            this.model.Password = password;
-
             // Now that the value of the connection parameters have been set,
             // the global connection to the database is established.
             this.model.CreateNeo4jDriver(password);
-
         }
 
         private async void InitializeAsync()
@@ -82,6 +99,8 @@ namespace SocratexGraphExplorer
             await this.Browser.EnsureCoreWebView2Async(null);
             await this.TextBrowser.EnsureCoreWebView2Async(null);
 
+            this.CypherEditor.SyntaxHighlighting = SourceEditor.LoadHighlightDefinition("Cypher-mode.xshd");
+
             // Set up a function to call when the user clicks on something in the graph browser.
             Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>
             {
@@ -89,20 +108,27 @@ namespace SocratexGraphExplorer
                 // The payload will be empty if the user clicked in the empty space
                 // it will be {edge: id} if an edge is selected
                 // it will be {node: id) if a node is selected
-                var item = System.Text.Json.JsonSerializer.Deserialize<ClickedItem>(message);
+                //var item = System.Text.Json.JsonSerializer.Deserialize<ClickedItem>(message);
 
-                if (item.node != 0)
+                var e = Newtonsoft.Json.Linq.JObject.Parse(message);
+
+                if (e.ContainsKey("nodeId"))
                 {
-                    var cypher = string.Format("MATCH (c) where id(c) = {0} return c limit 1", item.node);
-                    this.ViewModel.SelectedNode = item.node;
-                    var nodeResult = await this.model.ExecuteCypherAsync(cypher);
+                    var id = e["nodeId"].ToObject<long>();
+
+                    var cypher = "MATCH (c) where id(c) = {id} return c limit 1";
+                    this.ViewModel.SelectedNode = id;
+                    var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(nodeResult);
+
                 }
-                else if (item.edge != 0)
+                else if (e.ContainsKey("edgeId"))
                 {
-                    var cypher = string.Format("MATCH (c) -[r]- (d) where id(r) = {0} return r limit 1", item.edge);
-                    this.ViewModel.SelectedEdge = item.edge;
-                    var edgeResult = await this.model.ExecuteCypherAsync(cypher);
+                    var id = e["edgeId"].ToObject<long>();
+
+                    var cypher = "MATCH (c) -[r]- (d) where id(r) = {id} return r limit 1";
+                    this.ViewModel.SelectedEdge = id;
+                    var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(edgeResult);
                 }
                 else
@@ -113,16 +139,17 @@ namespace SocratexGraphExplorer
 
             this.Browser.SizeChanged += async (object sender, SizeChangedEventArgs e) =>
             {
-                // await this.Browser.EnsureCoreWebView2Async();
-                var snippet = "setVizSize(" + (e.NewSize.Width - 0).ToString() + "," + (e.NewSize.Height - 0).ToString() + ");";
+                await this.Browser.EnsureCoreWebView2Async();
+                var snippet = "setGraphSize(" + (e.NewSize.Width - 20).ToString() + "," + (e.NewSize.Height - 20).ToString() + ");";
                 await this.Browser.ExecuteScriptAsync(snippet);
             };
 
+            this.Browser.NavigationCompleted += Browser_NavigationCompleted;
             // The debugger does not work in Edge if the source does not come from a file.
             // Load the script into a temporary file, and use that file in the URI that
             // the debugger loads.
 //            this.Browser.Source = new Uri("file:///c:/users/.../test.html");
-            this.Browser.NavigateToString(this.model.Source);
+            this.Browser.Source = this.model.ScriptUri;
             this.TextBrowser.NavigateToString(@"<html>
     <head>
         <style>
@@ -146,8 +173,27 @@ namespace SocratexGraphExplorer
 
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
+            base.OnClosed(e);
+            this.ViewModel.Close();
         }
+
+        /// <summary>
+        /// This method is called after the browser has finished loading the document. The 
+        /// size is set to fill out the frame. The SizeChanged event is triggered too early
+        /// to have any effect.
+        /// </summary>
+        /// <param name="sender">The browser graph view</param>
+        /// <param name="e">The event args. Not used.</param>
+        private async void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            var browser = sender as Microsoft.Web.WebView2.Wpf.WebView2;
+            await browser.EnsureCoreWebView2Async();
+
+            var snippet = "setGraphSize(" + (browser.RenderSize.Width - 20).ToString() + "," + (browser.RenderSize.Height - 20).ToString() + ");";
+            await this.Browser.ExecuteScriptAsync(snippet);
+        }
+        
     }
 }

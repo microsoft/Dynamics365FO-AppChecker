@@ -82,12 +82,12 @@
         <GroupBox Grid.Row="2" Header="Queries">
 
             <WrapPanel Orientation="Horizontal">
-                <Button Click="ShowBaseClass">Show parent class.</Button>
-                <Button Click="ShowBaseClasses">Show parent classes.</Button>                
-                <Button Click="ShowDerivedClasses">Show derived classes.</Button>
-                <Button Click="ShowImplementedInterfaces">Show interfaces implemented.</Button>
-                <Button Click="ShowMethods">Show methods.</Button>
-                <Button Click="ShowFields">Show fields.</Button>
+                <Button Click="ShowBaseClass" Style="{StaticResource PredefinedQueryButton}">Show parent class.</Button>
+                <Button Click="ShowBaseClasses" Style="{StaticResource PredefinedQueryButton}">Show parent classes.</Button>
+                <Button Click="ShowDerivedClasses" Style="{StaticResource PredefinedQueryButton}">Show derived classes.</Button>
+                <Button Click="ShowImplementedInterfaces" Style="{StaticResource PredefinedQueryButton}">Show interfaces implemented.</Button>
+                <Button Click="ShowMethods" Style="{StaticResource PredefinedQueryButton}">Show methods.</Button>
+                <Button Click="ShowFields" Style="{StaticResource PredefinedQueryButton}">Show fields.</Button>
             </WrapPanel>
         </GroupBox>
     </Grid>

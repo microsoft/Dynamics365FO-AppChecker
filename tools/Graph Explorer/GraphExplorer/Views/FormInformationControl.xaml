@@ -82,7 +82,7 @@
         <GroupBox Grid.Row="2" Header="Queries">
 
             <WrapPanel Orientation="Horizontal">
-                <Button Click="ShowMethods">Show methods.</Button>
+                <Button Click="ShowMethods" Style="{StaticResource PredefinedQueryButton}">Show methods.</Button>
             </WrapPanel>
         </GroupBox>
     </Grid>

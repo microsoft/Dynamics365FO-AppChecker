@@ -19,12 +19,11 @@ namespace SocratexGraphExplorer.Views
     /// </summary>
     public partial class TableInformationControl : UserControl
     {
-        private Model model;
-        private EditorViewModel viewModel;
-        private INode node;
+        private readonly Model model;
+        private readonly INode node;
         private SourceEditor ClassEditor { set; get; }
 
-        private ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
+        private readonly ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
 
         public ObservableCollection<PropertyItem> Properties
         {
@@ -42,10 +41,9 @@ namespace SocratexGraphExplorer.Views
             Clipboard.SetText(control.Text);
         }
 
-        public TableInformationControl(Model model, EditorViewModel viewModel, INode node)
+        public TableInformationControl(Model model, INode node)
         {
             this.model = model;
-            this.viewModel = viewModel;
             this.node = node;
 
             InitializeComponent();

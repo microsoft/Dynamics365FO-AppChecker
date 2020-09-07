@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
@@ -10,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -88,7 +91,7 @@ namespace SocratexGraphExplorer.ViewModels
         private bool graphModeSelected = true;
         public bool GraphModeSelected
         {
-            get { return this.graphModeSelected;  }
+            get { return this.graphModeSelected; }
             set
             {
                 this.graphModeSelected = value;
@@ -141,14 +144,16 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
 
         public ICommand AboutCommand => new RelayCommand(
-            p => {
+            p =>
+            {
                 var aboutBox = new AboutBox();
                 aboutBox.Show();
             }
         );
 
         public ICommand ApplicationExitCommand => new RelayCommand(
-            p => {
+            p =>
+            {
                 System.Windows.Application.Current.Shutdown();
             }
         );
@@ -186,8 +191,8 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
-                var q = "match (n) -[]-> (q) where id(n) = " + this.SelectedNode + " return q";
-                var result = await this.model.ExecuteCypherAsync(q);
+                var query = "match (n) -[]-> (q) where id(n) = {nodeId} return q";
+                var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var outgoing = Model.HarvestNodeIdsFromGraph(result);
 
@@ -209,8 +214,9 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
-                var q = "match (n) <-[]- (q) where id(n) = " + this.SelectedNode + " return q";
-                var result = await this.model.ExecuteCypherAsync(q);
+
+                var query = "match (n) <-[]- (q) where id(n) = {nodeId} return q";
+                var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var incoming = Model.HarvestNodeIdsFromGraph(result);
 
@@ -291,12 +297,17 @@ namespace SocratexGraphExplorer.ViewModels
             );
         }
 
+        // TODO. Move this
+        private ConfigEditWindow configEditor;
+
         public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
-                p=>
+                p =>
                 {
-
+                    this.configEditor = new ConfigEditWindow();
+                    this.configEditor.DataContext = this;
+                    this.configEditor.Show();
                 }
             );
         }
@@ -304,17 +315,84 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ShowDatabaseParametersCommand
         {
             get => new RelayCommand(
-                p => 
+                p =>
                 {
                     this.ShowDatabaseInfoPanel();
                 }
             );
-
         }
+
+        public ICommand ImportStyleCommand
+        {
+            get => new RelayCommand(
+                async p =>
+                {
+                    // Open a Javascript (.js) file with the file open dialog
+                    var openFileDialog = new OpenFileDialog()
+                    {
+                        CheckFileExists = true,
+                        AddExtension = true,
+                        DefaultExt = ".js",
+                        Filter = "Javascript|*.js",
+                        Multiselect = false,
+                        Title = "Select style document to import",
+                    };
+
+                    if (openFileDialog.ShowDialog() == true)
+                    {
+                        var styleScriptSource = File.ReadAllText(openFileDialog.FileName);
+                        Properties.Settings.Default.Configuration = styleScriptSource;
+
+                        // Store the file along with the script
+                        var uri = this.model.ScriptUri;
+                        var fileName = uri.LocalPath;
+
+                        var directory = Path.GetDirectoryName(fileName);
+                        var configFileName = Path.Combine(directory, "Config.js");
+                        File.WriteAllText(configFileName, styleScriptSource);
+
+                        // Reload the browser content to reflect the change in style.
+                        this.view.Browser.Reload();
+
+                        // Redraw what was there with the new style.
+                        await this.RepaintNodesAsync(this.model.NodesShown);
+                    }
+                });
+        }
+
+        public ICommand ExportStyleCommand
+        {
+            get => new RelayCommand(
+                p =>
+                {
+                    // Export the bare-bones style Javascript style document.
+                    var saveFileDialog = new SaveFileDialog()
+                    {
+                        AddExtension = true,
+                        CheckFileExists = true,
+                        CheckPathExists = true,
+                        DefaultExt = "js",
+                        Filter = "Javascript|*.js",
+                        OverwritePrompt = true,
+                        Title = "Save generic style document",
+                    };
+
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        var assembly = Assembly.GetExecutingAssembly();
+                        var s = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources.GenericStyleDocument.js");
+
+                        using var reader = new StreamReader(s);
+                        File.WriteAllText(saveFileDialog.FileName, reader.ReadToEnd());
+                    }
+                });
+        }
+
         public ICommand SaveQueryCommand
         {
             get => new RelayCommand(
-                p => {
+                p =>
+                {
                     this.SaveQueryFile();
                 });
         }
@@ -331,7 +409,7 @@ namespace SocratexGraphExplorer.ViewModels
         public int QueryEditorFontSize
         {
             get => this.model.QueryFontSize;
-            set { this.model.QueryFontSize = value;  } 
+            set { this.model.QueryFontSize = value; }
         }
 
         public int QueryFont => model.QueryFontSize;
@@ -345,6 +423,19 @@ namespace SocratexGraphExplorer.ViewModels
             set
             {
                 this.OnPropertyChanged(nameof(CaretPositionString));
+            }
+        }
+
+        public bool IsDarkMode
+        {
+            get { return this.model.IsDarkMode; }
+            set
+            {
+                if (value != this.model.IsDarkMode)
+                {
+                    this.model.IsDarkMode = value;
+                    this.OnPropertyChanged(nameof(IsDarkMode));
+                }
             }
         }
 
@@ -362,21 +453,14 @@ namespace SocratexGraphExplorer.ViewModels
                 {
                     if (this.RenderingMode == RenderingMode.Text)
                     {
-                        // The user switched to text mode from fraph mode. The user may have made
+                        // The user switched to text mode from graph mode. The user may have made
                         // changes that are not reflected in the graph, but the current graph is
                         // represented in the Nodes structure.
                         if (this.model.NodesShown != null)
                         {
-                            var nodeIdsString = Model.CommaSeparatedString(this.model.NodesShown);
+                            var results = await this.GetGraphFromNodes(this.model.NodesShown);
 
-                            var q = "match (n) where id(n) in [" + nodeIdsString + "] "
-                                  + "optional match (n) -[r]- (m) "
-                                  + "where id(n) in [" + nodeIdsString + "] " +
-                                    "  and id(m) in [" + nodeIdsString + "] " +
-                                    "return n,m,r";
-
-                            var res = await this.model.ExecuteCypherAsync(q);
-                            var html = Model.GenerateHtml(res);
+                            var html = Model.GenerateHtml(results);
                             this.view.TextBrowser.NavigateToString(html);
                         }
                     }
@@ -399,6 +483,15 @@ namespace SocratexGraphExplorer.ViewModels
                 {
                     this.CaretPositionString = this.model.CaretPositionString;
                 }
+                else if (e.PropertyName == "IsDarkMode")
+                {
+                    var paletteHelper = new PaletteHelper();
+
+                    ITheme theme = paletteHelper.GetTheme();
+                    IBaseTheme baseTheme = this.model.IsDarkMode ? new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
+                    theme.SetBaseTheme(baseTheme);
+                    paletteHelper.SetTheme(theme);
+                }
                 else if (e.PropertyName == nameof(Model.NodesShown))
                 {
                     // The nodes have been changed, so do a repaint
@@ -412,7 +505,10 @@ namespace SocratexGraphExplorer.ViewModels
                     }
                     else
                     {
-                        var html = Model.GenerateHtml(this.model.QueryResults);
+                        // TODO Test
+                        // var html = Model.GenerateHtml(this.model.QueryResults);
+                        var html = Model.GenerateJSON(this.model.QueryResults);
+
                         this.view.TextBrowser.NavigateToString(html);
                     }
                 }
@@ -422,7 +518,7 @@ namespace SocratexGraphExplorer.ViewModels
                  async p =>
                  {
                      string source = v.CypherEditor.Document.Text;
-                     
+
                      this.SelectedNode = 0;
                      this.SelectedEdge = 0;
 
@@ -460,29 +556,41 @@ namespace SocratexGraphExplorer.ViewModels
             this.printGraphCommand = new RelayCommand(
                 async p =>
                 {
-                    await this.view.Browser.ExecuteScriptAsync ("this.print();");
+                    await this.view.Browser.ExecuteScriptAsync("this.print();");
                 }
             );
         }
 
-        public async Task RepaintNodesAsync(HashSet<long> nodes)
+        private async Task<List<IRecord>> GetGraphFromNodes(HashSet<long> nodes)
         {
             if (nodes != null)
             {
-                var nodeIdsString = Model.CommaSeparatedString(nodes);
-
-                var q = "match (n) where id(n) in [" + nodeIdsString + "] "
+                var query = "match (n) where id(n) in {nodeIds} "
                       + "optional match (n) -[r]- (m) "
-                      + "where id(n) in [" + nodeIdsString + "] " +
-                        "  and id(m) in [" + nodeIdsString + "] " +
+                      + "where id(n) in {nodeIds} " +
+                        "  and id(m) in {nodeIds} " +
                         "return n,m,r";
 
-                await view.Browser.ExecuteScriptAsync(string.Format("draw('{0}');", q));
+                var results = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
+                return results;
+            }
+
+            return null;
+        }
+
+        public async Task RepaintNodesAsync(HashSet<long> nodes)
+        {
+            var results = await this.GetGraphFromNodes(nodes);
+            if (results != null)
+            {
+                string resultJson = Model.GenerateJSON(results);
+
+                await view.Browser.ExecuteScriptAsync(string.Format("draw({0});", resultJson));
             }
         }
 
-         private void UpdateNodeInfoPage(INode node)
-         {
+        private void UpdateNodeInfoPage(INode node)
+        {
             // TODO this should not be hardcoded, but MEF should be used to find a plugin
             // that is able to handle (i.e. create a user control) for the node with the 
             // given label. What happens if there are more labels? Not defined at this time.
@@ -498,11 +606,11 @@ namespace SocratexGraphExplorer.ViewModels
             }
             else if (string.Compare(node.Labels[0], "Table") == 0)
             {
-                child = new SocratexGraphExplorer.Views.TableInformationControl(this.model, this, node);
+                child = new SocratexGraphExplorer.Views.TableInformationControl(this.model, node);
             }
             else if (string.Compare(node.Labels[0], "Form") == 0)
             {
-                child = new SocratexGraphExplorer.Views.FormInformationControl(this.model, this, node);
+                child = new SocratexGraphExplorer.Views.FormInformationControl(this.model, node);
             }
             else
             {
@@ -525,13 +633,9 @@ namespace SocratexGraphExplorer.ViewModels
 
         private void UpdateProperties(object nodeOrEdge)
         {
-            var n = nodeOrEdge as INode;
-            if (n != null)
+            if (nodeOrEdge is INode n)
             {
-                if (this.NodeSelected != null)
-                {
-                    this.NodeSelected(n);
-                }
+                this.NodeSelected?.Invoke(n);
             }
             else
             {
@@ -595,6 +699,14 @@ namespace SocratexGraphExplorer.ViewModels
                 var stream = dialog.OpenFile();
                 this.view.CypherEditor.Load(stream);
             }
+        }
+
+        /// <summary>
+        /// Called when the application closes down. Do any cleanup here.
+        /// </summary>
+        public void Close()
+        {
+            this.model.Close();
         }
     }
 }

@@ -81,9 +81,9 @@
         <GroupBox Grid.Row="2" Header="Queries">
             
             <WrapPanel Orientation="Horizontal">
-                <Button Click="ShowDeclaringEntityClicked">Show containing toplevel entity.</Button>
-                <Button Click="ShowCallersButtonClicked">Show callers.</Button>
-                <Button Click="ShowCalleesButtonClicked">Show callees.</Button>
+                <Button Click="ShowDeclaringEntityClicked" Style="{StaticResource PredefinedQueryButton}">Show containing toplevel entity.</Button>
+                <Button Click="ShowCallersButtonClicked" Style="{StaticResource PredefinedQueryButton}">Show callers.</Button>
+                <Button Click="ShowCalleesButtonClicked" Style="{StaticResource PredefinedQueryButton}">Show callees.</Button>
             </WrapPanel>
         </GroupBox>
     </Grid>

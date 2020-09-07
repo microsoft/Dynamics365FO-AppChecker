@@ -77,56 +77,6 @@ namespace SocratexGraphExplorer.Views
             }
         }
 
-        //private void ImgShowHide_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    this.HidePassword();
-        //}
-
-        //private void ImgShowHide_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    this.ShowPassword();
-        //}
-
-        //private void ImgShowHide_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    this.HidePassword();
-        //}
-
-        //        /// <summary>
-        //        /// Called when the password text changes. When this happens the
-        //        /// view switches back to hidden mode (showing ****) and any 
-        //        /// residual connection message is removed.
-        //        /// </summary>
-        //        /// <param name="sender"></param>
-        //        /// <param name="e"></param>
-        //        private void TxtPasswordbox_PasswordChanged(object sender, RoutedEventArgs e)
-        //        {
-        //            if (PasswordControl.Password.Length > 0)
-        //                IconShowHide.Visibility = Visibility.Visible;
-        //            else
-        //                IconShowHide.Visibility = Visibility.Hidden;
-
-        //            this.StatusControl.Content = string.Empty;
-        //        }
-
-        //        private void ShowPassword()
-        //        {
-        //            this.IconShowHide.Kind = MaterialDesignThemes.Wpf.PackIconKind.EyeOutline;
-        ////            ImgShowHide.Source = new BitmapImage(new Uri("pack://application:,,,/Images/fatter-eye-inverted.png", UriKind.Absolute));
-        //            txtVisiblePasswordbox.Visibility = Visibility.Visible;
-        //            PasswordControl.Visibility = Visibility.Hidden;
-        //            txtVisiblePasswordbox.Text = PasswordControl.Password;
-        //        }
-
-        //        private void HidePassword()
-        //        {
-        //            this.IconShowHide.Kind = MaterialDesignThemes.Wpf.PackIconKind.Eye;
-        ////            ImgShowHide.Source = new BitmapImage(new Uri("pack://application:,,,/Images/fatter-eye.png", UriKind.Absolute));
-        //            txtVisiblePasswordbox.Visibility = Visibility.Hidden;
-        //            PasswordControl.Visibility = Visibility.Visible;
-        //            PasswordControl.Focus();
-        //        }
-
         /// <summary>
         /// Called when the user name is changed by the user. In this case any
         /// message about connection failure should be removed.

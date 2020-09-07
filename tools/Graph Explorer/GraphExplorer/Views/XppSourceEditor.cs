@@ -25,7 +25,7 @@ namespace SocratexGraphExplorer.Views
             var xppFoldingManager = FoldingManager.Install(this.TextArea);
             xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
 
-            this.SyntaxHighlighting = this.LoadHighlightDefinition("Xpp-Mode.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
 
             //model.Tick += (object sender, EventArgs e) =>
             //{
