@@ -10,11 +10,11 @@ If you're working in a developer environment and don't have admin privileges, us
 
 BaseX is a Java-based XML document database. It requires a Java Runtime Environment (JRE) of version 8 or later. Before you install BaseX, verify that a JRE is installed.
 
-# [Admin: Install Java](#tab/admin)
+### Admin: Install Java
 
 Download and install Java JRE **64-bit** from the [Java download page](https://aka.ms/getjava).
 
-# [Non-admin: Set up Java](#tab/non-admin)
+### Non-admin: Set up Java
 
 Download Java **Server JRE** from the [Java download page](https://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
@@ -22,8 +22,7 @@ Java Server JRE is downloaded as a .tar.gz compressed archive that you must extr
 
 To extract Java Server JRE binaries from the archive, run the following Windows PowerShell commands.
 
-> [!NOTE]
-> You must modify these commands so that they reflect the version of the Server JRE archive that you downloaded. In the commands that are shown here, both 7za.exe and the archive are in the current working directory.
+**Note**: You must modify these commands so that they reflect the version of the Server JRE archive that you downloaded. In the commands that are shown here, both 7za.exe and the archive are in the current working directory.
 
 ```powershell
 .\7za.exe x .\server-jre-8u202-windows-x64.tar.gz # decompresses to current working directory
@@ -40,36 +39,30 @@ After you extract Java, modify and run the following Windows PowerShell script t
     [EnvironmentVariableTarget]::User)
 ```
 
----
-
 ## Download BaseX
 
 To download BaseX, go to the [BaseX website](http://basex.org/download/), and download the latest version.
 
-# [Admin: Download BaseX](#tab/admin)
+### Admin: Download BaseX
 
 Download the Microsoft Windows installer from the download page.
 
-# [Non-admin: Download BaseX](#tab/non-admin)
+### Non-admin: Download BaseX
 
 Download the zip package from the download page.
 
----
-
 ## Install BaseX
 
-# [Admin: Install BaseX](#tab/admin)
+### Admin: Install BaseX
 
 Run the executable file on the developer machine where you will compile your module. For each step, accept the default settings.
 
-# [Non-admin: Set up BaseX](#tab/non-admin)
+### Non-admin: Set up BaseX
 
 Extract the BaseX zip package that you previously downloaded.
 
----
 
-> [!TIP]
-> If the installation drive doesn't have enough space for your model, you can change the folder for BaseX data later. For more information, see [BaseX configuration](http://docs.basex.org/wiki/Configuration#Database_Directory).
+**Tip**: If the installation drive doesn't have enough space for your model, you can change the folder for BaseX data later. For more information, see [BaseX configuration](http://docs.basex.org/wiki/Configuration#Database_Directory).
 
 After you install BaseX, modify and run the following Windows PowerShell script to add the BaseX bin folder to your **PATH** environment variable.
 
@@ -81,8 +74,7 @@ After you install BaseX, modify and run the following Windows PowerShell script 
     [EnvironmentVariableTarget]::User)
 ```
 
-> [!IMPORTANT]
-> If Microsoft Visual Studio was open while you set the **PATH** environment variable, you must restart it.
+**Important**: If Microsoft Visual Studio was open while you set the **PATH** environment variable, you must restart it.
 
 ## Configure BaseX to handle your model
 
@@ -97,5 +89,4 @@ By default, BaseX is configured to use a maximum of about 1200 megabytes (MB) of
 
     Leave the rest of the script unchanged.
 
-> [!NOTE]
-> You don't have to start the BaseX server, because Application Checker will use the standalone executable file for storage and queries.
+**Note**: You don't have to start the BaseX server, because Application Checker will use the standalone executable file for storage and queries.
