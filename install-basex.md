@@ -1,4 +1,4 @@
-# Install BaseX for AppChecker
+# Install BaseX for Application Checker
 
 Application Checker depends on an installation of BaseX to store and query abstract syntax trees that the X++ compiler generates. This topic explains how to install and set up BaseX in a developer environment.
 
