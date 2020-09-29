@@ -13,11 +13,16 @@ namespace XppReasoningWpf.ViewModels
     {
         private ObservableCollection<SourceWindowDescriptor> tabDescriptors = new ObservableCollection<SourceWindowDescriptor>();
 
+        private static string TabTitle(TabItem ti)
+        {
+            return (ti.Header as TextBlock).Text;
+        }
+
         public SourceWindowViewModel(WindowsWindow window, TabControl sourceTabs)
         {
-            foreach (TabItem t in sourceTabs.Items.OfType<TabItem>().OrderBy(ti => (string)ti.Header))
+            foreach (TabItem t in sourceTabs.Items.OfType<TabItem>().OrderBy(ti => TabTitle(ti)))
             {
-                this.tabDescriptors.Add(new SourceWindowDescriptor(t.Header as string));
+                this.tabDescriptors.Add(new SourceWindowDescriptor(TabTitle(t)));
             }
 
             window.SourceList.ItemsSource = this.tabDescriptors;
@@ -30,7 +35,7 @@ namespace XppReasoningWpf.ViewModels
                         var tabHeader = descriptor.Name;
                         foreach (TabItem ti in sourceTabs.Items.OfType<TabItem>().ToList())
                         {
-                            if ((string)ti.Header == tabHeader)
+                            if (TabTitle(ti) == tabHeader)
                             {
                                 sourceTabs.Items.Remove(ti);
                                 this.tabDescriptors.Remove(descriptor);
@@ -50,7 +55,7 @@ namespace XppReasoningWpf.ViewModels
                     var tabHeader = descriptor.Name;
                     foreach (TabItem ti in sourceTabs.Items.OfType<TabItem>().ToList())
                     {
-                        if ((string)ti.Header == tabHeader)
+                        if (TabTitle(ti) == tabHeader)
                         {
                             sourceTabs.SelectedItem = ti;
                             break;

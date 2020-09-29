@@ -546,7 +546,7 @@ namespace XppReasoningWpf
             var tab = new Wpf.Controls.TabItem()
             {
                 Tag = name,
-                Header = name,
+                Header = new TextBlock() { Text = name },
                 Icon = new Image
                 {
                     Source = new BitmapImage(new Uri("images/Hourglass_16x.png", UriKind.Relative)),
