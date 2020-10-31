@@ -305,8 +305,10 @@ namespace SocratexGraphExplorer.ViewModels
             get => new RelayCommand(
                 p =>
                 {
-                    this.configEditor = new ConfigEditWindow();
-                    this.configEditor.DataContext = this;
+                    this.configEditor = new ConfigEditWindow(this)
+                    {
+                        DataContext = this
+                    };
                     this.configEditor.Show();
                     this.configEditor.Owner = this.view;
                 }
@@ -326,7 +328,7 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ImportStyleCommand
         {
             get => new RelayCommand(
-                async p =>
+                p =>
                 {
                     // Open a Javascript (.js) file with the file open dialog
                     var openFileDialog = new OpenFileDialog()
@@ -342,21 +344,21 @@ namespace SocratexGraphExplorer.ViewModels
                     if (openFileDialog.ShowDialog() == true)
                     {
                         var styleScriptSource = File.ReadAllText(openFileDialog.FileName);
-                        Properties.Settings.Default.Configuration = styleScriptSource;
+                        this.model.StyleDocumentSource = styleScriptSource;
 
-                        // Store the file along with the script
-                        var uri = this.model.ScriptUri;
-                        var fileName = uri.LocalPath;
+                        //// Store the file along with the script
+                        //var uri = this.model.ScriptUri;
+                        //var fileName = uri.LocalPath;
 
-                        var directory = Path.GetDirectoryName(fileName);
-                        var configFileName = Path.Combine(directory, "Config.js");
-                        File.WriteAllText(configFileName, styleScriptSource);
+                        //var directory = Path.GetDirectoryName(fileName);
+                        //var configFileName = Path.Combine(directory, "Config.js");
+                        //File.WriteAllText(configFileName, styleScriptSource);
 
-                        // Reload the browser content to reflect the change in style.
-                        this.view.Browser.Reload();
+                        //// Reload the browser content to reflect the change in style.
+                        //this.view.Browser.Reload();
 
-                        // Redraw what was there with the new style.
-                        await this.RepaintNodesAsync(this.model.NodesShown);
+                        //// Redraw what was there with the new style.
+                        //await this.RepaintNodesAsync(this.model.NodesShown);
                     }
                 });
         }
@@ -427,6 +429,19 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        public string StyleDocumentSource
+        {
+            get { return this.model.StyleDocumentSource; }
+            set
+            {
+                if (this.model.StyleDocumentSource != value)
+                {
+                    this.model.StyleDocumentSource = value;
+                    this.OnPropertyChanged(nameof(StyleDocumentSource));
+                }
+            }
+        }
+
         public bool IsDarkMode
         {
             get { return this.model.IsDarkMode; }
@@ -448,6 +463,7 @@ namespace SocratexGraphExplorer.ViewModels
             NodeSelected += UpdateNodeInfoPage;
             EdgeSelected += UpdateEdgeInfoPage;
 
+            // Handler for events in this view model
             this.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
             {
                 if (e.PropertyName == nameof(RenderingMode))
@@ -461,13 +477,14 @@ namespace SocratexGraphExplorer.ViewModels
                         {
                             var results = await this.GetGraphFromNodes(this.model.NodesShown);
 
-                            var html = Model.GenerateHtml(results);
+                           var html = Model.GenerateHtml(results);
                             this.view.TextBrowser.NavigateToString(html);
                         }
                     }
                 }
             };
 
+            // Handler for events bubbling up from the model.
             model.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
             {
                 if (e.PropertyName == "QueryFontSize")
@@ -493,6 +510,22 @@ namespace SocratexGraphExplorer.ViewModels
                     theme.SetBaseTheme(baseTheme);
                     paletteHelper.SetTheme(theme);
                 }
+                else if (e.PropertyName == nameof(Model.StyleDocumentSource))
+                {
+                    // Store the file along with the script
+                    var uri = this.model.ScriptUri;
+                    var fileName = uri.LocalPath;
+
+                    var directory = Path.GetDirectoryName(fileName);
+                    var configFileName = Path.Combine(directory, "Config.js");
+                    File.WriteAllText(configFileName, model.StyleDocumentSource);
+
+                    // Reload the browser content to reflect the change in style.
+                    this.view.Browser.Reload();
+
+                    // Redraw what was there with the new style.
+                    await this.RepaintNodesAsync(this.model.NodesShown);
+                }
                 else if (e.PropertyName == nameof(Model.NodesShown))
                 {
                     // The nodes have been changed, so do a repaint
@@ -506,10 +539,7 @@ namespace SocratexGraphExplorer.ViewModels
                     }
                     else
                     {
-                        // TODO Test
-                        // var html = Model.GenerateHtml(this.model.QueryResults);
-                        var html = Model.GenerateJSON(this.model.QueryResults);
-
+                        var html = Model.GenerateHtml(this.model.QueryResults);
                         this.view.TextBrowser.NavigateToString(html);
                     }
                 }
@@ -586,6 +616,8 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 string resultJson = Model.GenerateJSON(results);
 
+                await view.Browser.EnsureCoreWebView2Async();
+                // await Task.Delay(1000);
                 await view.Browser.ExecuteScriptAsync(string.Format("draw({0});", resultJson));
             }
         }
@@ -622,7 +654,7 @@ namespace SocratexGraphExplorer.ViewModels
 
         private void UpdateEdgeInfoPage(IRelationship edge)
         {
-            UserControl child = new SocratexGraphExplorer.Views.EmptyInformationControl();
+            UserControl child = new SocratexGraphExplorer.Views.EdgeInformationControl(this.model, edge);
             this.view.ContextualInformation.Content = child;
         }
 

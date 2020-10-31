@@ -26,7 +26,6 @@
             document.getElementById('mynetwork').style.height = height + 'px';
         }
 
-        // function draw(nodesAndEdgesInJson, config) {
         function draw(nodesAndEdgesInJson) {
             // Instantiate our network object.
             var container = document.getElementById('mynetwork');
@@ -34,13 +33,11 @@
             // Convert the graph rendering agnostic format to the vis.js format
             var graphNodes = [];
             nodesAndEdgesInJson.nodes.forEach(n => {
-                //                graphNodes.push(config.createGraphNode(n));
                 graphNodes.push(createGraphNode(n));
             });
 
             var graphEdges = [];
             nodesAndEdgesInJson.edges.forEach(e => {
-//                graphEdges.push(config.createGraphEdge(e));
                 graphEdges.push(createGraphEdge(e));
             });
 
@@ -65,8 +62,16 @@
     </script>
 </head>
 
-<body onload="document.body.style.background = graphSurfaceBackgroundColor();">
-    <div id='mynetwork'></div>
+<body onload="document.body.style.background = graphSurfaceDefaultBackgroundColor(); document.body.style.color = graphSurfaceDefaultForegroundColor();">
+    <div id='mynetwork'>
+        <!-- This nested div will be overwritten when graph is rendered -->
+        <div style='display:flex; position:absolute; top:0; bottom:0; right:0; left:0;'>
+            <div id='centered_div' style='margin:auto;font-size:large;' >
+                Execute a query to render a graph
+            </div>
+        </div>
+
+    </div>
 </body>
 
 </html>

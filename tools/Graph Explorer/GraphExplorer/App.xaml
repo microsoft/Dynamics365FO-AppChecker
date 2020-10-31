@@ -23,7 +23,9 @@ Licensed under the MIT license.
 
             <Style TargetType="Button" x:Key="PredefinedQueryButton">
                 <Setter Property="Margin" Value="0,0,4,0"/>
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="0"  />
+                <Setter Property="MaxWidth" Value="200" />
+                <Setter Property="FontSize" Value="12"  />
             </Style>
 
             <Style TargetType="avalonedit:TextEditor" x:Key="SourceEditorStyle">

@@ -10,29 +10,6 @@
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
-        <Style TargetType="Button">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="MinHeight" Value="23" />
-            <Setter Property="MaxWidth" Value="200" />
-            <Setter Property="Foreground" Value="Blue"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border TextBlock.Foreground="{TemplateBinding Foreground}"
-                            x:Name="Border"
-                            BorderThickness="00">
-
-                            <ContentPresenter Margin="2"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>

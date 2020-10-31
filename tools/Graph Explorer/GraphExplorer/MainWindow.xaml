@@ -29,6 +29,7 @@ Licensed under the MIT license.
         <KeyBinding Command="{Binding SaveQueryCommand}" Gesture='Ctrl+S'/>
         <KeyBinding Command="{Binding OpenQueryCommand}" Gesture="Ctrl+O"/>
         <KeyBinding Command="{Binding ApplicationExitCommand}" Gesture="Alt+F4"/>
+        <KeyBinding Command="{Binding ExecuteQueryCommand}" Gesture="Ctrl+Enter"/>
     </Window.InputBindings>
 
     <DockPanel>

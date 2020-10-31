@@ -10,9 +10,14 @@
     //    Nodes: https://visjs.github.io/vis-network/docs/network/nodes.html
     //    Edges: https://visjs.github.io/vis-network/docs/network/edges.html
 
-    // This function determines the background color of the graph drawing surface.
+    // This function determines the default background color of the graph drawing surface.
     function graphSurfaceBackgroundColor() {
         return 'lightgrey';
+    }
+
+    // This function determines the default foreground color of the graph drawing surface.
+    function graphSurfaceDefaultForegroundColor() {
+        return 'darkgray';
     }
 
     // The createGraphNode function is used to generate a vis.js node from the node data in

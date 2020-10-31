@@ -69,7 +69,7 @@
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}"  HeaderContainerStyle="{StaticResource HeadingStyle}"/>
+                            <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}"  Width="100" HeaderContainerStyle="{StaticResource HeadingStyle}"/>
                             <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="200"
                                             HeaderContainerStyle="{StaticResource HeadingStyle}">
                             </GridViewColumn>

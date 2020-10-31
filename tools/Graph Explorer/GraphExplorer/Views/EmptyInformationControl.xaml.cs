@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Neo4j.Driver;
+using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +26,7 @@ namespace SocratexGraphExplorer.Views
     {
         public EmptyInformationControl()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

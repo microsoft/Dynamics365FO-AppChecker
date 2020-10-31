@@ -42,8 +42,7 @@ namespace SocratexGraphExplorer
                 this.model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
             };
 
-            // An file argument can be passed, which is the style .js file. If so,
-            // read this file and store it in the configuration
+            // If a configuration file argument is passed, then read this file and store it in the configuration
             if (args.Length != 0)
             {
                 var fileName = args[0];

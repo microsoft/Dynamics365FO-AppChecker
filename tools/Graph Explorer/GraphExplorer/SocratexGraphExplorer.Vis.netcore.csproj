@@ -15,7 +15,9 @@
   <ItemGroup>
     <None Remove="Fat Graph White Background.ico" />
     <None Remove="Resources\Cypher-mode.xshd" />
+    <None Remove="Resources\DarkStyle.js" />
     <None Remove="Resources\GenericStyleDocument.js" />
+    <None Remove="Resources\LightStyle.js" />
     <None Remove="Resources\Script.html" />
     <None Remove="Resources\SourcecodeSymbols\ClassFriend_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\ClassMethodReference_16x.svg" />
@@ -196,8 +198,10 @@
         <Resource Include="Images\Fat Graph White Background.png" />
         <Resource Include="Images\Simple Graph.png" />
         <Resource Include="Images\High Contrast Socrates.png" />
+        <EmbeddedResource Include="Resources\DarkStyle.js" />
         <EmbeddedResource Include="Resources\GenericStyleDocument.js" />
         <EmbeddedResource Include="Resources\Cypher-mode.xshd" />
+        <EmbeddedResource Include="Resources\LightStyle.js" />
         <EmbeddedResource Include="Resources\Script.html" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\ClassFriend_16x.svg" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\ClassMethodReference_16x.svg" />

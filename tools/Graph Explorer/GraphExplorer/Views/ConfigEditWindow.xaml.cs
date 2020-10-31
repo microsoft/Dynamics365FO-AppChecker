@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -17,8 +19,12 @@ namespace SocratexGraphExplorer.Views
     /// </summary>
     public partial class ConfigEditWindow : Window
     {
-        public ConfigEditWindow()
+        private EditorViewModel ViewModel{ get; set; }
+
+        public ConfigEditWindow(EditorViewModel model)
         {
+            this.ViewModel = model;
+
             InitializeComponent();
 
             this.ConfigEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
@@ -32,7 +38,7 @@ namespace SocratexGraphExplorer.Views
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            this.ConfigEditor.Text = Properties.Settings.Default.Configuration;
+            this.ConfigEditor.Text = this.ViewModel.StyleDocumentSource;
         }
     }
 }

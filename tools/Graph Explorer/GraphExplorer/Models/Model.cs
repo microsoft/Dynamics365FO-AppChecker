@@ -74,6 +74,19 @@ namespace SocratexGraphExplorer.Models
             }
         }
 
+        public string StyleDocumentSource
+        {
+            get { return Properties.Settings.Default.Configuration; }
+            set
+            {
+                if (value != Properties.Settings.Default.Configuration)
+                {
+                    Properties.Settings.Default.Configuration = value;
+                    this.OnPropertyChanged(nameof(StyleDocumentSource));
+                }
+            }
+        }
+
         private void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -227,8 +240,9 @@ namespace SocratexGraphExplorer.Models
             var script = this.Source;
             File.WriteAllText(Path.Combine(this.WebRootPath, "Script.html"), script);
 
+            // Copy the configuration file into the web root directory.
             var configFileName = Path.Combine(this.WebRootPath, "Config.js");
-            File.WriteAllText(configFileName, Properties.Settings.Default.Configuration);
+            File.WriteAllText(configFileName, this.StyleDocumentSource);
 
             var assembly = Assembly.GetExecutingAssembly();
 
