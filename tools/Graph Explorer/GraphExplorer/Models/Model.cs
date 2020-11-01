@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SocratexGraphExplorer.Models
@@ -29,7 +30,7 @@ namespace SocratexGraphExplorer.Models
         private HashSet<long> nodesShown;
 
         /// <summary>
-        /// The nodes shown on the canvas. A property is raised when the value changes.
+        /// The nodes shown on the canvas. An event is raised when the value changes.
         /// </summary>
         public HashSet<long> NodesShown
         {
@@ -118,6 +119,17 @@ namespace SocratexGraphExplorer.Models
                     this.caretPositionString = value;
                     this.OnPropertyChanged(nameof(CaretPositionString));
                 }
+            }
+        }
+
+        private (int, int) editorPosition;
+        public (int, int) EditorPosition
+        {
+            get { return this.editorPosition;  }
+            set
+            {
+                this.editorPosition = value;
+                this.OnPropertyChanged(nameof(EditorPosition));
             }
         }
 
@@ -724,6 +736,17 @@ namespace SocratexGraphExplorer.Models
         }
 
         /// <summary>
+        /// Determines if the list of records can be rendered as a graph. This is true if
+        /// there are no atomic values (like strings, ints, etc.) in the list of records.
+        /// </summary>
+        /// <param name="res">The list containing the records.</param>
+        /// <returns>True if the records can be interpreted as as graph, and false otherwise.</returns>
+        public static bool CanBeRenderedAsGraph(IList<IRecord> res)
+        {
+            return res.All(rec => rec.Values.All(v => v.Value is INode || v.Value is IPath || v.Value is IRelationship));
+        }
+
+        /// <summary>
         /// Execute the cypher string on the current connection. If the cypher is incorrect
         /// the error message is updated.
         /// </summary>
@@ -738,14 +761,32 @@ namespace SocratexGraphExplorer.Models
             try
             {
                 IResultCursor cursor = await session.RunAsync(cypherSource, parameters);
-                var res = await cursor.ToListAsync();
+                List<IRecord> res = await cursor.ToListAsync();
 
                 this.ErrorMessage = "Done.";
                 return res;
             }
-            catch (Exception e)
+            catch (Neo4jException e)
             {
-                this.ErrorMessage = e.Message;
+                if (e.Code == "Neo.ClientError.Statement.SyntaxError")
+                {
+                    // Auxiliary information is passed in the Message(!)
+                    // Get the line and column information
+                    //  (line 1, column 9 (offset: 8))
+                    Regex rx = new Regex(@"(.+)\(line\s+(\d+),\s+column\s+(\d+)");
+                    var m = rx.Match(e.Message);
+
+                    var lineNo = int.Parse(m.Groups[2].Value);
+                    var columnNo = int.Parse(m.Groups[3].Value);
+                    var errorString = m.Groups[1].Value;
+
+                    this.ErrorMessage = errorString;
+                    this.EditorPosition = (lineNo, columnNo);
+                }
+                else
+                {
+                    this.ErrorMessage = e.Message;
+                }
             }
             return null;
         }

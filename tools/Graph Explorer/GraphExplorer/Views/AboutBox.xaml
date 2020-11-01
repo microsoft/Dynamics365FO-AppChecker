@@ -84,7 +84,9 @@
                 
             The splash screen artwork was created from a picture by Derek Key on <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.flickr.com/photos/derekskey/9135166134">flickr</Hyperlink> 
             and used under the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://creativecommons.org/licenses/by/2.0">Creative Commons 2.0 license</Hyperlink>.
-            
+            The graph rendering optionally uses icons provided in the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.microsoft.com/en-us/download/details.aspx?id=35825">Visual Studio image library</Hyperlink> 
+            in accordance with the requirements in the EULA.
+                
             This tool connects to a running <Hyperlink RequestNavigate="Navigate" NavigateUri="https://neo4j.com">Neo4j</Hyperlink> graph database with code supplied 
             by Neo4j under the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</Hyperlink>.
             </TextBlock>

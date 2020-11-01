@@ -143,7 +143,7 @@ Licensed under the MIT license.
             </MenuItem>
         </Menu>
 
-        <StatusBar  DockPanel.Dock="Bottom" Height="48"  Background="{DynamicResource MaterialDesignBackground}">
+        <StatusBar  DockPanel.Dock="Bottom" Height="50" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -156,7 +156,7 @@ Licensed under the MIT license.
             </StatusBar.ItemsPanel>
 
             <StatusBarItem Grid.Column="0">
-                <Label Content="{Binding ErrorMessage}" FontFamily="Courier New"/>
+                <Label Content="{Binding ErrorMessage}" FontFamily="Courier New" />
             </StatusBarItem>
 
             <StatusBarItem Grid.Column="1">

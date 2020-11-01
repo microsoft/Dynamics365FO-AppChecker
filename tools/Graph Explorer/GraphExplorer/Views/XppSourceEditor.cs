@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Folding;
 using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

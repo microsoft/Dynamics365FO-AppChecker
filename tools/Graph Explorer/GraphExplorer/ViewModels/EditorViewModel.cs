@@ -477,7 +477,7 @@ namespace SocratexGraphExplorer.ViewModels
                         {
                             var results = await this.GetGraphFromNodes(this.model.NodesShown);
 
-                           var html = Model.GenerateHtml(results);
+                            var html = Model.GenerateHtml(results);
                             this.view.TextBrowser.NavigateToString(html);
                         }
                     }
@@ -500,6 +500,13 @@ namespace SocratexGraphExplorer.ViewModels
                 else if (e.PropertyName == "CaretPositionString")
                 {
                     this.CaretPositionString = this.model.CaretPositionString;
+                }
+                else if (e.PropertyName == "EditorPosition")
+                {
+                    var p = this.model.EditorPosition;
+
+                    this.view.CypherEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition(p.Item1, p.Item2);
+                    this.view.CypherEditor.TextArea.Caret.BringCaretToView();
                 }
                 else if (e.PropertyName == "IsDarkMode")
                 {
@@ -556,13 +563,21 @@ namespace SocratexGraphExplorer.ViewModels
                      if (this.model.ConnectResultNodes)
                      {
                          // First execute the query to get the result graph in memory:
-                         var result = await this.model.ExecuteCypherAsync(source);
+                         List<IRecord> result = await this.model.ExecuteCypherAsync(source);
                          if (result != null)
                          {
-                             // The query executed correctly. Now get the nodes so we can generate the
-                             // query to show the nodes with all their connections.
-                             //this.model.NodesShown = Model.HarvestNodeIdsFromGraph(result);
-                             this.model.QueryResults = result;
+                             // The query executed correctly. 
+                             if (Model.CanBeRenderedAsGraph(result))
+                             {
+                                 // Now get the nodes so we can generate the
+                                 // query to show the nodes with all their connections.
+                                 //this.model.NodesShown = Model.HarvestNodeIdsFromGraph(result);
+                                 this.model.QueryResults = result;
+                             }
+                             else
+                             {
+                                 // this.TextModeSelected = true;
+                             }
                          }
                      }
                      else
@@ -581,7 +596,7 @@ namespace SocratexGraphExplorer.ViewModels
                  // there is a connection to the database.
                  p =>
                  {
-                     return true;
+                     return v.CypherEditor.Document.Text.Any();
                  });
 
             this.printGraphCommand = new RelayCommand(
