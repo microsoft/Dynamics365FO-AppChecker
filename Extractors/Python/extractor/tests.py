@@ -1082,31 +1082,6 @@ class SliceTest(unittest.TestCase):
         node = slice.find("Step/NumberLiteral[@Value='1']")
         assert node != None
 
-    def testSliceExtended(self):
-        root = createTree("a[0, 1:2, ...]")
-        assert root != None
-
-        node = root.find("Statements/ExpressionStatement/Subscript")
-        assert node != None
-
-        name = node.find("Name[@Id='a']")
-        assert name != None
-
-        ext = node.find("ExtSlice")
-        assert ext != None
-
-        firstIndex = ext.find("Index/NumberLiteral[@Value='0']")
-        assert firstIndex != None
-
-        firstSlice = ext.find("Slice/Lower/NumberLiteral[@Value='1']")
-        assert firstSlice != None
-
-        firstSlice = ext.find("Slice/Upper/NumberLiteral[@Value='2']")
-        assert firstSlice != None
-
-        ellipsis = ext.find("Index/Ellipsis")
-        assert ellipsis != None
-
 class StarTest(unittest.TestCase):
     def testStar(self):
         root = createTree("a, *b = (1, 2, 3)")
