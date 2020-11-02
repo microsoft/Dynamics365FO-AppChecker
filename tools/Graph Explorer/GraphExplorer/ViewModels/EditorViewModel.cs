@@ -106,6 +106,7 @@ namespace SocratexGraphExplorer.ViewModels
                 else
                 {
                     this.view.GraphColumn.Width = new GridLength(0);
+                    this.RenderingMode = RenderingMode.Text;
                 }
 
                 this.OnPropertyChanged(nameof(GraphModeSelected));
@@ -468,19 +469,19 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 if (e.PropertyName == nameof(RenderingMode))
                 {
-                    if (this.RenderingMode == RenderingMode.Text)
-                    {
-                        // The user switched to text mode from graph mode. The user may have made
-                        // changes that are not reflected in the graph, but the current graph is
-                        // represented in the Nodes structure.
-                        if (this.model.NodesShown != null)
-                        {
-                            var results = await this.GetGraphFromNodes(this.model.NodesShown);
+                    //if (this.RenderingMode == RenderingMode.Text)
+                    //{
+                    //    // The user switched to text mode from graph mode. The user may have made
+                    //    // changes that are not reflected in the graph, but the current graph is
+                    //    // represented in the Nodes structure.
+                    //    if (this.model.NodesShown != null)
+                    //    {
+                    //        var results = await this.GetGraphFromNodes(this.model.NodesShown);
 
-                            var html = Model.GenerateHtml(results);
-                            this.view.TextBrowser.NavigateToString(html);
-                        }
-                    }
+                    //        var html = Model.GenerateHtml(results);
+                    //        this.view.TextBrowser.NavigateToString(html);
+                    //    }
+                    //}
                 }
             };
 
@@ -555,7 +556,7 @@ namespace SocratexGraphExplorer.ViewModels
             this.executeQueryCommand = new RelayCommand(
                  async p =>
                  {
-                     string source = v.CypherEditor.Document.Text;
+                     string source = this.GetSource();
 
                      this.SelectedNode = 0;
                      this.SelectedEdge = 0;
@@ -567,17 +568,12 @@ namespace SocratexGraphExplorer.ViewModels
                          if (result != null)
                          {
                              // The query executed correctly. 
-                             if (Model.CanBeRenderedAsGraph(result))
+                             if (this.GraphModeSelected  && !Model.CanBeRenderedAsGraph(result))
                              {
-                                 // Now get the nodes so we can generate the
-                                 // query to show the nodes with all their connections.
-                                 //this.model.NodesShown = Model.HarvestNodeIdsFromGraph(result);
-                                 this.model.QueryResults = result;
+                                 this.GraphModeSelected = false;
+                                 this.TextModeSelected = true;
                              }
-                             else
-                             {
-                                 // this.TextModeSelected = true;
-                             }
+                             this.model.QueryResults = result;
                          }
                      }
                      else
@@ -605,6 +601,23 @@ namespace SocratexGraphExplorer.ViewModels
                     await this.view.Browser.ExecuteScriptAsync("this.print();");
                 }
             );
+        }
+
+        /// <summary>
+        /// Get the cypher source to execute from the cypher editor. If no selection is 
+        /// active in the editor, the whoile buffer is executed. If one or more lines are 
+        /// selected, the selected lines are returned.
+        /// </summary>
+        /// <returns>The buffer content or the selected lines, as described.</returns>
+        private string GetSource()
+        {
+            var editor = this.view.CypherEditor;
+            if (editor.SelectionLength > 0)
+            {
+                return editor.SelectedText;
+            }
+
+            return editor.Document.Text;
         }
 
         private async Task<List<IRecord>> GetGraphFromNodes(HashSet<long> nodes)

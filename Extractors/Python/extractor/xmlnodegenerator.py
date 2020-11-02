@@ -798,7 +798,8 @@ class XmlNodeGenerator(object):
             result.append(self.visitExpression(node.value))
             return result
         else:
-            raise NotImplementedError("This slice operator is not implemented")
+            debugString = ast.dump(node)
+            raise NotImplementedError("This slice operator: " + debugString + " is not implemented")
 
     def visitEllipsis(self, node: ast.Ellipsis):
         result = ET.Element("Ellipsis")

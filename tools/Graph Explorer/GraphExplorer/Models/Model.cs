@@ -775,13 +775,19 @@ namespace SocratexGraphExplorer.Models
                     //  (line 1, column 9 (offset: 8))
                     Regex rx = new Regex(@"(.+)\(line\s+(\d+),\s+column\s+(\d+)");
                     var m = rx.Match(e.Message);
+                    if (m.Success)
+                    {
+                        var lineNo = int.Parse(m.Groups[2].Value);
+                        var columnNo = int.Parse(m.Groups[3].Value);
+                        var errorString = m.Groups[1].Value;
 
-                    var lineNo = int.Parse(m.Groups[2].Value);
-                    var columnNo = int.Parse(m.Groups[3].Value);
-                    var errorString = m.Groups[1].Value;
-
-                    this.ErrorMessage = errorString;
-                    this.EditorPosition = (lineNo, columnNo);
+                        this.ErrorMessage = errorString;
+                        this.EditorPosition = (lineNo, columnNo);
+                    }
+                    else
+                    {
+                        this.ErrorMessage = e.Message;
+                    }
                 }
                 else
                 {
