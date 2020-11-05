@@ -85,11 +85,11 @@ namespace AstVisualizer
             sourceEditorTimer.Interval = TimeSpan.FromSeconds(2);
             sourceEditorTimer.Stop();
 
-            sourceEditorTimer.Tick += (object s, EventArgs ea) =>
-            {
-                ViewModel.ExecuteExtractionCommand.Execute(null);
-                (s as DispatcherTimer).Stop();
-            };
+            //sourceEditorTimer.Tick += (object s, EventArgs ea) =>
+            //{
+            //    ViewModel.ExecuteExtractionCommand.Execute(null);
+            //    (s as DispatcherTimer).Stop();
+            //};
 
             this.SourceEditor.TextChanged += (object sender, EventArgs e) =>
             {
