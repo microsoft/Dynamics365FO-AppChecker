@@ -465,24 +465,8 @@ namespace SocratexGraphExplorer.ViewModels
             EdgeSelected += UpdateEdgeInfoPage;
 
             // Handler for events in this view model
-            this.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
+            this.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
-                if (e.PropertyName == nameof(RenderingMode))
-                {
-                    //if (this.RenderingMode == RenderingMode.Text)
-                    //{
-                    //    // The user switched to text mode from graph mode. The user may have made
-                    //    // changes that are not reflected in the graph, but the current graph is
-                    //    // represented in the Nodes structure.
-                    //    if (this.model.NodesShown != null)
-                    //    {
-                    //        var results = await this.GetGraphFromNodes(this.model.NodesShown);
-
-                    //        var html = Model.GenerateHtml(results);
-                    //        this.view.TextBrowser.NavigateToString(html);
-                    //    }
-                    //}
-                }
             };
 
             // Handler for events bubbling up from the model.
