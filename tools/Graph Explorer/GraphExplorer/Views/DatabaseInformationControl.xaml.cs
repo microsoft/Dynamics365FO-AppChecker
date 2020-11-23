@@ -55,7 +55,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
             {
                 var chip = new MaterialDesignThemes.Wpf.Chip()
                 {
-                    Margin = new Thickness(5,0,5,0),
+                    Margin = new Thickness(5,0,5,5),
                     Content = o as string,
                     IsDeletable = false,
                     ToolTip = "Calculating...",

@@ -16,8 +16,10 @@ namespace SocratexGraphExplorer.Views
         public XppSourceEditor(Model model): base(model)
         {
             // FontFamily = "{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}"
-            var fontFamilyBinding = new Binding("SourceFont");
-            fontFamilyBinding.Source = Properties.Settings.Default;
+            var fontFamilyBinding = new Binding("SourceFont")
+            {
+                Source = Properties.Settings.Default
+            };
             this.SetBinding(FontFamilyProperty, fontFamilyBinding);
 
             // Configure the X++ folding manager. 
@@ -27,12 +29,9 @@ namespace SocratexGraphExplorer.Views
             var xppFoldingManager = FoldingManager.Install(this.TextArea);
             xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
 
-            this.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
+            this.IsReadOnly = true;
 
-            //model.Tick += (object sender, EventArgs e) =>
-            //{
-            //    xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
-            //};
+            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.Resources.Xpp-Mode.xshd");
         }
     }
 }

@@ -156,7 +156,7 @@ Licensed under the MIT license.
             </StatusBar.ItemsPanel>
 
             <StatusBarItem Grid.Column="0">
-                <Label Content="{Binding ErrorMessage}" FontFamily="Courier New" />
+                <Label Content="{Binding ErrorMessage}" FontFamily="Courier" />
             </StatusBarItem>
 
             <StatusBarItem Grid.Column="1">
@@ -177,17 +177,15 @@ Licensed under the MIT license.
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="218.75"/>
-                    <ColumnDefinition Width="57.566"/>
-                    <ColumnDefinition Width="523.684"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="7*"/>
+                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Grid.Column="0" Header="Graph" Grid.ColumnSpan="3">
+                <GroupBox Grid.Column="0" Header="Graph" >
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="56"/>
                             <ColumnDefinition x:Name="GraphColumn" Width="*"/>
                             <ColumnDefinition x:Name="TextColumn" Width="0"/>
                         </Grid.ColumnDefinitions>
@@ -214,16 +212,16 @@ Licensed under the MIT license.
                     </Grid>
                 </GroupBox>
 
-                <GridSplitter Grid.Column="3" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
 
-                <GroupBox x:Name="ContextualInformation" Grid.Column="4" Header="Information" Margin="0,0,4,0">
+                <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
                 </GroupBox>
             </Grid>
 
             <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 
-            <GroupBox Header="Queries"  Grid.Row="2">
-                <DockPanel x:Name="ToolbarAndEditor">
+            <GroupBox Header="Queries"  Grid.Row="2" Margin="1,0,1,0">
+                <DockPanel x:Name="ToolbarAndEditor" Margin="-5">
                     <ToolBarTray DockPanel.Dock="Top" x:Name="QueryToolbarTray" Orientation="Horizontal"  >
                         <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ToolBarTray.IsLocked="True">
                             <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
@@ -264,9 +262,15 @@ Licensed under the MIT license.
                             <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size" >
                                 <materialDesign:PackIcon Kind="FormatFontSizeDecrease" />
                             </Button>
+                            <Separator/>
+                            <ListBox>
+                                <ListBoxItem ToolTip="Show line numbers" Selector.IsSelected="{Binding ShowLineNumbers}">
+                                    <materialDesign:PackIcon Kind="FormatListNumbered" />
+                                </ListBoxItem>
+                            </ListBox>
                         </ToolBar>
                     </ToolBarTray>
-                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,5,0,0"  Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" ShowLineNumbers="True" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
+                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,2,0,0"  Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" ShowLineNumbers="{Binding ShowLineNumbers}" FontFamily="Courier" FontSize="{Binding QueryEditorFontSize}">
                         match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
                     </avalonedit:TextEditor>
 

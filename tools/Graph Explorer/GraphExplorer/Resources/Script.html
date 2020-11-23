@@ -26,7 +26,15 @@
             document.getElementById('mynetwork').style.height = height + 'px';
         }
 
-        function draw(nodesAndEdgesInJson) {
+        function draw(nodesAndEdgesInJson, backgroundColor, foregroundColor) {
+
+            // Set the colors of the foreground and background. The colors passed from
+            // the application are in conformance with the visual preferences of the 
+            // user, but you may assign any static value you want for the colors to
+            // overrride these choices.
+            document.body.style.background = backgroundColor; 
+            document.body.style.color = foregroundColor;
+
             // Instantiate our network object.
             var container = document.getElementById('mynetwork');
 
@@ -62,7 +70,7 @@
     </script>
 </head>
 
-<body onload="document.body.style.background = graphSurfaceDefaultBackgroundColor(); document.body.style.color = graphSurfaceDefaultForegroundColor();">
+<body onload="">
     <div id='mynetwork'>
         <!-- This nested div will be overwritten when graph is rendered -->
         <div style='display:flex; position:absolute; top:0; bottom:0; right:0; left:0;'>

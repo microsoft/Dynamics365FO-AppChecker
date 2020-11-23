@@ -60,13 +60,18 @@ namespace SocratexGraphExplorer.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static IHighlightingDefinition LoadHighlightDefinition(string mode)
+        public static IHighlightingDefinition LoadHighlightDefinition(string mode, Assembly assembly=null)
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            // Use the local (i.e. current) assembly if no assembly was provided
+            if (assembly == null)
+            {
+                assembly = Assembly.GetExecutingAssembly();
+            }
+
             Stream syntaxModeStream = null;
             try
             {
-                syntaxModeStream = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources." + mode);
+                syntaxModeStream = assembly.GetManifestResourceStream(mode);
 
                 using (var xshd_reader = new XmlTextReader(syntaxModeStream))
                 {
@@ -146,7 +151,6 @@ namespace SocratexGraphExplorer.Views
             ICSharpCode.AvalonEdit.Search.SearchPanel.Install(this.TextArea);
 
             this.PreviewMouseWheel += MouseWheelHandler;
-            this.IsReadOnly = true;
 
             var fontFamilyBinding = new Binding("SourceFont")
             {

@@ -23,12 +23,19 @@
         
         <!-- TODO: Introduce setting for fontsize and family -->
         <!-- TODO: Introduce toolbar with Font increase and decreaase -->
-        <GroupBox  Grid.Row="0" Header="Style">
-            <avalonedit:TextEditor x:Name="ConfigEditor" Style="{DynamicResource SourceEditorStyle}" ShowLineNumbers="True"  FontFamily="Courier"  FontSize="{Binding QueryEditorFontSize}" />
+        <!-- TODO: Introduce GUI for setting: Default user name and port, server name (or 
+             perhaps these are persisted when a new value is used? 
+            TODO: Switch color modes in a better way than what is currently done.
+        -->
+        <GroupBox  x:Name="OptionsEditor" Grid.Row="0" Header="Style">
         </GroupBox>
 
         <GroupBox Header="Settings" Grid.Row="1">
-            <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Default ToggleButton Style" Content="Dark Mode" IsChecked="{Binding IsDarkMode}" />
+            <StackPanel  Orientation="Horizontal" Margin="8">
+                <TextBlock VerticalAlignment="Center" Text="Light"/>
+                <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Margin="8 0 16 0" ToolTip="Theme" IsChecked="{Binding IsDarkMode}" />
+                <TextBlock VerticalAlignment="Center" Text="Dark"/>
+            </StackPanel>
         </GroupBox>
     </Grid>
 </Window>

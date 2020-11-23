@@ -218,6 +218,19 @@ namespace SocratexGraphExplorer.Models
             }
         }
 
+        public bool ShowLineNumbers
+        {
+            get 
+            {
+                return Properties.Settings.Default.ShowLineNumbers;
+            }
+            set 
+            {
+                Properties.Settings.Default.ShowLineNumbers = value;
+                OnPropertyChanged(nameof(ShowLineNumbers));
+            }
+        }
+
         public string QueryFont => Properties.Settings.Default.QueryFont;
 
         public IDriver CreateNeo4jDriver(string password)
@@ -746,18 +759,25 @@ namespace SocratexGraphExplorer.Models
             return res.All(rec => rec.Values.All(v => v.Value is INode || v.Value is IPath || v.Value is IRelationship));
         }
 
-        /// <summary>
-        /// Execute the cypher string on the current connection. If the cypher is incorrect
-        /// the error message is updated.
-        /// </summary>
-        /// <param name="cypherSource">The cypher source</param>
-        /// <param name="parameters">Any parameters used in the source string</param>
-        /// <returns>The list of results.</returns>
+        public Task<IResultCursor> ExecuteQueryAsync(string cypherSource, Dictionary<string, object> parameters = null)
+        { 
+            IAsyncSession session = this.Driver.AsyncSession();
+            return session.RunAsync(cypherSource, parameters);
+        }
+
+            /// <summary>
+            /// Execute the cypher string on the current connection. If the cypher is incorrect
+            /// the error message is updated.
+            /// </summary>
+            /// <param name="cypherSource">The cypher source</param>
+            /// <param name="parameters">Any parameters used in the source string</param>
+            /// <returns>The list of results.</returns>
         public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, Dictionary<string, object> parameters=null)
         {
+            this.ErrorMessage = "Running query...";
+
             IAsyncSession session = this.Driver.AsyncSession();
 
-            this.ErrorMessage = "Running query...";
             try
             {
                 IResultCursor cursor = await session.RunAsync(cypherSource, parameters);

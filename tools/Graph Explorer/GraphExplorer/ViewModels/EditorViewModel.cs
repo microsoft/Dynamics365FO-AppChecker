@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace SocratexGraphExplorer.ViewModels
@@ -306,11 +307,11 @@ namespace SocratexGraphExplorer.ViewModels
             get => new RelayCommand(
                 p =>
                 {
-                    this.configEditor = new ConfigEditWindow(this)
+                    this.configEditor = new ConfigEditWindow(this.model, this)
                     {
                         DataContext = this
                     };
-                    this.configEditor.Show();
+                    this.configEditor.ShowDialog();
                     this.configEditor.Owner = this.view;
                 }
             );
@@ -443,6 +444,20 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        public bool ShowLineNumbers
+        {
+            get { return this.model.ShowLineNumbers; }
+            set
+            {
+                if (value != this.model.ShowLineNumbers)
+                {
+                    this.model.ShowLineNumbers = value;
+                    this.OnPropertyChanged(nameof(ShowLineNumbers));
+                }
+            }
+        }
+
+
         public bool IsDarkMode
         {
             get { return this.model.IsDarkMode; }
@@ -472,28 +487,28 @@ namespace SocratexGraphExplorer.ViewModels
             // Handler for events bubbling up from the model.
             model.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
             {
-                if (e.PropertyName == "QueryFontSize")
+                if (e.PropertyName == nameof(Model.QueryFontSize))
                 {
                     QueryEditorFontSize = this.model.QueryFontSize;
                     this.OnPropertyChanged(nameof(QueryEditorFontSize));
                 }
-                else if (e.PropertyName == "ErrorMessage")
+                else if (e.PropertyName == nameof(Model.ErrorMessage))
                 {
                     this.ErrorMessage = this.model.ErrorMessage;
                     this.OnPropertyChanged(nameof(ErrorMessage));
                 }
-                else if (e.PropertyName == "CaretPositionString")
+                else if (e.PropertyName == nameof(Model.CaretPositionString))
                 {
                     this.CaretPositionString = this.model.CaretPositionString;
                 }
-                else if (e.PropertyName == "EditorPosition")
+                else if (e.PropertyName == nameof(Model.EditorPosition))
                 {
                     var p = this.model.EditorPosition;
 
                     this.view.CypherEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition(p.Item1, p.Item2);
                     this.view.CypherEditor.TextArea.Caret.BringCaretToView();
                 }
-                else if (e.PropertyName == "IsDarkMode")
+                else if (e.PropertyName == nameof(Model.IsDarkMode))
                 {
                     var paletteHelper = new PaletteHelper();
 
@@ -501,6 +516,9 @@ namespace SocratexGraphExplorer.ViewModels
                     IBaseTheme baseTheme = this.model.IsDarkMode ? new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
                     theme.SetBaseTheme(baseTheme);
                     paletteHelper.SetTheme(theme);
+
+                    // Update the view
+                    await this.RepaintNodesAsync(this.model.NodesShown);
                 }
                 else if (e.PropertyName == nameof(Model.StyleDocumentSource))
                 {
@@ -511,9 +529,6 @@ namespace SocratexGraphExplorer.ViewModels
                     var directory = Path.GetDirectoryName(fileName);
                     var configFileName = Path.Combine(directory, "Config.js");
                     File.WriteAllText(configFileName, model.StyleDocumentSource);
-
-                    // Reload the browser content to reflect the change in style.
-                    this.view.Browser.Reload();
 
                     // Redraw what was there with the new style.
                     await this.RepaintNodesAsync(this.model.NodesShown);
@@ -621,6 +636,11 @@ namespace SocratexGraphExplorer.ViewModels
             return null;
         }
 
+        private static string JavascriptColorString(Color color)
+        {
+            return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+        }
+
         public async Task RepaintNodesAsync(HashSet<long> nodes)
         {
             var results = await this.GetGraphFromNodes(nodes);
@@ -630,7 +650,14 @@ namespace SocratexGraphExplorer.ViewModels
 
                 await view.Browser.EnsureCoreWebView2Async();
                 // await Task.Delay(1000);
-                await view.Browser.ExecuteScriptAsync(string.Format("draw({0});", resultJson));
+
+                var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
+                var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;
+
+                var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
+                var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
+
+                await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor ));
             }
         }
 

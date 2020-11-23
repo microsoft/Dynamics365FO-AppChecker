@@ -19,26 +19,29 @@ namespace SocratexGraphExplorer.Views
     /// </summary>
     public partial class ConfigEditWindow : Window
     {
-        private EditorViewModel ViewModel{ get; set; }
+        private EditorViewModel ViewModel { get; set; }
+        private JavaScriptEditor Editor { get; set; }
 
-        public ConfigEditWindow(EditorViewModel model)
+        public ConfigEditWindow(Model model, EditorViewModel viewModel)
         {
-            this.ViewModel = model;
+            this.ViewModel = viewModel;
 
             InitializeComponent();
 
-            this.ConfigEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
+            this.Editor = new JavaScriptEditor(model);
+            this.Editor.Text = this.ViewModel.StyleDocumentSource;
+
+            this.OptionsEditor.Content = this.Editor;
         }
 
+        /// <summary>
+        /// When the dialog is dismissed, the changes are persisted.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            this.ConfigEditor.Text = this.ViewModel.StyleDocumentSource;
+            this.ViewModel.StyleDocumentSource = this.Editor.Text; // Not needed. Using binding
         }
     }
 }
