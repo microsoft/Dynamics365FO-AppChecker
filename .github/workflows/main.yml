@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
+      uses: nuget/setup-nuget@v1
 
     - name: Restore Packages for BaseXInterface project
       run: nuget restore tools\BaseXInterface\BaseXInterface.csproj
