@@ -6,7 +6,7 @@
 | Ast Visualizer| ![Build.AstVisualizer](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.AstVisualizer/badge.svg) |
 | Python Extractor | ![Python Extractor](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Python%20Extractor/badge.svg)|
 | Go Extractor| ![Go Extractor](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Go%20Extractor/badge.svg) |
-| Bulk Query tool | ![Go Extractor](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Go%20Extractor/badge.svg) |
+| Bulk Query tool | ![Build.BulkQuery.netcore](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.BulkQuery.netcore/badge.svg) |
 | Graph Explorer .NET Core | ![Build.GraphExplorer.netcore](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.GraphExplorer.netcore/badge.svg) |
 
 # Application checker
