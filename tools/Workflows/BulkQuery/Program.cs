@@ -124,9 +124,9 @@
         {
             Parallel.ForEach(scripts,
                 new ParallelOptions { MaxDegreeOfParallelism = threads },
-                fn =>
+                async fn =>
                 {
-                    using (var session = server.GetSession(database))
+                    using (var session = await server.GetSessionAsync(database))
                     {
                         var outputFileName = Path.Combine(outputDirectory.FullName, Path.ChangeExtension(Path.GetFileName(fn), extension));
 
