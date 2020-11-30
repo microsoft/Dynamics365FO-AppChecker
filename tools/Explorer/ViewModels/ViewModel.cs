@@ -54,46 +54,25 @@ namespace XppReasoningWpf.ViewModels
         public ICommand SubmitQueryCommand => this.submitQueryCommand;
 
         private readonly ICommand windowsCommand;
-        public ICommand WindowsCommand
-        {
-            get => this.windowsCommand;
-        }
+        public ICommand WindowsCommand => this.windowsCommand;
 
         private readonly ICommand closeAllWindowsCommand;
-        public ICommand CloseAllWindowsCommand
-        {
-            get => this.closeAllWindowsCommand;
-        }
+        public ICommand CloseAllWindowsCommand => this.closeAllWindowsCommand;
 
         private readonly ICommand saveCommand;
-        public ICommand SaveCommand
-        {
-            get => this.saveCommand;
-        }
+        public ICommand SaveCommand => this.saveCommand;
 
         private readonly ICommand saveAsCommand;
-        public ICommand SaveAsCommand
-        {
-            get => this.saveAsCommand;
-        }
+        public ICommand SaveAsCommand => this.saveAsCommand;
 
         private readonly ICommand openQueryCommand;
-        public ICommand OpenQueryCommand
-        {
-            get => this.openQueryCommand;
-        }
+        public ICommand OpenQueryCommand => this.openQueryCommand;
 
         private readonly ICommand createNewQueryCommand;
-        public ICommand CreateNewQueryCommand
-        {
-            get => this.createNewQueryCommand;
-        }
+        public ICommand CreateNewQueryCommand => this.createNewQueryCommand;
 
         private readonly ICommand openQueuedQueriesWindow;
-        public ICommand OpenQueuedQueriesWindow
-        {
-            get => this.openQueuedQueriesWindow;
-        }
+        public ICommand OpenQueuedQueriesWindow => this.openQueuedQueriesWindow;
 
         public ICommand ResultsUndoCommand
         {
@@ -184,8 +163,7 @@ namespace XppReasoningWpf.ViewModels
             }
         }
 
-
-        public string QueryResult
+         public string QueryResult
         {
             get { return this.model.QueryResult; }
             set
@@ -533,6 +511,7 @@ namespace XppReasoningWpf.ViewModels
             this.view = view;
             this.model = model;
 
+            // Take care of events bubbling up from the model.
             model.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
                 if (e.PropertyName == "CaretPositionString")
@@ -551,6 +530,14 @@ namespace XppReasoningWpf.ViewModels
                 {
                     this.SelectedDatabase = model.SelectedDatabase;
                     this.UpdateConnectionInfo(model);
+                }
+                else if (e.PropertyName == "DatabaseOpening")
+                {
+                    this.Status = "Opening database...";
+                }
+                else if (e.PropertyName == "DatabaseOpened")
+                {
+                    this.Status = "";
                 }
                 else if (e.PropertyName == "QueryResult")
                 {
@@ -681,7 +668,6 @@ namespace XppReasoningWpf.ViewModels
                 }
             );
 
-
             this.openQueuedQueriesWindow = new RelayCommand(
                 p =>
                 {
@@ -713,7 +699,7 @@ namespace XppReasoningWpf.ViewModels
                     queryExecutionTime.Start();
 
                     var tabItem = queryEditor.Parent as Wpf.Controls.TabItem;
-                    using (var session = model.Server.GetSession(this.model.SelectedDatabase.Name))
+                    using (var session = await model.Server.GetSessionAsync(this.model.SelectedDatabase.Name))
                     {
                         try
                         {
@@ -785,7 +771,7 @@ namespace XppReasoningWpf.ViewModels
                    Stopwatch queryCheckTime = new Stopwatch();
                    queryCheckTime.Start();
 
-                   using (var session = model.Server.GetSession(this.model.SelectedDatabase.Name))
+                   using (var session = await model.Server.GetSessionAsync(this.model.SelectedDatabase.Name))
                    {
                        try
                        {
@@ -847,7 +833,7 @@ namespace XppReasoningWpf.ViewModels
                   string result;
                   try
                   {
-                      using (var session = this.model.GetSession(this.model.SelectedDatabase.Name))
+                      using (var session =await this.model.GetSessionAsync(this.model.SelectedDatabase.Name))
                       {
                           result = await session.SubmitQueryAsync(query);
                       }
@@ -875,13 +861,13 @@ namespace XppReasoningWpf.ViewModels
         /// Called when the system shuts down. This method will stop all interactive jobs
         /// that the user may have started, so they do not burden the server.
         /// </summary>
-        public void Closedown()
+        public async Task ClosedownAsync()
         {
             // Shut down any running interactive queries
             string result = "";
             const string jobDetailsQuery = "xquery jobs:list-details()";
 
-            using (var session = this.model.GetSession(""))
+            using (var session = this.model.GetSessionAsync("").Result)
             {
                 result = $"<Jobs>{session.Execute(jobDetailsQuery)}</Jobs>";
             }
@@ -890,7 +876,7 @@ namespace XppReasoningWpf.ViewModels
             // Build the list from the server:
             IList<SubmittedQueryDescriptor> serverList = new List<SubmittedQueryDescriptor>();
 
-            using (var session = this.model.GetSession(""))
+            using (var session = this.model.GetSessionAsync("").Result)
             {
                 foreach (var job in document.Document.XPathSelectElements("//job"))
                 {
@@ -906,7 +892,7 @@ namespace XppReasoningWpf.ViewModels
                     }
                 }
             }
-            this.model.CloseConnectionToServer();
+            await this.model.CloseConnectionToServerAsync();
         }
 
         private void UpdateConnectionInfo(Model model)

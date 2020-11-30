@@ -26,6 +26,7 @@
     --nodes=..\import\FormDatasourceMethodNodes.csv ^
     --nodes=..\import\FormDatasourceDataFieldMethodNodes.csv ^
     --nodes=..\import\FormDataSourceDataFieldNodes.csv ^
+    --nodes=..\import\FunctionNodes.csv ^
     --relationships=..\import\Class_DECLARES_Delegate.csv ^
     --relationships=..\import\Class_DECLARES_Field.csv ^
     --relationships=..\import\Class_DECLARES_Method.csv ^
@@ -59,3 +60,4 @@
     --relationships=..\import\Class_EXTENSIONOF_Table.csv ^
     --relationships=..\import\Class_EXTENSIONOF_View.csv ^
     --relationships=..\import\Method_CALLS_Method.csv ^
+    --relationships=..\import\Method_DECLARES_Function.csv ^

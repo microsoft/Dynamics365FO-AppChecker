@@ -60,13 +60,12 @@ namespace XppReasoningWpf
             Thread.Sleep(2000);
 
             this.Model = new Model();
+            this.ViewModel = new ViewModels.ViewModel(this, this.Model);
+            this.DataContext = this.ViewModel;
 
             Properties.Settings.Default.PropertyChanged += SettingsChanged;
 
             InitializeComponent();
-
-            this.ViewModel = new ViewModels.ViewModel(this, this.Model);
-            this.DataContext = this.ViewModel;
 
             // For some reason this is required for getting the commandparameter 
             // binding mechanism to work for menu items
@@ -92,7 +91,7 @@ namespace XppReasoningWpf
             {
                 // This call may throw when Basex complains when connecting or
                 // asking for the active databases.
-                this.PopulateUIFromServer();
+                this.PopulateUIFromServerAsync();
             }
             catch(Exception e)
             {
@@ -115,9 +114,9 @@ namespace XppReasoningWpf
             Properties.Settings.Default.Save();
         }
 
-        private void PopulateUIFromServer()
+        private async void PopulateUIFromServerAsync()
         {
-            Model.Databases = this.Model.Server.GetDatabases();
+            Model.Databases = await this.Model.Server.GetDatabasesAsync();
 
             // Initialize the model dropdown from the value stored in the settings
             // If that value no longer exists, set it to the first one.
@@ -173,11 +172,11 @@ namespace XppReasoningWpf
         /// Called when the system is irretrievably closing down
         /// </summary>
         /// <param name="e">Not used</param>
-        protected override void OnClosed(EventArgs e)
+        protected async override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
-            this.ViewModel.Closedown();
+            await this.ViewModel.ClosedownAsync();
         }
 
         private void CommandBinding_SaveResultExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -214,7 +213,7 @@ namespace XppReasoningWpf
 
         private async Task<string> GetSourceDocAsync(string query)
         {
-            using (var session = this.Model.GetSession(this.Model.SelectedDatabase.Name))
+            using (var session = await this.Model.GetSessionAsync(this.Model.SelectedDatabase.Name))
             {
                 return await session.DoQueryAsync(query);
             }
@@ -350,7 +349,7 @@ namespace XppReasoningWpf
                             FindPositionsInSelfOrAncestor(positionElement, ref sl, ref sc, ref el, ref ec);
 
                             if (rootArtifact.Attribute("Name") != null && !string.IsNullOrEmpty(rootArtifact.Attribute("Name").Value))
-                                this.ShowSourceAt(rootArtifact.Attribute("Name").Value, "X++", sl, sc, el, ec);
+                                this.ShowSourceAt(rootArtifact.Name.LocalName.ToLower() + ":" + rootArtifact.Attribute("Name").Value, "X++", sl, sc, el, ec);
                         }
                         else
                         {
@@ -721,7 +720,7 @@ namespace XppReasoningWpf
                 var db = e.AddedItems[0] as BaseXInterface.Database;
                 this.Model.Status = $"{db.Name}. Items: {db.Resources}, Size: {db.Size}";
 
-                using (var session = this.Model.GetSession(""))
+                using (var session = await this.Model.GetSessionAsync(""))
                 {
                     this.ResultsEditor.Text = await session.DoQueryAsync($"db:info('{db.Name}')");
                 }

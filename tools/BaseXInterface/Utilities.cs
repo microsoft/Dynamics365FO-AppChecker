@@ -101,6 +101,11 @@ namespace BaseXInterface
             session.Execute("open " + database);
         }
 
+        public async static Task OpenDatabaseAsync(this Session session, string database)
+        {
+            await session.ExecuteAsync("open " + database);
+        }
+
         /// <summary>
         /// Execute the query against the database in the current session
         /// </summary>

@@ -45,7 +45,7 @@ namespace XppReasoningWpf.ViewModels
         private async Task GetJobsStatusAsync()
         {
             string result = "";
-            using (var session = this.model.GetSession(""))
+            using (var session = await this.model.GetSessionAsync(""))
             {
                 result = $"<Jobs>{await session.ExecuteAsync(jobDetailsQuery)}</Jobs>";
             }
@@ -132,7 +132,7 @@ namespace XppReasoningWpf.ViewModels
         private async Task<string> ShowResult(string jobId)
         {
             // Get the result from the server
-            using (var session = this.model.GetSession(""))
+            using (var session = await this.model.GetSessionAsync(""))
             {
                 var result = await session.DoQueryAsync($"jobs:result('{jobId}')", null);
                 this.model.QueryResult = result;
@@ -142,7 +142,7 @@ namespace XppReasoningWpf.ViewModels
 
         private async void DeleteJob(string jobId)
         {
-            using (var session = this.model.GetSession(""))
+            using (var session = await this.model.GetSessionAsync(""))
             {
                 var result = await session.DoQueryAsync($"jobs:stop('{jobId}')", null);
             }
