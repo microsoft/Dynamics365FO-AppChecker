@@ -3,6 +3,7 @@ using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -75,8 +76,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {0} return m", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id} });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())

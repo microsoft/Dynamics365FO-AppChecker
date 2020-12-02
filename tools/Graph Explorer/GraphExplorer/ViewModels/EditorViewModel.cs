@@ -240,8 +240,8 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the edges (both incoming and outgoing) from the current node:
-                var q = string.Format("match (f) -[]- (n) where id(n) = {0} return f", this.SelectedNode);
-                var result = await this.model.ExecuteCypherAsync(q);
+                var q = "match (f) -[]- (n) where id(n) = {nodeId} return f";
+                var result = await this.model.ExecuteCypherAsync(q, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var outgoing = Model.HarvestNodeIdsFromGraph(result);
 
@@ -649,7 +649,6 @@ namespace SocratexGraphExplorer.ViewModels
                 string resultJson = Model.GenerateJSON(results);
 
                 await view.Browser.EnsureCoreWebView2Async();
-                // await Task.Delay(1000);
 
                 var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
                 var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;

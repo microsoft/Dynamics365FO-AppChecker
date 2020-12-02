@@ -3,6 +3,7 @@ using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -57,14 +58,14 @@ namespace SocratexGraphExplorer.Views
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {0} return q", node.Id);
-            var extendsQueryPromise = model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q";
+            var extendsQueryPromise = model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            var extendedByQuery = string.Format("match (c:Class) <-[:EXTENDS]- (q) where id(c) = {0} return count(q) as cnt", node.Id);
-            var extendedByQueryPromise = model.ExecuteCypherAsync(extendedByQuery);
+            var extendedByQuery = "match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return count(q) as cnt";
+            var extendedByQueryPromise = model.ExecuteCypherAsync(extendedByQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            var implementsCountQuery = string.Format("match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={0} return count(i) as cnt", node.Id);
-            var implementsCountQueryPromise = model.ExecuteCypherAsync(implementsCountQuery);
+            var implementsCountQuery = "match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return count(i) as cnt";
+            var implementsCountQueryPromise = model.ExecuteCypherAsync(implementsCountQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
             properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
@@ -110,8 +111,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowBaseClass(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {0} return q limit 1", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q limit 1";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null)
@@ -124,8 +125,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowBaseClasses(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:EXTENDS*]-> (q) where id(c) = {0} return q", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:EXTENDS*]-> (q) where id(c) = {nodeId} return q";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())
@@ -138,8 +139,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowDerivedClasses(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) <-[:EXTENDS]- (q) where id(c) = {0} return q", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return q";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null)
@@ -152,8 +153,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowImplementedInterfaces(object sender, RoutedEventArgs e)
         {
-            var implementsCountQuery = string.Format("match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={0} return i", node.Id);
-            var implementsCountQueryResult = await model.ExecuteCypherAsync(implementsCountQuery);
+            var implementsCountQuery = "match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return i";
+            var implementsCountQueryResult = await model.ExecuteCypherAsync(implementsCountQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(implementsCountQueryResult);
 
             if (result != null)
@@ -166,8 +167,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = {0} return m", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())
@@ -180,8 +181,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {0} return m", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())

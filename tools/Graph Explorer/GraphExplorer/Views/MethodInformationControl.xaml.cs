@@ -3,6 +3,7 @@ using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -76,8 +77,8 @@ namespace SocratexGraphExplorer.Views
             var parts = artifact.Split('/');
             var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
-            var query = string.Format("match (p) where p.Artifact='{0}' return p limit 1", toplevelArtifact);
-            var c = await model.ExecuteCypherAsync(query);
+            var query = "match (p) where p.Artifact={artifact} return p limit 1";
+            var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
 
             if (c != null)
             {
@@ -104,9 +105,12 @@ namespace SocratexGraphExplorer.Views
             }
 
             var incomingCallsQuery = model.ExecuteCypherAsync(
-                string.Format("match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = {0} return count(r) as methods, sum(r.Count) as count", node.Id));
+                "match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = {nodeId} return count(r) as methods, sum(r.Count) as count", 
+                new Dictionary<string, object>() { { "nodeId", node.Id} });
+
             var outGoingCallsQuery = model.ExecuteCypherAsync(
-                string.Format("match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = {0} return count(r) as methods, sum(r.Count) as count", node.Id));
+                "match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = {nodeId} return count(r) as methods, sum(r.Count) as count",
+                new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             var incomingCallsResult = await incomingCallsQuery;
             if (incomingCallsResult != null)
@@ -126,12 +130,11 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowDeclaringEntityClicked(object sender, RoutedEventArgs e)
         {
-            var containingEntityQuery = string.Format("match p=(c) -[*]-> (n:Method) where id(n) = {0} return p order by length(p) desc limit 1", node.Id.ToString());
-            var containingQueryResult = await model.ExecuteCypherAsync(containingEntityQuery);
+            var containingEntityQuery = "match p=(c) -[*]-> (n:Method) where id(n) = {nodeId} return p order by length(p) desc limit 1";
+            var containingQueryResult = await model.ExecuteCypherAsync(containingEntityQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            var path = containingQueryResult[0].Values["p"] as IPath;
 
-            if (path != null && path.Nodes.Any())
+            if (containingQueryResult[0].Values["p"] is IPath path && path.Nodes.Any())
             {
                 var nodes = this.model.NodesShown;
                 nodes.UnionWith(path.Nodes.Select(n => n.Id));
@@ -141,8 +144,9 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowCallersButtonClicked(object sender, RoutedEventArgs e)
         {
-            var callersQuery = string.Format("match (c) -[:CALLS]-> (n) where id(n) = {0} return c", node.Id.ToString());
-            var callersQueryResult = await model.ExecuteCypherAsync(callersQuery);
+            var callersQuery = "match (c) -[:CALLS]-> (n) where id(n) = {nodeId} return c";
+            var callersQueryResult = await model.ExecuteCypherAsync(callersQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
+
             var result = Model.HarvestNodeIdsFromGraph(callersQueryResult);
 
             if (result != null && result.Any())
@@ -155,8 +159,9 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowCalleesButtonClicked(object sender, RoutedEventArgs e)
         {
-            var calleesQuery = string.Format("match (c) <-[:CALLS]- (n) where id(n) = {0} return c", node.Id.ToString());
-            var calleesQueryResult = await model.ExecuteCypherAsync(calleesQuery);
+            var calleesQuery = "match (c) <-[:CALLS]- (n) where id(n) = {nodeId} return c";
+            var calleesQueryResult = await model.ExecuteCypherAsync(calleesQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
+
             var result = Model.HarvestNodeIdsFromGraph(calleesQueryResult);
 
             var nodes = this.model.NodesShown;

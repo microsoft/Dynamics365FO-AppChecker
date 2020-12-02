@@ -1,16 +1,12 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
-using Neo4j.Driver;
+﻿using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml;
 
 namespace SocratexGraphExplorer.Views
 {
@@ -75,8 +71,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Table) -[:DECLARES]-> (m:Method) where id(c) = {0} return m", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Table) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())
@@ -89,8 +85,8 @@ namespace SocratexGraphExplorer.Views
 
         private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = string.Format("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {0} return m", node.Id);
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery);
+            var extendsQuery = "match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m";
+            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
             var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
 
             if (result != null && result.Any())
