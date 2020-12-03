@@ -28,7 +28,7 @@ jobs:
       run: nuget restore "tools\Explorer\Socratex Explorer.csproj"
      
     - name: Setup msbuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/Setup-MSBuild@v1.0.2
      
     - name: Build BaseXInterface with MSBuild
       run: msbuild tools\BaseXInterface\BaseXInterface.csproj
