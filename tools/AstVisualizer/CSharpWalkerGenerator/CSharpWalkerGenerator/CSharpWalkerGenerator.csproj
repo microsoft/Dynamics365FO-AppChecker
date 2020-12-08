@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8C79B41C-1382-4B80-A83E-3D33DF481111}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>GenerateCSharpWalker.NETFW</RootNamespace>
-    <AssemblyName>GenerateCSharpWalker.NETFW</AssemblyName>
+    <RootNamespace>GenerateCSharpWalker</RootNamespace>
+    <AssemblyName>GenerateCSharpWalker</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
