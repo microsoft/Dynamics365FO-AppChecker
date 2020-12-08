@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 /Tools/Explorer/cqmanifest.json
 /.vscode/launch.json
+/tools/AstVisualizer/CSharpExtractor/CSharpExtractor.GeneratedMSBuildEditorConfig.editorconfig
