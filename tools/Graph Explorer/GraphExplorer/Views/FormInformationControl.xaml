@@ -83,6 +83,8 @@
 
             <WrapPanel Orientation="Horizontal">
                 <Button Click="ShowMethods" Style="{StaticResource PredefinedQueryButton}">Show methods.</Button>
+                <Button Click="ShowControls" Style="{StaticResource PredefinedQueryButton}">Show controls.</Button>
+                <Button Click="ShowDatasources" Style="{StaticResource PredefinedQueryButton}">Show datasources.</Button>
             </WrapPanel>
         </GroupBox>
     </Grid>

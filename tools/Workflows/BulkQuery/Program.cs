@@ -10,11 +10,6 @@
     class Program
     {
         /// <summary>
-        /// This is the number of concurrent sessions that query the server.
-        /// </summary>
-        private const int noOfSessions = 4;
-
-        /// <summary>
         /// Downloads a set of files by executing queries against BaseX. The BaseX server is identified with
         /// the server URL, the username and password and optionally the port number. The queries to run are
         /// given as arguments to this command. The downloaded files will have the same names as the queries,

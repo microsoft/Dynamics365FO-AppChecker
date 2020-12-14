@@ -20,12 +20,10 @@ namespace SocratexGraphExplorer.Views
     public partial class DatabaseInformationControl : UserControl
     {
         private readonly Model Model;
-        private readonly EditorViewModel ViewModel;
 
-        public DatabaseInformationControl(Model model, EditorViewModel viewModel)
+        public DatabaseInformationControl(Model model)
         {
             this.Model = model;
-            this.ViewModel = viewModel;
 
             InitializeComponent();
 

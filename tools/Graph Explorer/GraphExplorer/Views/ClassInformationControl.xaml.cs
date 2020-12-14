@@ -1,17 +1,13 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
-using Neo4j.Driver;
+﻿using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml;
 
 namespace SocratexGraphExplorer.Views
 {
@@ -20,12 +16,11 @@ namespace SocratexGraphExplorer.Views
     /// </summary>
     public partial class ClassInformationControl : UserControl
     {
-        private Model model;
-        private EditorViewModel viewModel;
+        private readonly Model model;
         private INode node;
         private SourceEditor ClassEditor { set; get; }
 
-        private ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
+        private readonly ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
 
         public ObservableCollection<PropertyItem> Properties
         {
@@ -43,10 +38,9 @@ namespace SocratexGraphExplorer.Views
             Clipboard.SetText(control.Text);
         }
 
-        public ClassInformationControl(Model model, EditorViewModel viewModel, INode node)
+        public ClassInformationControl(Model model, INode node)
         {
             this.model = model;
-            this.viewModel = viewModel;
             this.node = node;
 
             InitializeComponent();

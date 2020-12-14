@@ -772,7 +772,7 @@ namespace SocratexGraphExplorer.Models
             /// <param name="cypherSource">The cypher source</param>
             /// <param name="parameters">Any parameters used in the source string</param>
             /// <returns>The list of results.</returns>
-        public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, Dictionary<string, object> parameters=null)
+        public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
         {
             this.ErrorMessage = "Running query...";
 

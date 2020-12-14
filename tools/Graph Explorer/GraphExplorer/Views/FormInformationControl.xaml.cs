@@ -1,17 +1,12 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
-using Neo4j.Driver;
+﻿using Neo4j.Driver;
 using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml;
 
 namespace SocratexGraphExplorer.Views
 {
@@ -63,8 +58,7 @@ namespace SocratexGraphExplorer.Views
 
             properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
-            //properties.Add(new PropertyItem() { Key = "Abstract methods", Value = (node.Properties["NOAM"].ToString()) });
-            //properties.Add(new PropertyItem() { Key = "Fields", Value = (node.Properties["NOA"].ToString()) });
+            properties.Add(new PropertyItem() { Key = "Private methods", Value = (node.Properties["NOPM"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
 
@@ -74,11 +68,10 @@ namespace SocratexGraphExplorer.Views
             this.ClassEditor.Text = source;
         }
 
-        private async void ShowMethods(object sender, RoutedEventArgs e)
+        private async void AddNodes(string query, IDictionary<string, object> parameters)
         {
-            var extendsQuery = "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id} });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
+            var queryResult = await model.ExecuteCypherAsync(query, parameters);
+            var result = Model.HarvestNodeIdsFromGraph(queryResult);
 
             if (result != null && result.Any())
             {
@@ -86,6 +79,27 @@ namespace SocratexGraphExplorer.Views
                 nodes.UnionWith(result);
                 this.model.NodesShown = nodes;
             }
+        }
+
+        private void ShowMethods(object sender, RoutedEventArgs e)
+        {
+            AddNodes(
+                "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", 
+                new Dictionary<string, object>() { { "nodeId", node.Id} });
+        }
+
+        private void ShowControls(object sender, RoutedEventArgs e)
+        {
+            AddNodes(
+                "match (c:Form) -[:CONTROL]-> (fc:FormControl) where id(c) = {nodeId} return fc",
+                new Dictionary<string, object>() { { "nodeId", node.Id } });
+        }
+
+        private void ShowDatasources(object sender, RoutedEventArgs e)
+        {
+            AddNodes(
+                "match (c:Form) -[:DATASOURCE]-> (fds:FormDataSource) where id(c) = {nodeId} return fds",
+                new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }

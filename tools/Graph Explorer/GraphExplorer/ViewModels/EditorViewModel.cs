@@ -669,36 +669,36 @@ namespace SocratexGraphExplorer.ViewModels
 
             if (string.Compare(node.Labels[0], "Method") == 0)
             {
-                child = new SocratexGraphExplorer.Views.MethodInformationControl(this.model, this, node);
+                child = new MethodInformationControl(this.model, node);
             }
             else if (string.Compare(node.Labels[0], "Class") == 0)
             {
-                child = new SocratexGraphExplorer.Views.ClassInformationControl(this.model, this, node);
+                child = new ClassInformationControl(this.model, node);
             }
             else if (string.Compare(node.Labels[0], "Table") == 0)
             {
-                child = new SocratexGraphExplorer.Views.TableInformationControl(this.model, node);
+                child = new TableInformationControl(this.model, node);
             }
             else if (string.Compare(node.Labels[0], "Form") == 0)
             {
-                child = new SocratexGraphExplorer.Views.FormInformationControl(this.model, node);
+                child = new FormInformationControl(this.model, node);
             }
             else
             {
-                child = new SocratexGraphExplorer.Views.EmptyInformationControl();
+                child = new EmptyInformationControl();
             }
             this.view.ContextualInformation.Content = child;
         }
 
         private void UpdateEdgeInfoPage(IRelationship edge)
         {
-            UserControl child = new SocratexGraphExplorer.Views.EdgeInformationControl(this.model, edge);
+            UserControl child = new EdgeInformationControl(this.model, edge);
             this.view.ContextualInformation.Content = child;
         }
 
         private void ShowDatabaseInfoPanel()
         {
-            UserControl child = new SocratexGraphExplorer.Views.DatabaseInformationControl(this.model, this);
+            UserControl child = new DatabaseInformationControl(this.model);
             this.view.ContextualInformation.Content = child;
         }
 
