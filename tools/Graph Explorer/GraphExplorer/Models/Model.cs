@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Neo4j.Driver;
+using SocratexGraphExplorer.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SocratexGraphExplorer.Models
 {
-    public class Model : INotifyPropertyChanged
+    public class Model : IModel, INotifyPropertyChanged
     {
         public string WebRootPath { private set; get; }
 
@@ -759,19 +760,19 @@ namespace SocratexGraphExplorer.Models
             return res.All(rec => rec.Values.All(v => v.Value is INode || v.Value is IPath || v.Value is IRelationship));
         }
 
-        public Task<IResultCursor> ExecuteQueryAsync(string cypherSource, Dictionary<string, object> parameters = null)
+        public Task<IResultCursor> ExecuteQueryAsync(string cypherSource, IDictionary<string, object> parameters = null)
         { 
             IAsyncSession session = this.Driver.AsyncSession();
             return session.RunAsync(cypherSource, parameters);
         }
 
-            /// <summary>
-            /// Execute the cypher string on the current connection. If the cypher is incorrect
-            /// the error message is updated.
-            /// </summary>
-            /// <param name="cypherSource">The cypher source</param>
-            /// <param name="parameters">Any parameters used in the source string</param>
-            /// <returns>The list of results.</returns>
+        /// <summary>
+        /// Execute the cypher string on the current connection. If the cypher is incorrect
+        /// the error message is updated.
+        /// </summary>
+        /// <param name="cypherSource">The cypher source</param>
+        /// <param name="parameters">Any parameters used in the source string</param>
+        /// <returns>The list of results.</returns>
         public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
         {
             this.ErrorMessage = "Running query...";
@@ -815,6 +816,19 @@ namespace SocratexGraphExplorer.Models
                 }
             }
             return null;
+        }
+
+        public async Task AddNodesAsync(string query, IDictionary<string, object> parameters)
+        {
+            var queryResult = await this.ExecuteCypherAsync(query, parameters);
+            var result = Model.HarvestNodeIdsFromGraph(queryResult);
+
+            if (result != null && result.Any())
+            {
+                var nodes = this.NodesShown;
+                nodes.UnionWith(result);
+                this.NodesShown = nodes;
+            }
         }
 
         /// <summary>

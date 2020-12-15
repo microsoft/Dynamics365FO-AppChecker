@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Peter Villadsen</Authors>
+    <PackageId>SocratexGraphExplorer.DefaultRenderers</PackageId>
+    <Company>Microsoft</Company>
+    <Product>Socratex Graph Explorer</Product>
+    <Description>Provides default renderers for nodes and edges that do not have any specific renderers.</Description>
+    <Copyright>Copyright © 2020</Copyright>
+    <UseWPF>true</UseWPF>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</PackageProjectUrl>
+    <RootNamespace>SocratexGraphExplorer.DefaultsPlugin</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="NodeRenderers\DefaultNodeRenderer.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
+  </ItemGroup>
+ 
+</Project>

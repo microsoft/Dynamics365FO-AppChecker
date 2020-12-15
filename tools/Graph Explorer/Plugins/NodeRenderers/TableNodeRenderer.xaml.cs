@@ -1,22 +1,26 @@
 ﻿using Neo4j.Driver;
-using SocratexGraphExplorer.Models;
+using SocratexGraphExplorer.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.Views
+
+namespace SocratexGraphExplorer.XppPlugin
 {
     /// <summary>
     /// Interaction logic for ClassInformationControl.xaml
     /// </summary>
-    public partial class FormInformationControl : UserControl
+    public partial class TableNodeRenderer : UserControl, INodeRenderer
     {
-        private readonly Model model;
-        private readonly INode node;
+        private readonly IModel model;
+        private INode node;
+
         private SourceEditor ClassEditor { set; get; }
 
         private readonly ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
@@ -37,20 +41,21 @@ namespace SocratexGraphExplorer.Views
             Clipboard.SetText(control.Text);
         }
 
-        public FormInformationControl(Model model, INode node)
+        public TableNodeRenderer(IModel model)
         {
             this.model = model;
-            this.node = node;
 
             InitializeComponent();
 
             this.DataContext = this;
-            this.ClassEditor = new XppSourceEditor(model);
+            this.ClassEditor = new XppSourceEditor();
             this.SourceEditorBox.Content = this.ClassEditor;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        public void SelectNodeAsync(INode node)
         {
+            this.node = node;
+
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
             properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
             properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
@@ -58,7 +63,7 @@ namespace SocratexGraphExplorer.Views
 
             properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Private methods", Value = (node.Properties["NOPM"].ToString()) });
+            properties.Add(new PropertyItem() { Key = "Fields", Value = (node.Properties["NOA"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
             properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
 
@@ -68,38 +73,14 @@ namespace SocratexGraphExplorer.Views
             this.ClassEditor.Text = source;
         }
 
-        private async void AddNodes(string query, IDictionary<string, object> parameters)
+        private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            var queryResult = await model.ExecuteCypherAsync(query, parameters);
-            var result = Model.HarvestNodeIdsFromGraph(queryResult);
-
-            if (result != null && result.Any())
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Table) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
-        private void ShowMethods(object sender, RoutedEventArgs e)
+        private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            AddNodes(
-                "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", 
-                new Dictionary<string, object>() { { "nodeId", node.Id} });
-        }
-
-        private void ShowControls(object sender, RoutedEventArgs e)
-        {
-            AddNodes(
-                "match (c:Form) -[:CONTROL]-> (fc:FormControl) where id(c) = {nodeId} return fc",
-                new Dictionary<string, object>() { { "nodeId", node.Id } });
-        }
-
-        private void ShowDatasources(object sender, RoutedEventArgs e)
-        {
-            AddNodes(
-                "match (c:Form) -[:DATASOURCE]-> (fds:FormDataSource) where id(c) = {nodeId} return fds",
-                new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }

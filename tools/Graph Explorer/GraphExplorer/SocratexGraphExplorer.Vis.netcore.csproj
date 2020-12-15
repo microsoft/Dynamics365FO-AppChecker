@@ -11,6 +11,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>Fat Graph White Background.ico</ApplicationIcon>
+    <Authors>Peter Villadsen</Authors>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Fat Graph White Background.ico" />
@@ -175,14 +178,17 @@
     <None Remove="Resources\SourcecodeSymbols\ValueType_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\View_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\XMLFile_16x.svg" />
-    <None Remove="Resources\Xpp-Mode.xshd" />
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.0.1" />
-        <PackageReference Include="MaterialDesignColors" Version="1.2.6" />
-        <PackageReference Include="MaterialDesignThemes" Version="3.1.3" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="0.9.579-prerelease" />
-        <PackageReference Include="Neo4j.Driver" Version="4.1.1" />
+        <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
+        <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.664.37" />
+        <PackageReference Include="Neo4j.Driver" Version="4.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
     <ItemGroup>
@@ -359,7 +365,11 @@
         <EmbeddedResource Include="Resources\SourcecodeSymbols\ValueType_16x.svg" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\View_16x.svg" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\XMLFile_16x.svg" />
-        <EmbeddedResource Include="Resources\Xpp-Mode.xshd" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Plugins\XppProgrammingPlugins.netcore.csproj" />
+      <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj" />
+      <ProjectReference Include="..\SocratexGraphExplorer.DefaultRenderers.netcore\SocratexGraphExplorer.DefaultRenderers.netcore.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Properties\Settings.Designer.cs">

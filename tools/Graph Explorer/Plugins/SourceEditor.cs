@@ -1,28 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace SocratexGraphExplorer.Views
+namespace SocratexGraphExplorer.XppPlugin
 {
     using System;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Highlighting;
     using System.ComponentModel;
-    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
-    using System.Windows.Media.Imaging;
     using System.Xml;
-    using SocratexGraphExplorer.Models;
     using MaterialDesignThemes.Wpf;
 
     /// <summary>
     /// Base class for all the text editors.s
     /// </summary>
-    public class SourceEditor : TextEditor, INotifyPropertyChanged
+    internal class SourceEditor : TextEditor, INotifyPropertyChanged
     {
         /// <summary>
         /// A bindable Text property

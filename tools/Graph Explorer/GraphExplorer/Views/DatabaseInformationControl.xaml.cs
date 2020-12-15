@@ -90,8 +90,8 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
             var relationship = relationshipGlyph.Replace("-[", "");
             relationship = relationship.Replace("]-", "");
 
-            var query = "match ()-[c:{relationship}]-() return count(c) as Count";
-            var result = await Model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "relationship", relationship } });
+            var query = string.Format("match ()-[c:{0}]-() return count(c) as Count", relationship);
+            var result = await Model.ExecuteCypherAsync(query);
 
             container.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
         }
@@ -101,8 +101,8 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
             var chip = sender as MaterialDesignThemes.Wpf.Chip;
             var label = chip.Content as string;
 
-            var query = "match(c:{label}) return count(c) as Count";
-            var result = await Model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "label", label } });
+            var query = string.Format("match(c:{0}) return count(c) as Count", label);
+            var result = await Model.ExecuteCypherAsync(query);
 
             chip.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
         }

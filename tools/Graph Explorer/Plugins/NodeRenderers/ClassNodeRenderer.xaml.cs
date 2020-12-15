@@ -1,22 +1,22 @@
 ﻿using Neo4j.Driver;
-using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
+using SocratexGraphExplorer.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.Views
+namespace SocratexGraphExplorer.XppPlugin
 {
     /// <summary>
     /// Interaction logic for ClassInformationControl.xaml
     /// </summary>
-    public partial class ClassInformationControl : UserControl
+    public partial class ClassNodeRenderer : UserControl, INodeRenderer
     {
-        private readonly Model model;
+        private readonly IModel model;
         private INode node;
         private SourceEditor ClassEditor { set; get; }
 
@@ -38,20 +38,21 @@ namespace SocratexGraphExplorer.Views
             Clipboard.SetText(control.Text);
         }
 
-        public ClassInformationControl(Model model, INode node)
+        public ClassNodeRenderer(IModel model)
         {
             this.model = model;
-            this.node = node;
 
             InitializeComponent();
 
             this.DataContext = this;
-            this.ClassEditor = new XppSourceEditor(model);
+            this.ClassEditor = new XppSourceEditor();
             this.SourceEditorBox.Content = this.ClassEditor;
         }
 
-        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        public async void SelectNodeAsync(INode node)
         {
+            this.node = node;
+
             var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q";
             var extendsQueryPromise = model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
@@ -100,92 +101,36 @@ namespace SocratexGraphExplorer.Views
             var sourceArray = Convert.FromBase64String(base64Source);
             var source = Encoding.ASCII.GetString(sourceArray);
             this.ClassEditor.Text = source;
-
         }
 
         private async void ShowBaseClass(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q limit 1";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
-
-            if (result != null)
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowBaseClasses(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = "match (c:Class) -[:EXTENDS*]-> (q) where id(c) = {nodeId} return q";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
-
-            if (result != null && result.Any())
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS*]-> (q) where id(c) = {nodeId} return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowDerivedClasses(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = "match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return q";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
-
-            if (result != null)
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowImplementedInterfaces(object sender, RoutedEventArgs e)
         {
-            var implementsCountQuery = "match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return i";
-            var implementsCountQueryResult = await model.ExecuteCypherAsync(implementsCountQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(implementsCountQueryResult);
-
-            if (result != null)
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return i", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = "match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
-
-            if (result != null && result.Any())
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            var extendsQuery = "match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m";
-            var extendsQueryResult = await model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
-            var result = Model.HarvestNodeIdsFromGraph(extendsQueryResult);
-
-            if (result != null && result.Any())
-            {
-                var nodes = this.model.NodesShown;
-                nodes.UnionWith(result);
-                this.model.NodesShown = nodes;
-            }
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
-
     }
 }

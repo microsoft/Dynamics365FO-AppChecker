@@ -4,13 +4,15 @@
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Neo4j.Driver;
+using SocratexGraphExplorer.Common;
 using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
 using SocratexGraphExplorer.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,6 +36,34 @@ namespace SocratexGraphExplorer.ViewModels
         private readonly Models.Model model;
         private long selectedNode = 0;
         private long selectedEdge = 0;
+
+        /// <summary>
+        /// The list of plugins to handle rendering of node information. This list is
+        /// populated by MEF.
+        /// </summary>
+        [ImportMany(typeof(INodeRendererPlugin))]
+        public IEnumerable<Lazy<INodeRendererPlugin, IPluginMetadata>> NodePlugins { get; set; }
+
+        /// <summary>
+        /// The list of plugins to handle rendering of edge information. This list is
+        /// populated by MEF.
+        /// </summary>
+        [ImportMany(typeof(IEdgeRendererPlugin))]
+        public IEnumerable<Lazy<IEdgeRendererPlugin, IPluginMetadata>> EdgePlugins { get; set; }
+
+        /// <summary>
+        /// This dictionary maps the names of labels onto the renderers that 
+        /// present the node information.
+        /// </summary>
+        private IDictionary<string, INodeRenderer> NodeRenderers { get; set; }
+
+        /// <summary>
+        /// This dictionary maps the names of labels onto the renderers that 
+        /// present the edge (i.e. relationship) information.
+        /// </summary>
+        private IDictionary<string, IEdgeRenderer> EdgeRenderers { get; set; }
+
+        private ConfigEditWindow configEditor;
 
         event NodeSelectedDelegate NodeSelected;
         event EdgeSelectedDelegate EdgeSelected;
@@ -299,9 +329,6 @@ namespace SocratexGraphExplorer.ViewModels
             );
         }
 
-        // TODO. Move this
-        private ConfigEditWindow configEditor;
-
         public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
@@ -475,6 +502,42 @@ namespace SocratexGraphExplorer.ViewModels
         {
             this.view = v;
             this.model = model;
+
+            // Initialize the mapping from names onto renderers.
+            this.NodeRenderers = new Dictionary<string, INodeRenderer>(); 
+            this.EdgeRenderers = new Dictionary<string, IEdgeRenderer>();
+
+            // Load the list of renderers through MEF.
+            var catalog = new AggregateCatalog();
+
+            // Put in the directory where the table extractor lives into the catalog
+            // Use the directory where the main executable is found
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            catalog.Catalogs.Add(new DirectoryCatalog(assemblyPath));
+
+            CompositionContainer container = new CompositionContainer(catalog);
+
+            try
+            {
+                // Load all the plugins in the catalog, i.e. in the directory provided.
+                container.SatisfyImportsOnce(this);
+
+                // at this point the extractor should have been filled in. The metadata is
+                // also available.
+                foreach (var plugin in this.NodePlugins)
+                {
+                    this.NodeRenderers[plugin.Metadata.Label] = plugin.Value.CreateRenderer(model);
+                }
+
+                foreach (var plugin in this.EdgePlugins)
+                {
+                    this.EdgeRenderers[plugin.Metadata.Label] = plugin.Value.CreateRenderer(model);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             NodeSelected += UpdateNodeInfoPage;
             EdgeSelected += UpdateEdgeInfoPage;
@@ -662,38 +725,34 @@ namespace SocratexGraphExplorer.ViewModels
 
         private void UpdateNodeInfoPage(INode node)
         {
-            // TODO this should not be hardcoded, but MEF should be used to find a plugin
-            // that is able to handle (i.e. create a user control) for the node with the 
-            // given label. What happens if there are more labels? Not defined at this time.
-            UserControl child;
+            if (!this.NodeRenderers.TryGetValue(node.Labels[0], out INodeRenderer renderer))
+            {
+                // Use the default one, by convention called ()
+                renderer = this.NodeRenderers["()"];
+            }
 
-            if (string.Compare(node.Labels[0], "Method") == 0)
+            if (this.view.ContextualInformation.Content != renderer)
             {
-                child = new MethodInformationControl(this.model, node);
+                this.view.ContextualInformation.Content = renderer;
             }
-            else if (string.Compare(node.Labels[0], "Class") == 0)
-            {
-                child = new ClassInformationControl(this.model, node);
-            }
-            else if (string.Compare(node.Labels[0], "Table") == 0)
-            {
-                child = new TableInformationControl(this.model, node);
-            }
-            else if (string.Compare(node.Labels[0], "Form") == 0)
-            {
-                child = new FormInformationControl(this.model, node);
-            }
-            else
-            {
-                child = new EmptyInformationControl();
-            }
-            this.view.ContextualInformation.Content = child;
+
+            renderer.SelectNodeAsync(node);
         }
 
         private void UpdateEdgeInfoPage(IRelationship edge)
         {
-            UserControl child = new EdgeInformationControl(this.model, edge);
-            this.view.ContextualInformation.Content = child;
+            if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
+            {
+                // Use the default one, by convention called ()
+                renderer = this.EdgeRenderers["()"];
+            }
+
+            if (this.view.ContextualInformation.Content != renderer)
+            {
+                this.view.ContextualInformation.Content = renderer;
+            }
+
+            renderer.SelectEdgeAsync(edge);
         }
 
         private void ShowDatabaseInfoPanel()

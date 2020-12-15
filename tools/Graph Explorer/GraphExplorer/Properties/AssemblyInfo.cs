@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("An application that allows introspection into large codebases by using graph paradigms. Source code is represented as graphs in a graph database and queried with a graph query language.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Source Code Reasoning")]
+[assembly: AssemblyProduct("Socratex Graph Explorer")]
 [assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

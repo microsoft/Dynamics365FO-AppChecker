@@ -1,6 +1,4 @@
 ﻿using ICSharpCode.AvalonEdit.Folding;
-using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +7,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SocratexGraphExplorer.Views
+namespace SocratexGraphExplorer.XppPlugin
 {
     class XppSourceEditor : SourceEditor
     {
-        public XppSourceEditor(Model model): base(model)
+        public XppSourceEditor(): base()
         {
             // FontFamily = "{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}"
             var fontFamilyBinding = new Binding("SourceFont")
@@ -31,7 +29,7 @@ namespace SocratexGraphExplorer.Views
 
             this.IsReadOnly = true;
 
-            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.Resources.Xpp-Mode.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.XppPlugin.Resources.Xpp-Mode.xshd");
         }
     }
 }

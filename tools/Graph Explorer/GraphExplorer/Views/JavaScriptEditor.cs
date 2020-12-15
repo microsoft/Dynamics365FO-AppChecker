@@ -18,7 +18,7 @@ namespace SocratexGraphExplorer.Views
 {
     class JavaScriptEditor : SourceEditor
     {
-        public JavaScriptEditor(Model model) : base(model)
+        public JavaScriptEditor() : base()
         {
             // FontFamily = "{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}"
             // var fontFamilyBinding = new Binding("SourceFont");
