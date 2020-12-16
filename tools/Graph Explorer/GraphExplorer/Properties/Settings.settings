@@ -21,7 +21,7 @@
       <Value Profile="(Default)">Socratex Graph Explorer</Value>
     </Setting>
     <Setting Name="ConnectResultNodes" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SourceFontSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">12</Value>

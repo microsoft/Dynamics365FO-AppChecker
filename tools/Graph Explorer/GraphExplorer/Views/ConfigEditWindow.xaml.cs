@@ -28,8 +28,10 @@ namespace SocratexGraphExplorer.Views
 
             InitializeComponent();
 
-            this.Editor = new JavaScriptEditor();
-            this.Editor.Text = this.ViewModel.StyleDocumentSource;
+            this.Editor = new JavaScriptEditor
+            {
+                Text = this.ViewModel.StyleDocumentSource
+            };
 
             this.OptionsEditor.Content = this.Editor;
         }

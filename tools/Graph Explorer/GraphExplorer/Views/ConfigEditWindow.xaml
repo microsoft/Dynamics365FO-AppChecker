@@ -11,7 +11,8 @@
         TextOptions.TextHintingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Background="{DynamicResource MaterialDesignPaper}"        
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"          
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" 
+        xmlns:settings="clr-namespace:SocratexGraphExplorer.Properties"         
         xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
         mc:Ignorable="d"
         Title="Configuration Settings" Height="450" Width="800">
@@ -31,10 +32,9 @@
         </GroupBox>
 
         <GroupBox Header="Settings" Grid.Row="1">
-            <StackPanel  Orientation="Horizontal" Margin="8">
-                <TextBlock VerticalAlignment="Center" Text="Light"/>
-                <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Margin="8 0 16 0" ToolTip="Theme" IsChecked="{Binding IsDarkMode}" />
-                <TextBlock VerticalAlignment="Center" Text="Dark"/>
+            <StackPanel  Orientation="Vertical" Margin="8">
+                <CheckBox Style="{StaticResource MaterialDesignCheckBox}" Content="Dark Theme" ToolTip="Switches between dark and light themes." IsChecked="{Binding IsDarkMode}" />
+                <CheckBox Style="{StaticResource MaterialDesignCheckBox}" Content="Connect nodes" ToolTip="Determines whether the selected nodes should be selected even if not specified explicitly." IsChecked="{Binding Source={x:Static settings:Settings.Default}, Path=ConnectResultNodes}" />
             </StackPanel>
         </GroupBox>
     </Grid>

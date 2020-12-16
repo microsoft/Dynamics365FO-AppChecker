@@ -498,6 +498,16 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        private void SetTheme(bool darkMode)
+        {
+            var paletteHelper = new PaletteHelper();
+
+            ITheme theme = paletteHelper.GetTheme();
+            IBaseTheme baseTheme = darkMode ? (IBaseTheme)new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
+            theme.SetBaseTheme(baseTheme);
+            paletteHelper.SetTheme(theme);
+        }
+
         public EditorViewModel(MainWindow v, Models.Model model)
         {
             this.view = v;
@@ -547,6 +557,8 @@ namespace SocratexGraphExplorer.ViewModels
             {
             };
 
+            this.SetTheme(this.model.IsDarkMode);
+
             // Handler for events bubbling up from the model.
             model.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
             {
@@ -573,12 +585,7 @@ namespace SocratexGraphExplorer.ViewModels
                 }
                 else if (e.PropertyName == nameof(Model.IsDarkMode))
                 {
-                    var paletteHelper = new PaletteHelper();
-
-                    ITheme theme = paletteHelper.GetTheme();
-                    IBaseTheme baseTheme = this.model.IsDarkMode ? new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
-                    theme.SetBaseTheme(baseTheme);
-                    paletteHelper.SetTheme(theme);
+                    this.SetTheme(this.model.IsDarkMode);
 
                     // Update the view
                     await this.RepaintNodesAsync(this.model.NodesShown);
@@ -640,12 +647,18 @@ namespace SocratexGraphExplorer.ViewModels
                      }
                      else
                      {
-                         // Send the query prepended with the EXPLAIN keyword to check the query.
-                         var result = await this.model.ExecuteCypherAsync("explain " + source);
+                         var result = await this.model.ExecuteCypherAsync(source);
                          if (result != null)
                          {
-                             // Send the query to the browser:
-                             var response = await v.Browser.ExecuteScriptAsync(string.Format("draw('{0}');", v.CypherEditor.Document.Text));
+                             string resultJson = Model.GenerateJSON(result);
+
+                             var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
+                             var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;
+
+                             var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
+                             var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
+
+                             await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor));
                          }
                      }
                  },
