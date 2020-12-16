@@ -26,7 +26,7 @@
         /// <param name="verbose">Print extra progress information to the console.</param>
         /// <param name="args">The files containing the queries to execute. A list of query files can be provided, including wildcards.</param>
         public static void Main(string server, string password, string database,
-            string username="admin", DirectoryInfo outputDirectory=null, string extension="xml", int port=1984, int threads = 4, bool verbose =false, params string[] args)
+            string username = "admin", DirectoryInfo outputDirectory = null, string extension = "xml", int port = 1984, int threads = 4, bool verbose = false, params string[] args)
         {
             if (args == null || !args.Any())
             {
@@ -106,7 +106,7 @@
                 }
                 Extract(s, database, files, outputDirectory, extension, threads, verbose);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("A problem happened during execution. Please review the parameters.");
                 Console.WriteLine(e.Message);
@@ -119,9 +119,9 @@
         {
             Parallel.ForEach(scripts,
                 new ParallelOptions { MaxDegreeOfParallelism = threads },
-                async fn =>
+                fn =>
                 {
-                    using (var session = await server.GetSessionAsync(database))
+                    using (var session = server.GetSession(database))
                     {
                         var outputFileName = Path.Combine(outputDirectory.FullName, Path.ChangeExtension(Path.GetFileName(fn), extension));
 
@@ -142,7 +142,6 @@
                         }
                     }
                 });
-
         }
     }
 }

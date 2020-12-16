@@ -26,7 +26,7 @@ namespace BaseXInterface
         /// List of database sessions. The sessions will be reused.
         /// </summary>
         private List<DatabaseSession> sessions = new List<DatabaseSession>();
-        private readonly static SemaphoreSlim locker = new SemaphoreSlim(1,1);
+        private readonly static SemaphoreSlim locker = new SemaphoreSlim(1, 1);
         private readonly string host;
         private readonly int port;
 
@@ -119,6 +119,31 @@ namespace BaseXInterface
             }
         }
 
+        public DatabaseSession GetSession(string database)
+        {
+            var existingUnused = sessions.Where(s => !s.InUse && string.Compare(s.Database, database, true) == 0).FirstOrDefault();
+            if (existingUnused == null)
+            {
+                // there were no sessions ready to be used. Create one and add to list.
+                var session = this.CreateSession(database);
+                session.InUse = true;
+                sessions.Add(session);
+                if (database.Length != 0)
+                {
+                    this.DatabaseOpening?.Invoke(database);
+                    session.OpenDatabase(database);
+                    this.DatabaseOpened?.Invoke(database);
+                }
+                return session;
+            }
+            else
+            {
+                // The session is no longer in use, so go ahead and reuse.
+                existingUnused.InUse = true;
+                return existingUnused;
+            }
+        }
+
         // TODO: Put in a timer that will make sure that running sessions that have
         // not been used for a time are closed.
 
@@ -148,7 +173,7 @@ namespace BaseXInterface
                 {
                     if (string.IsNullOrEmpty(line))
                         break;
-                    var re = new Regex(@"^(?'name'.+)\s+(?'resources'\d+)\s+(?'size'\d+)" , RegexOptions.IgnoreCase);
+                    var re = new Regex(@"^(?'name'.+)\s+(?'resources'\d+)\s+(?'size'\d+)", RegexOptions.IgnoreCase);
                     var matches = re.Match(line);
 
                     res.Add(new Database()
