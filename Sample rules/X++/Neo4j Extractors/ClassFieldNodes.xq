@@ -21,6 +21,11 @@ let $r := <FieldsOnClasses>
         <Kind name="Kind">ClassMember</Kind>
         <Type name='Type'>{lower-case($m/@Type)}</Type>
         <Visibility name='Visibility'>{string($visibility)}</Visibility>
+        <IsStatic name='IsStatic:boolean'>{string(lower-case($m/@IsStatic))}</IsStatic>
+        <StartLine name='StartLine:int'>{xs:integer($m/@StartLine)}</StartLine>
+        <StartCol name='StartCol:int'>{xs:integer($m/@StartCol)}</StartCol>
+        <EndLine name='EndLine:int'>{xs:integer($m/@EndLine)}</EndLine>
+        <EndCol name='EndCol:int'>{xs:integer($m/@EndCol)}</EndCol>
         <Label name=':LABEL'>ClassMember</Label>
      </Record>
 }
