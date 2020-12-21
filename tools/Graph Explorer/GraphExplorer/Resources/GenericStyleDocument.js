@@ -34,7 +34,7 @@
         //        image = "MethodFriend_16x.svg";
         //    else if (node.properties.Visibility == 'final')
         //        image = "MethodSealed_16x.svg";
-        //    return { id: node.id, value: node.properties.LOC, label: node.properties.Name, title: node.properties.Name, shape: 'image', image: 'Resources/' + image, color: "green" }
+        //    return { id: node.id, value: node.properties.LOC, label: node.properties.Name, title: 'Method ' + node.properties.Name, shape: 'image', image: 'Resources/' + image, color: "green" }
         //}
 
         // Minimal implementation.

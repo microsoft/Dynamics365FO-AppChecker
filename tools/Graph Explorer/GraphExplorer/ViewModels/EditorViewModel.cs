@@ -514,7 +514,7 @@ namespace SocratexGraphExplorer.ViewModels
             this.model = model;
 
             // Initialize the mapping from names onto renderers.
-            this.NodeRenderers = new Dictionary<string, INodeRenderer>(); 
+            this.NodeRenderers = new Dictionary<string, INodeRenderer>();
             this.EdgeRenderers = new Dictionary<string, IEdgeRenderer>();
 
             // Load the list of renderers through MEF.
@@ -630,10 +630,11 @@ namespace SocratexGraphExplorer.ViewModels
                      this.SelectedNode = 0;
                      this.SelectedEdge = 0;
 
+                     // First execute the query to get the result graph in memory:
+                     List<IRecord> result = await this.model.ExecuteCypherAsync(source);
+
                      if (this.model.ConnectResultNodes)
                      {
-                         // First execute the query to get the result graph in memory:
-                         List<IRecord> result = await this.model.ExecuteCypherAsync(source);
                          if (result != null)
                          {
                              // The query executed correctly. 
@@ -647,7 +648,6 @@ namespace SocratexGraphExplorer.ViewModels
                      }
                      else
                      {
-                         var result = await this.model.ExecuteCypherAsync(source);
                          if (result != null)
                          {
                              string resultJson = Model.GenerateJSON(result);
@@ -732,7 +732,7 @@ namespace SocratexGraphExplorer.ViewModels
                 var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
                 var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
 
-                await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor ));
+                await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor));
             }
         }
 
@@ -770,7 +770,7 @@ namespace SocratexGraphExplorer.ViewModels
 
         private void ShowDatabaseInfoPanel()
         {
-            UserControl child = new DatabaseInformationControl(this.model);
+            UserControl child = new DatabaseInformationControl(this, this.model);
             this.view.ContextualInformation.Content = child;
         }
 
@@ -844,6 +844,10 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        public void EnterSourceInCypherEditor(string source)
+        {
+            this.view.CypherEditor.Text += "\n\n" + source;
+        }
         /// <summary>
         /// Called when the application closes down. Do any cleanup here.
         /// </summary>
