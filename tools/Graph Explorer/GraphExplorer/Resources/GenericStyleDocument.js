@@ -59,28 +59,28 @@
     // Provide options that govern other aspects of the graph rendering.
     function options() {
         return {
-            interaction: { hover: true, selectConnectedEdges: false },
-            manipulation: {
-                enabled: false, // true enables adding nodes to the graph
+            'interaction': { 'hover': true, 'selectConnectedEdges': false },
+            'manipulation': {
+                'enabled': false, // true enables adding nodes to the graph
             },
-            nodes: {
-                size: 10, // For nodes that do not have specific size or where no value attribute is provided
-                font: { strokeWidth: 0, bold: false }, // strokeWidth is the amount of space around the text in nodes or edges.
-                shape: 'dot',
-                scaling: {
-                    min: 10, max: 30,
-                    label: { // Make sure font size is in this range.
-                        min: 8, max: 24
+            'nodes': {
+                'size': 10, // For nodes that do not have specific size or where no value attribute is provided
+                'font': { 'strokeWidth': 0 }, // strokeWidth is the amount of space around the text in nodes or edges.
+                'shape': 'dot',
+                'scaling': {
+                    'min': 10, 'max': 30,
+                    'label': { // Make sure font size is in this range.
+                        'min': 8, 'max': 24
                     }
                 }
             },
-            edges: {
-                arrows: "to",
-                shadow: false,
-                smooth: true,
-                font: { strokeWidth: 0, opacity: 1.0 },
-                scaling: {
-                    min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14 }
+            'edges': {
+                'arrows': "to",
+                'shadow': false,
+                'smooth': true,
+                'font': { 'strokeWidth': 0 },
+                'scaling': {
+                    'min': 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14 }
                 }
             }
         }

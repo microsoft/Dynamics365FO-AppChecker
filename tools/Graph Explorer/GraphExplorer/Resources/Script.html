@@ -10,14 +10,13 @@
         }
 
         #mynetwork {
-            
         }
     </style>
 
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <script type="text/javascript" src="Config.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" > </script >
+        <script type="text/javascript" src="Config.js?ts=1234567890" > </script >
 
-    <script type='text/javascript'>
+        <script type='text/javascript' >
 
         var network = null;
 
@@ -27,59 +26,46 @@
         }
 
         function draw(nodesAndEdgesInJson, backgroundColor, foregroundColor) {
-
             // Set the colors of the foreground and background. The colors passed from
             // the application are in conformance with the visual preferences of the 
             // user, but you may assign any static value you want for the colors to
             // overrride these choices.
-            document.body.style.background = backgroundColor; 
+            document.body.style.background = backgroundColor;
             document.body.style.color = foregroundColor;
 
             // Instantiate our network object.
             var container = document.getElementById('mynetwork');
 
-            // Convert the graph rendering agnostic format to the vis.js format
+            // Convert the graph rendering agnostic format to the vis.js format 
             var graphNodes = [];
-            nodesAndEdgesInJson.nodes.forEach(n => {
+            nodesAndEdgesInJson .nodes.forEach(n => {
                 graphNodes.push(createGraphNode(n));
             });
 
             var graphEdges = [];
-            nodesAndEdgesInJson.edges.forEach(e => {
+            nodesAndEdgesInJson .edges.forEach(e => {
                 graphEdges.push(createGraphEdge(e));
             });
 
-            /*
-            const nodesDataSet = new vis.DataSet(graphNodes);
-            const edgesDataSet = new vis.DataSet(graphEdges);
-            const nodesView = new vis.DataView(nodesDataSet, { filter: function (n) { return n.static; } });
-            const edgesView = new vis.DataView(edgesDataSet, { filter: function(e) { return true; } });
-
-            data = { nodes: nodesView, edges: edgesView };
-             */
             data = { nodes: graphNodes, edges: graphEdges };
+
             network = new vis.Network(container, data, options());
 
+            // Wire in the messaging so that the C# is notified of clicking in 
+            // nodes or edges.
             network.on('selectNode', function (params) {
-                window.chrome.webview.postMessage({ 'nodeId': params.nodes[0] });
-            });
+                    window.chrome.webview.postMessage({ 'nodeId': params.nodes[0] });
+                });
             network.on('selectEdge', function (params) {
-                window.chrome.webview.postMessage({ 'edgeId': params.edges[0] });
-            });
+                    window.chrome.webview.postMessage({ 'edgeId': params.edges[0] });
+                });
         }
-    </script>
-</head>
+        </script>
+ </head>
 
-<body onload="">
-    <div id='mynetwork'>
-        <!-- This nested div will be overwritten when graph is rendered -->
-        <div style='display:flex; position:absolute; top:0; bottom:0; right:0; left:0;'>
-            <div id='centered_div' style='margin:auto;font-size:large;' >
-                Execute a query to render a graph
-            </div>
-        </div>
+<body >
+    <div id='mynetwork' >
+    </div >
+</body >
 
-    </div>
-</body>
-
-</html>
+</html >

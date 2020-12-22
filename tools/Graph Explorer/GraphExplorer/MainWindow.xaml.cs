@@ -16,6 +16,7 @@ using System.IO;
 using MaterialDesignColors;
 using System.Linq;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace SocratexGraphExplorer
 {
@@ -138,17 +139,17 @@ namespace SocratexGraphExplorer
 
             this.Browser.SizeChanged += async (object sender, SizeChangedEventArgs e) =>
             {
-                await this.Browser.EnsureCoreWebView2Async();
-                var snippet = "setGraphSize(" + (e.NewSize.Width - 20).ToString() + "," + (e.NewSize.Height - 20).ToString() + ");";
-                await this.Browser.ExecuteScriptAsync(snippet);
+                var browser = sender as WebView2;
+                //await browser.EnsureCoreWebView2Async();
+                await this.ViewModel.SetGraphSizeAsync(browser);
             };
 
             this.Browser.NavigationCompleted += Browser_NavigationCompleted;
             // The debugger does not work in Edge if the source does not come from a file.
             // Load the script into a temporary file, and use that file in the URI that
             // the debugger loads.
-//            this.Browser.Source = new Uri("file:///c:/users/.../test.html");
             this.Browser.Source = this.model.ScriptUri;
+
             this.TextBrowser.NavigateToString(@"<html>
     <head>
         <style>
@@ -187,11 +188,11 @@ namespace SocratexGraphExplorer
         /// <param name="e">The event args. Not used.</param>
         private async void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            var browser = sender as Microsoft.Web.WebView2.Wpf.WebView2;
+            var browser = sender as WebView2;
             await browser.EnsureCoreWebView2Async();
+            await this.ViewModel.SetGraphSizeAsync(browser);
 
-            var snippet = "setGraphSize(" + (browser.RenderSize.Width - 20).ToString() + "," + (browser.RenderSize.Height - 20).ToString() + ");";
-            await this.Browser.ExecuteScriptAsync(snippet);
+            browser.NavigationCompleted -= Browser_NavigationCompleted;
         }
         
     }

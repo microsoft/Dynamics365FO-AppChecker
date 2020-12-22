@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using MaterialDesignThemes.Wpf;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
 using Microsoft.Win32;
 using Neo4j.Driver;
 using SocratexGraphExplorer.Common;
@@ -9,7 +11,6 @@ using SocratexGraphExplorer.Models;
 using SocratexGraphExplorer.Views;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -21,7 +22,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace SocratexGraphExplorer.ViewModels
 {
@@ -374,20 +374,6 @@ namespace SocratexGraphExplorer.ViewModels
                     {
                         var styleScriptSource = File.ReadAllText(openFileDialog.FileName);
                         this.model.StyleDocumentSource = styleScriptSource;
-
-                        //// Store the file along with the script
-                        //var uri = this.model.ScriptUri;
-                        //var fileName = uri.LocalPath;
-
-                        //var directory = Path.GetDirectoryName(fileName);
-                        //var configFileName = Path.Combine(directory, "Config.js");
-                        //File.WriteAllText(configFileName, styleScriptSource);
-
-                        //// Reload the browser content to reflect the change in style.
-                        //this.view.Browser.Reload();
-
-                        //// Redraw what was there with the new style.
-                        //await this.RepaintNodesAsync(this.model.NodesShown);
                     }
                 });
         }
@@ -498,6 +484,12 @@ namespace SocratexGraphExplorer.ViewModels
             }
         }
 
+        public async Task SetGraphSizeAsync(WebView2 browser)
+        {
+            var snippet = "setGraphSize(" + (browser.RenderSize.Width - 16).ToString() + "," + (browser.RenderSize.Height - 16).ToString() + ");";
+            await browser.ExecuteScriptAsync(snippet);
+        }
+
         private void SetTheme(bool darkMode)
         {
             var paletteHelper = new PaletteHelper();
@@ -552,12 +544,12 @@ namespace SocratexGraphExplorer.ViewModels
             NodeSelected += UpdateNodeInfoPage;
             EdgeSelected += UpdateEdgeInfoPage;
 
+            this.SetTheme(this.model.IsDarkMode);
+
             // Handler for events in this view model
             this.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
             };
-
-            this.SetTheme(this.model.IsDarkMode);
 
             // Handler for events bubbling up from the model.
             model.PropertyChanged += async (object sender, PropertyChangedEventArgs e) =>
@@ -600,8 +592,28 @@ namespace SocratexGraphExplorer.ViewModels
                     var configFileName = Path.Combine(directory, "Config.js");
                     File.WriteAllText(configFileName, model.StyleDocumentSource);
 
-                    // Redraw what was there with the new style.
-                    await this.RepaintNodesAsync(this.model.NodesShown);
+                    // The config file was changed, but the browser will keep a cached copy. To avoid
+                    // this, the script is updated to reflect a new file name.
+                    var script = File.ReadAllText(fileName);
+
+                    // The script contains a reference to the config file:
+                    //     <script type="text/javascript" src="Config.js?ts=1234567890"></script>
+                    // The digit sequence needs to be changed so that the browser does not
+                    // use a cached version of the config file.
+                    var idx = script.IndexOf("Config.js?ts=") + "Config.js?ts=".Length;
+
+                    var cnt = 0;
+                    while (char.IsDigit(script[idx + cnt])) 
+                        cnt++;
+
+                    script = script.Remove(idx, cnt);
+                    script = script.Insert(idx, DateTime.Now.Ticks.ToString());
+
+                    File.WriteAllText(fileName, script);
+
+                    this.view.Browser.NavigationCompleted += Browser_NavigationCompleted;
+
+                    this.view.Browser.Reload();
                 }
                 else if (e.PropertyName == nameof(Model.NodesShown))
                 {
@@ -632,24 +644,23 @@ namespace SocratexGraphExplorer.ViewModels
 
                      // First execute the query to get the result graph in memory:
                      List<IRecord> result = await this.model.ExecuteCypherAsync(source);
-
-                     if (this.model.ConnectResultNodes)
+                     if (result != null)
                      {
-                         if (result != null)
+                         // The query executed correctly. 
+                         if (this.model.ConnectResultNodes)
                          {
-                             // The query executed correctly. 
-                             if (this.GraphModeSelected  && !Model.CanBeRenderedAsGraph(result))
+
+                             if (this.GraphModeSelected && !Model.CanBeRenderedAsGraph(result))
                              {
                                  this.GraphModeSelected = false;
                                  this.TextModeSelected = true;
                              }
                              this.model.QueryResults = result;
+
                          }
-                     }
-                     else
-                     {
-                         if (result != null)
+                         else
                          {
+
                              string resultJson = Model.GenerateJSON(result);
 
                              var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
@@ -659,6 +670,7 @@ namespace SocratexGraphExplorer.ViewModels
                              var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
 
                              await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor));
+
                          }
                      }
                  },
@@ -676,6 +688,15 @@ namespace SocratexGraphExplorer.ViewModels
                     await this.view.Browser.ExecuteScriptAsync("this.print();");
                 }
             );
+        }
+
+        private async void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            var browser = sender as WebView2;
+            // Redraw what was there with the new style.
+            await this.SetGraphSizeAsync(browser);
+            await this.RepaintNodesAsync(this.model.NodesShown);
+            browser.NavigationCompleted -= Browser_NavigationCompleted;
         }
 
         /// <summary>
@@ -848,6 +869,7 @@ namespace SocratexGraphExplorer.ViewModels
         {
             this.view.CypherEditor.Text += "\n\n" + source;
         }
+
         /// <summary>
         /// Called when the application closes down. Do any cleanup here.
         /// </summary>
