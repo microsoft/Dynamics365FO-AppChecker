@@ -332,3 +332,4 @@ ASALocalRun/
 /.vscode/launch.json
 /tools/AstVisualizer/CSharpExtractor/CSharpExtractor.GeneratedMSBuildEditorConfig.editorconfig
 Extractors/Go/.vscode/launch.json
+/Extractors/Python/extractor/.vscode/launch.json

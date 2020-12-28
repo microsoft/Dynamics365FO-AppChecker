@@ -11,36 +11,6 @@ import (
 	"github.com/beevik/etree"
 )
 
-// mode returns a string describing the mode of an expression.
-func mode(tv types.TypeAndValue) string {
-	s := ""
-	if tv.IsVoid() {
-		s += ",void"
-	}
-	if tv.IsType() {
-		s += ",type"
-	}
-	if tv.IsBuiltin() {
-		s += ",builtin"
-	}
-	if tv.IsValue() {
-		s += ",value"
-	}
-	if tv.IsNil() {
-		s += ",nil"
-	}
-	if tv.Addressable() {
-		s += ",addressable"
-	}
-	if tv.Assignable() {
-		s += ",assignable"
-	}
-	if tv.HasOk() {
-		s += ",ok"
-	}
-	return s[1:]
-}
-
 func walkIdentList(parent *etree.Element, list []*ast.Ident, fileset *token.FileSet, info *types.Info) {
 	for _, x := range list {
 		Walk(parent, x, fileset, info)

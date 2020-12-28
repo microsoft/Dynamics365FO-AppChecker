@@ -8,8 +8,10 @@ import (
 	"go/scanner"
 	"go/token"
 	"go/types"
+	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -22,7 +24,7 @@ func main() {
 
 	flag.Parse()
 
-	// Basic validation:
+	// Basic validation: Both the source and target directories must be provided
 	if *sourceDirectoryPtr == "" || *targetDirectoryPtr == "" {
 		usage()
 		return
@@ -53,6 +55,18 @@ The arguments are:
 }
 
 func extract(sourceDir string, targetDir string) {
+	filepath.Walk(sourceDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+		if info.IsDir() {
+			extractDir(sourceDir, targetDir)
+		}
+		return nil
+	})
+}
+
+func extractDir(sourceDir string, targetDir string) {
 	fs := token.NewFileSet()
 	pkgs, diag := parser.ParseDir(fs, sourceDir, nil, parser.AllErrors|parser.ParseComments)
 
@@ -70,36 +84,6 @@ func extract(sourceDir string, targetDir string) {
 			extractPackage(path.Join(targetDir, name), name, pkg, diag, fs)
 		}
 	}
-}
-
-// Create a diagnostic document if there are any diagnostics recorded. If there
-// are no errors to report, the function returns nil.
-func createDiagnosticDocument(diags error) *etree.Document {
-
-	if diags != nil {
-		errlist := diags.(scanner.ErrorList)
-
-		if errlist.Len() > 0 {
-			doc := etree.NewDocument()
-			doc.WriteSettings.UseCRLF = true
-			doc.Indent(2)
-
-			root := doc.CreateElement("Diagnostics")
-
-			for _, e := range errlist {
-				diagNode := root.CreateElement("Diagnostic")
-				diagNode.CreateAttr("Message", e.Msg)
-				if e.Pos.IsValid() {
-					diagNode.CreateAttr("Filename", e.Pos.Filename)
-					diagNode.CreateAttr("StartLine", strconv.Itoa(e.Pos.Line))
-					diagNode.CreateAttr("EndLine", strconv.Itoa(e.Pos.Column))
-				}
-			}
-
-			return doc
-		}
-	}
-	return nil
 }
 
 func extractPackage(targetdir string, name string, pkg *ast.Package, diags error, fileset *token.FileSet) {
@@ -164,6 +148,36 @@ func addTypeInformation(element *etree.Element, node ast.Expr, info *types.Info)
 	}
 }
 
+// mode returns a string describing the mode of an expression.
+func mode(tv types.TypeAndValue) string {
+	s := ""
+	if tv.IsVoid() {
+		s += ",void"
+	}
+	if tv.IsType() {
+		s += ",type"
+	}
+	if tv.IsBuiltin() {
+		s += ",builtin"
+	}
+	if tv.IsValue() {
+		s += ",value"
+	}
+	if tv.IsNil() {
+		s += ",nil"
+	}
+	if tv.Addressable() {
+		s += ",addressable"
+	}
+	if tv.Assignable() {
+		s += ",assignable"
+	}
+	if tv.HasOk() {
+		s += ",ok"
+	}
+	return s[1:]
+}
+
 // Check that the given path exists and is a directory
 func checkDirectory(path string) bool {
 	stat, err := os.Stat(path)
@@ -187,4 +201,34 @@ func checkDirectory(path string) bool {
 func createDirectory(path string) bool {
 	err := os.MkdirAll(path, 0755)
 	return err == nil
+}
+
+// Create a diagnostic document if there are any diagnostics recorded. If there
+// are no errors to report, the function returns nil.
+func createDiagnosticDocument(diags error) *etree.Document {
+
+	if diags != nil {
+		errlist := diags.(scanner.ErrorList)
+
+		if errlist.Len() > 0 {
+			doc := etree.NewDocument()
+			doc.WriteSettings.UseCRLF = true
+			doc.Indent(2)
+
+			root := doc.CreateElement("Diagnostics")
+
+			for _, e := range errlist {
+				diagNode := root.CreateElement("Diagnostic")
+				diagNode.CreateAttr("Message", e.Msg)
+				if e.Pos.IsValid() {
+					diagNode.CreateAttr("Filename", e.Pos.Filename)
+					diagNode.CreateAttr("StartLine", strconv.Itoa(e.Pos.Line))
+					diagNode.CreateAttr("StartColumn", strconv.Itoa(e.Pos.Column))
+				}
+			}
+
+			return doc
+		}
+	}
+	return nil
 }

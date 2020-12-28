@@ -786,16 +786,25 @@ class XmlNodeGenerator(object):
             result.append(end)
             result.append(step)
             return result
+        # ExtSlice will be removed in Python versions after 3.9
         elif isinstance(node, ast.ExtSlice):
-
             result = ET.Element("ExtSlice")
             for dim in node.dims:
                 result.append(self.visitSlice(dim))
             return result
 
+        # Index will be removed in Python versions after 3.9
         elif isinstance(node, ast.Index):
             result = ET.Element("Index")
             result.append(self.visitExpression(node.value))
+            return result
+
+        elif isinstance(node, ast.Name):
+            result = self.visitName(node)
+            return result
+
+        elif isinstance(node, ast.Tuple):
+            result = self.visitTuple(node)
             return result
         else:
             debugString = ast.dump(node)

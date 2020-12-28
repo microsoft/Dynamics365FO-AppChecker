@@ -16,7 +16,9 @@ def generator(source_root: 'The toplevel directory',
     passed in the out parameter. Issue interesting messages if the verbose flag
     is set
     '''
-    print("Generating " + source_path + " into " + target_path)
+
+    if verbose:
+        print("Generating " + source_path + " into " + target_path)
 
     try:
         source = open(source_path, 'r', errors='ignore', encoding="utf-8").read()
@@ -30,9 +32,11 @@ def generator(source_root: 'The toplevel directory',
 
         save(xml, source_root, source_path, target_path)
     except IOError as io:
-        print("IO Exception handled: " + repr(message.filename))
+        print("IO Exception handled: " + repr(io.message.filename))
     except SyntaxError as su:
         print("Syntax error in source: " + source_path + "(" + str(su.lineno), ", " + str(su.offset) + "):\n" + str(su))
+    except Exception as e:
+        print("General error in source: " + source_path + ": " + str(e))
 
 def save(xml, source_root, source_path, target_path):
     sp = pathlib.Path(source_path)

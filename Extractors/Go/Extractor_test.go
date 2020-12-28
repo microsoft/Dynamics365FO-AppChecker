@@ -287,31 +287,30 @@ func TestUnaryExpr(t *testing.T) {
 		t.Fatal("Did not find unary Receive node")
 	}
 
-} // Receive
-
-func TestBinaryExpr(t *testing.T) {
-
 }
 
-// case token.ADD(t *testing.T) { }
-// case token.SUB(t *testing.T) { }
-// case token.MUL(t *testing.T) { }
-// case token.QUO(t *testing.T) { }
-// case token.REM(t *testing.T) { }
-// case token.AND(t *testing.T) { }
-// case token.OR(t *testing.T) { }
-// case token.XOR(t *testing.T) { }
-// case token.AND_NOT(t *testing.T) { }
-// case token.SHL(t *testing.T) { }
-// case token.SHR(t *testing.T) { }
-// case token.EQL(t *testing.T) { }
-// case token.NEQ(t *testing.T) { }
-// case token.LSS(t *testing.T) { }
-// case token.LEQ(t *testing.T) { }
-// case token.GTR(t *testing.T) { }
-// case token.GEQ(t *testing.T) { }
-// case token.LAND(t *testing.T) { }
-// case token.LOR(t *testing.T) { }
+func TestBinaryExpr(t *testing.T) {
+	// case token.ADD(t *testing.T) { }
+	// case token.SUB(t *testing.T) { }
+	// case token.MUL(t *testing.T) { }
+	// case token.QUO(t *testing.T) { }
+	// case token.REM(t *testing.T) { }
+	// case token.AND(t *testing.T) { }
+	// case token.OR(t *testing.T) { }
+	// case token.XOR(t *testing.T) { }
+	// case token.AND_NOT(t *testing.T) { }
+	// case token.SHL(t *testing.T) { }
+	// case token.SHR(t *testing.T) { }
+	// case token.EQL(t *testing.T) { }
+	// case token.NEQ(t *testing.T) { }
+	// case token.LSS(t *testing.T) { }
+	// case token.LEQ(t *testing.T) { }
+	// case token.GTR(t *testing.T) { }
+	// case token.GEQ(t *testing.T) { }
+	// case token.LAND(t *testing.T) { }
+	// case token.LOR(t *testing.T) { }
+}
+
 func TestKeyValueExpr(t *testing.T) {
 
 }
@@ -400,7 +399,7 @@ func TestBranchStmt(t *testing.T) {
 
 }
 func TestBlockStmt(t *testing.T) {
-	doc := createExpressionDocument(`func(a int) {  }`, t)
+	doc := createExpressionDocument(`func(a int) { }`, t)
 
 	var n *etree.Element = doc.FindElement("/FuncLit/BlockStatement")
 	if n == nil {

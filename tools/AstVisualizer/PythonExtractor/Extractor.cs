@@ -17,7 +17,7 @@ namespace PythonExtractor
         ExportMetadata("Extension", "py"),
         ExportMetadata("Version", "1.0.0"),
         ExportMetadata("Sample", @"# Function to reverse arr[] from index start to end 
-def rverseArray(arr, start, end): 
+def reverseArray(arr, start, end): 
     while (start < end): 
         temp = arr[start] 
         arr[start] = arr[end] 
@@ -59,7 +59,7 @@ def rverseArray(arr, start, end):
                 var root = string.Join(Path.DirectorySeparatorChar.ToString(), parts.Take<string>(parts.Length - 6));
 
                 // Add the directory path to the extractor .py file.
-                string PythonExtractorSource = Path.Combine(Path.Combine(Path.Combine(Path.Combine(root, "Extractors"), "Python"), "extractor"), "pythonextractor.py");
+                string PythonExtractorSource = Path.Combine(root, "Extractors", "Python", "extractor", "pythonextractor.py");
 
                 // Start the python extractor.
                 using (var process = new Process())
@@ -67,10 +67,12 @@ def rverseArray(arr, start, end):
                     process.StartInfo.FileName = "python";
                     process.StartInfo.CreateNoWindow = true;
                     process.StartInfo.UseShellExecute= false;
+                    process.StartInfo.RedirectStandardOutput = true;
                     process.EnableRaisingEvents = true;
                     process.StartInfo.Arguments = $"\"{PythonExtractorSource}\" --formatxml=False \"{sourceDirectory}\" \"{resultDirectory}\"";
                            
                     process.Start();
+                    // string output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();
                 }
 

@@ -252,8 +252,16 @@ namespace AstVisualizer
                         .Where(l => l.Metadata.Name == Properties.Settings.Default.CurrentLanguage)
                         .Select(l => l.Value).FirstOrDefault();
 
-                    (XDocument doc, IEnumerable<IDiagnosticItem> diagnostics) = extractor.Extract(this.view.SourceEditor.Text);
-
+                    XDocument doc = null; ;
+                    IEnumerable<IDiagnosticItem> diagnostics = null;
+                    try
+                    {
+                        (doc, diagnostics) = extractor.Extract(this.view.SourceEditor.Text);
+                    }
+                    catch (Exception e)
+                    {
+                        // Nothing.
+                    }
                     this.Result = doc != null ? doc.ToString() : "";
 
                     // Remove all the entries in the error list and the squigglies
