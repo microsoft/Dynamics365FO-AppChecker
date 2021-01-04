@@ -21,7 +21,7 @@ jobs:
         - name: Setup .NET core
           uses: actions/setup-dotnet@v1
           with:
-             dotnet-version: '3.1.100' # SDK Version to use.
+             dotnet-version: '5.0.101' # SDK Version to use.
 
         - name: Build and publish
           run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true -p:Platform=x64 "tools\Graph Explorer\GraphExplorer\SocratexGraphExplorer.vis.netcore.csproj"
