@@ -22,6 +22,7 @@
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\High Contrast Socrates.png" />
+    <None Remove="Resources\Go.xshd" />
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -73,6 +74,7 @@
     <Resource Include="Images\Colorful spinning wheel.gif" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Go.xshd" />
     <EmbeddedResource Include="Resources\XQuery.xshd" />
     <EmbeddedResource Include="Resources\CSharp-Mode.xshd" />
     <EmbeddedResource Include="Resources\Java-Mode.xshd" />

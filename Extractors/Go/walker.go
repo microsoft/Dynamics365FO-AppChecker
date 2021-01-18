@@ -6,7 +6,13 @@ import (
 	"go/importer"
 	"go/token"
 	"go/types"
+
+	"log"
+	"os"
 	"strconv"
+
+	"encoding/base64"
+	"io/ioutil"
 
 	"github.com/beevik/etree"
 )
@@ -100,7 +106,8 @@ func Walk(parent *etree.Element, node ast.Node, fileset *token.FileSet, info *ty
 		addPositionStartEnd(identNode, n.Pos(), n.End(), fileset)
 
 	case *ast.BadExpr:
-		// nothing to do
+		badExprNode := parent.CreateElement("BadExpression")
+		addPositionStartEnd(badExprNode, n.Pos(), n.End(), fileset)
 
 	case *ast.BasicLit:
 		var literalNode *etree.Element
@@ -367,7 +374,8 @@ func Walk(parent *etree.Element, node ast.Node, fileset *token.FileSet, info *ty
 
 	// Statements
 	case *ast.BadStmt:
-		// TODO: nothing to do?
+		badStatementNode := parent.CreateElement("BadStatement")
+		addPositionStartEnd(badStatementNode, n.Pos(), n.End(), fileset)
 
 	// https://golang.org/pkg/go/ast/#DeclStmt
 	// A DeclStmt node represents a declaration in a statement list.
@@ -622,7 +630,8 @@ func Walk(parent *etree.Element, node ast.Node, fileset *token.FileSet, info *ty
 		addPositionStartEnd(itemNode, n.Pos(), n.End(), fileset)
 
 	case *ast.BadDecl:
-		// TODO: nothing to do?
+		badDeclNode := parent.CreateElement("BadDeclaration")
+		addPositionStartEnd(badDeclNode, n.Pos(), n.End(), fileset)
 
 	case *ast.GenDecl:
 		var declkind string = ""
@@ -668,6 +677,23 @@ func Walk(parent *etree.Element, node ast.Node, fileset *token.FileSet, info *ty
 		fileNode := parent.CreateElement("File")
 		fileNode.CreateAttr("Package", n.Name.Name)
 		fileNode.CreateAttr("Filename", fileset.File(n.Package).Name())
+
+		file, err := os.Open(fileset.File(n.Package).Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		source, err := ioutil.ReadAll(file)
+		// Encode the file in Base64, since this XML implementation does not
+		// quote illegal characters (like <, > etc.).
+		encoded := base64.StdEncoding.EncodeToString([]byte(source))
+		fileNode.CreateAttr("Source", encoded)
+
+		defer func() {
+			if err = file.Close(); err != nil {
+				log.Fatal(err)
+			}
+		}()
 
 		if n.Doc != nil {
 			Walk(fileNode, n.Doc, fileset, info)
