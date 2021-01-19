@@ -136,7 +136,26 @@ namespace XppReasoningWpf
         /// <param name="e">Not used</param>
         private void UserNameTextChanged(object sender, TextChangedEventArgs e)
         {
-            this.StatusControl.Content = string.Empty;
+            if (this.StatusControl != null)
+            {
+                this.StatusControl.Content = string.Empty;
+            }
+        }
+
+        private void PortControl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (this.StatusControl != null)
+            {
+                this.StatusControl.Content = string.Empty;
+            }
+        }
+
+        private void ServerNameControl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (this.StatusControl != null)
+            {
+                this.StatusControl.Content = string.Empty;
+            }
         }
     }
 }

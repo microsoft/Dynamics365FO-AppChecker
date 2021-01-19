@@ -31,9 +31,11 @@ Licensed under the MIT license.
         <GroupBox Header="Server" Grid.Row="0">
             <StackPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource FieldPrompt}">Server URL</Label>
-                <TextBox x:Name="ServerNameControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Server}" Style="{StaticResource Field}" />
+                <TextBox x:Name="ServerNameControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Server}" Style="{StaticResource Field}" 
+                         TextChanged="ServerNameControl_TextChanged"/>
                 <Label Style="{StaticResource FieldPrompt}">Port</Label>
-                <TextBox x:Name="PortControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Port}" Style="{StaticResource Field}"/>
+                <TextBox x:Name="PortControl"  Text="{Binding Source={x:Static settings:Settings.Default}, Path=Port}" Style="{StaticResource Field}"
+                         TextChanged="PortControl_TextChanged"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Credentials" Grid.Row="1">
