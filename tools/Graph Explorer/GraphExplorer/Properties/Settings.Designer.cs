@@ -157,27 +157,42 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{\r\n    \"createGraphNode\": (node) => {\r\n        if (node.labels[0] == \'Class\') {\r\n" +
-            "            return { id: node.id, value: node.properties.WMC, label: node.proper" +
-            "ties.Name, title: node.properties.$indegree, color: \"red\" }\r\n        }\r\n        " +
-            "else if (node.labels[0] == \'Method\') {\r\n            return { id: node.id, value:" +
-            " node.properties.LOC, label: node.properties.Name, title: node.properties.$indeg" +
-            "ree, color: \"green\", static: node.properties.IsStatic }\r\n        }\r\n        else" +
-            " {\r\n\r\n        }\r\n        return { id: node.id, label: node.properties.Name };\r\n " +
-            "   },\r\n\r\n    \"createGraphEdge\": (edge) => {\r\n        if (edge.type == \'CALLS\') {" +
-            "\r\n            return { id: edge.id, from: edge.from, to: edge.to, value: edge.pr" +
-            "operties.Count, label: edge.type, title: \'Calls: \' + edge.properties.Count, colo" +
-            "r: {color: \"yellow\" }};\r\n        }\r\n        else {\r\n            return { id: edg" +
-            "e.id, from: edge.from, to: edge.to, label: edge.type };\r\n        }\r\n    },\r\n\r\n  " +
-            "  \"options\":  {\r\n        interaction: { hover: true, selectConnectedEdges: false" +
-            " },\r\n        manipulation: {\r\n            enabled: false, // true enables adding" +
-            " nodes to the graph\r\n        },\r\n        nodes: {\r\n            size: 10, // For " +
-            "nodes that do not have specific size\r\n            font: { strokeWidth: 2 }, // T" +
-            "his is the amount of space around the text in nodes or edges.\r\n            shape" +
-            ": \'dot\',\r\n            scaling: {\r\n                label: { // Make sure font siz" +
-            "e is in this range.\r\n                    min: 8, max: 40\r\n                }\r\n   " +
-            "         }\r\n        },\r\n        edges: {\r\n            arrows: \"to\",\r\n           " +
-            " shadow: true,\r\n            smooth: true,\r\n        }\r\n    }\r\n}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("function graphSurfaceDefaultBackgroundColor() {\r\n    return \'white\';\r\n}\r\n\r\nfuncti" +
+            "on graphSurfaceDefaultForegroundColor() {\r\n    return \'darkgray\';\r\n}\r\n\r\nfunction" +
+            " createGraphNode(node) {\r\n    if (node.labels[0] == \'Class\') {\r\n        var imag" +
+            "e = \"Resources/Class_16x.svg\";\r\n        return { id: node.id, value: node.proper" +
+            "ties.WMC, label: node.properties.Name, title: node.properties.$indegree, color: " +
+            "\"red\", shape: \'image\', \'image\': image }\r\n    }\r\n    else if (node.labels[0] == \'" +
+            "Interface\') {\r\n        var image = \"Resources/Interface_16x.svg\";\r\n        retur" +
+            "n { id: node.id, label: node.properties.Name, title: node.properties.Name, shape" +
+            ": \'image\', \'image\': image }\r\n    }\r\n    else if (node.labels[0] == \'Method\') {\r\n" +
+            "        // Find the correct image to use, depending on the method visibility\r\n  " +
+            "      var image = \"Method_16x.svg\";\r\n        if (node.properties.Visibility == \'" +
+            "private\')\r\n            image = \"MethodPrivate_16x.svg\";\r\n        else if (node.p" +
+            "roperties.Visibility == \'protected\')\r\n            image = \"MethodProtect_16x.svg" +
+            "\";\r\n        else if (node.properties.Visibility == \'internal\')\r\n            imag" +
+            "e = \"MethodFriend_16x.svg\";\r\n        else if (node.properties.Visibility == \'fin" +
+            "al\')\r\n            image = \"MethodSealed_16x.svg\";\r\n        return { id: node.id," +
+            " value: node.properties.LOC, label: node.properties.Name, title: \'Method \'+ node" +
+            ".properties.Name, shape: \'image\', image: \'Resources/\' + image, color: \"green\" }\r" +
+            "\n    }\r\n    return { id: node.id, label: node.properties.Name, title: node.prope" +
+            "rties.Name };\r\n}\r\n\r\nfunction createGraphEdge(edge) {\r\n    if (edge.type == \'CALL" +
+            "S\') {\r\n        return { id: edge.id, from: edge.from, to: edge.to, value: edge.p" +
+            "roperties.Count, label: edge.type, title: \'Calls: \' + edge.properties.Count, col" +
+            "or: {color: \'darkgrey\'}};\r\n    }\r\n    else {\r\n        return { id: edge.id, from" +
+            ": edge.from, to: edge.to, label: edge.type };\r\n    }\r\n}\r\n\r\nfunction options() {\r" +
+            "\n    return {\r\n        interaction: { hover: true, selectConnectedEdges: false }" +
+            ",\r\n        manipulation: {\r\n            enabled: false, // true enables adding n" +
+            "odes to the graph\r\n        },\r\n        nodes: {\r\n            size: 10, // For no" +
+            "des that do not have specific size or where no value attribute is provided\r\n    " +
+            "        font: { strokeWidth: 2 }, // This is the amount of space around the text" +
+            " in nodes or edges.\r\n            shape: \'dot\',\r\n            scaling: {\r\n        " +
+            "        min: 10, max: 30,\r\n                label: { // Make sure font size is in" +
+            " this range.\r\n                    min: 8, max: 24\r\n                }\r\n          " +
+            "  }\r\n        },\r\n        edges: {\r\n            arrows: \"to\",\r\n            shadow" +
+            ": false,\r\n            smooth: true,\r\n            scaling: {\r\n            min: 2," +
+            " \'max\': 12, \'label\': { \'enabled\': true, \'min\': 9, \'max\': 14}\r\n            }\r\n   " +
+            "     }\r\n    }\r\n}")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));

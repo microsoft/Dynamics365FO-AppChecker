@@ -78,7 +78,10 @@ namespace SocratexGraphExplorer.Models
 
         public string StyleDocumentSource
         {
-            get { return Properties.Settings.Default.Configuration; }
+            get 
+            { 
+                return Properties.Settings.Default.Configuration; 
+            }
             set
             {
                 if (value != Properties.Settings.Default.Configuration)

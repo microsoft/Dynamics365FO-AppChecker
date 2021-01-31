@@ -68,7 +68,7 @@ namespace SocratexGraphExplorer
             splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
-            if (!model.IsDebugMode)
+            // if (!model.IsDebugMode)
             {
                 // Now show the connection dialog
                 var connectionWindow = new Views.ConnectionWindow(this.model);
@@ -83,13 +83,13 @@ namespace SocratexGraphExplorer
                 }
                 password = connectionWindow.Password;
             }
-            else
-            {
-                password = "test";
-            }
+            //else
+            //{
+            //    password = "test";
+            //}
 
             // Now that the value of the connection parameters have been set,
-            // the global connection to the database is established.
+            // the global connection to the database can be established.
             this.model.CreateNeo4jDriver(password);
         }
 
