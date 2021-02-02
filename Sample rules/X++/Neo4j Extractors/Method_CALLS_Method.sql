@@ -7,8 +7,9 @@
 --
 --  sqlcmd -S . -d DYNAMICSXREFDB -E -s, -W -I script.sql -o output.csv 
 --  
---  This generates a 2GB file but it contains some ugly markup (a set of --- lines to separate the
---  data from the headers - It is not clear how to get rid of that, except by doing:
+--  This generates a file but it contains some ugly markup (a set of --- lines to separate the
+--  data from the headers) - It is not clear how to get rid of that, except by using another tool,
+--  like sed or grep after the fact:
 --
 --  sqlcmd ... | sed -e '2d'
 --
@@ -16,7 +17,8 @@
 --  Save Results As… and select Save As type = CSV. If headers are wanted (and they are for this usage) 
 --  you would need to go into "Tools | Options | Query Results | SQL Server | Results to grid" and set the 
 --  "Include column Headers when copying or saving the results" checkbox.
-Use the "Export data…" facility on the database (under tasks) in MSSQL. It does work  (and you can provide a query) but it is cumbersome to set up.
+--  
+--  3) Use the "Export data…" facility on the database (under tasks) in MSSQL. It does work  (and you can provide a query) but it is cumbersome to set up.
 
 
 select LOWER('/' + sourceModule.Module + source.[Path]) as ":START_ID", 
