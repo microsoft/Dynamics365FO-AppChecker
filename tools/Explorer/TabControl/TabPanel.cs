@@ -43,8 +43,7 @@ namespace Wpf.Controls
             get
             {
                 Dock dock = Dock.Top;
-                TabControl templatedParent = base.TemplatedParent as TabControl;
-                if (templatedParent != null)
+                if (TemplatedParent is TabControl templatedParent)
                 {
                     dock = templatedParent.TabStripPlacement;
 
@@ -56,8 +55,7 @@ namespace Wpf.Controls
         {
             get
             {
-                TabControl templatedParent = base.TemplatedParent as TabControl;
-                if (templatedParent != null)
+                if (base.TemplatedParent is TabControl templatedParent)
                     return templatedParent.TabItemMinWidth;
                 return 0;
             }
@@ -66,8 +64,7 @@ namespace Wpf.Controls
         {
             get
             {
-                TabControl templatedParent = base.TemplatedParent as TabControl;
-                if (templatedParent != null)
+                if (base.TemplatedParent is TabControl templatedParent)
                     return templatedParent.TabItemMinHeight;
                 return 0;
             }
@@ -76,8 +73,7 @@ namespace Wpf.Controls
         {
             get
             {
-                TabControl templatedParent = base.TemplatedParent as TabControl;
-                if (templatedParent != null)
+                if (base.TemplatedParent is TabControl templatedParent)
                     return templatedParent.TabItemMaxWidth;
                 return double.PositiveInfinity;
             }
@@ -86,8 +82,7 @@ namespace Wpf.Controls
         {
             get
             {
-                TabControl templatedParent = base.TemplatedParent as TabControl;
-                if (templatedParent != null)
+                if (base.TemplatedParent is TabControl templatedParent)
                     return templatedParent.TabItemMaxHeight;
                 return double.PositiveInfinity;
             }
@@ -184,8 +179,8 @@ namespace Wpf.Controls
 
             for (int i = 0; i < childCount; i++)
             {
-                TabItem tabItem = InternalChildren[i] as TabItem;
-                if (tabItem == null) return new Size();
+                if (!(InternalChildren[i] is TabItem tabItem)) 
+                    return new Size();
 
                 SetDimensions(tabItem);
 
@@ -218,8 +213,8 @@ namespace Wpf.Controls
                     _childRects[i] = new Rect(left, 0, widths[i], maxChildWidthOrHeight);
                     left += widths[i];
 
-                    FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                    if (child != null) child.Measure(new Size(widths[i], maxChildWidthOrHeight));
+                    if (InternalChildren[i] is FrameworkElement child) 
+                        child.Measure(new Size(widths[i], maxChildWidthOrHeight));
                 }
 
                 CanScrollLeftOrUp = false;
@@ -251,8 +246,8 @@ namespace Wpf.Controls
                         _childRects[i] = new Rect(left, 0, widths[i], maxChildWidthOrHeight);
                         left += widths[i];
 
-                        FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                        if (child != null) child.Measure(new Size(widths[i], maxChildWidthOrHeight));
+                        if (InternalChildren[i] is FrameworkElement child) 
+                            child.Measure(new Size(widths[i], maxChildWidthOrHeight));
                     }
                     _extent = new Size(extentWidth, maxChildWidthOrHeight);
 
@@ -283,9 +278,8 @@ namespace Wpf.Controls
                     _childRects[i] = new Rect(left, 0, widths[i], maxChildWidthOrHeight);
                     left += widths[i];
 
-
-                    FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                    if (child != null) child.Measure(new Size(widths[i], maxChildWidthOrHeight));
+                    if (InternalChildren[i] is FrameworkElement child) 
+                        child.Measure(new Size(widths[i], maxChildWidthOrHeight));
                 }
                 _extent = new Size(extentWidth, maxChildWidthOrHeight);
 
@@ -317,8 +311,8 @@ namespace Wpf.Controls
             // this will also get us the height required for all TabItems
             for (int i = 0; i < childCount; i++)
             {
-                TabItem tabItem = InternalChildren[i] as TabItem;
-                if (tabItem == null) return new Size();
+                if (!(InternalChildren[i] is TabItem tabItem)) 
+                    return new Size();
 
                 SetDimensions(tabItem);
 
@@ -351,8 +345,8 @@ namespace Wpf.Controls
                     _childRects[i] = new Rect(0, top, maxChildWidthOrHeight, heights[i]);
                     top += heights[i];
 
-                    FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                    if (child != null) child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
+                    if (InternalChildren[i] is FrameworkElement child) 
+                        child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
                 }
 
                 CanScrollLeftOrUp = false;
@@ -384,8 +378,8 @@ namespace Wpf.Controls
                         _childRects[i] = new Rect(0, top, maxChildWidthOrHeight, heights[i]);
                         top += heights[i];
 
-                        FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                        if (child != null) child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
+                        if (InternalChildren[i] is FrameworkElement child) 
+                            child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
                     }
                     _extent = new Size(maxChildWidthOrHeight, extentHeight);
 
@@ -412,8 +406,8 @@ namespace Wpf.Controls
                     _childRects[i] = new Rect(0, top, maxChildWidthOrHeight, heights[i]);
                     top += heights[i];
 
-                    FrameworkElement child = InternalChildren[i] as FrameworkElement;
-                    if (child != null) child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
+                    if (InternalChildren[i] is FrameworkElement child) 
+                        child.Measure(new Size(maxChildWidthOrHeight, heights[i]));
                 }
                 _extent = new Size(maxChildWidthOrHeight, extentHeight);
 
@@ -559,8 +553,7 @@ namespace Wpf.Controls
             InvalidateMeasure();
             UpdateLayout();
 
-            TabControl ic = ItemsControl.GetItemsOwner(this) as TabControl;
-            if (ic == null) return Rect.Empty;
+            if (!(ItemsControl.GetItemsOwner(this) is TabControl ic)) return Rect.Empty;
 
             int index = -1;
             var tabsCount = ic.GetTabsCount();

@@ -64,9 +64,9 @@ namespace XppReasoningWpf
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected Model Model { get { return (App.Current.MainWindow as MainWindow).Model; } }
+        protected static Model Model { get { return (App.Current.MainWindow as MainWindow).Model; } }
 
-        protected IHighlightingDefinition LoadHighlightDefinition(string mode)
+        protected static IHighlightingDefinition LoadHighlightDefinition(string mode)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream syntaxModeStream = null;
@@ -74,14 +74,14 @@ namespace XppReasoningWpf
             {
                 syntaxModeStream = assembly.GetManifestResourceStream("XppReasoningWpf.Resources." + mode);
 
-                using (var xshd_reader = new XmlTextReader(syntaxModeStream))
+                using var xshd_reader = new XmlTextReader(syntaxModeStream)
                 {
-                    xshd_reader.DtdProcessing = DtdProcessing.Prohibit;
-                    xshd_reader.XmlResolver = null;
+                    DtdProcessing = DtdProcessing.Prohibit,
+                    XmlResolver = null
+                };
 
-                    syntaxModeStream = null;
-                    return ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, HighlightingManager.Instance);
-                }
+                syntaxModeStream = null;
+                return ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, HighlightingManager.Instance);
             }
             finally
             {
@@ -143,7 +143,7 @@ namespace XppReasoningWpf
             this.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
             {
                 var caret = sender as ICSharpCode.AvalonEdit.Editing.Caret;
-                this.Model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
+                Model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
             };
 
             // Install the search panel that appears in the upper left corner.
@@ -251,19 +251,20 @@ namespace XppReasoningWpf
 
         protected virtual void MouseWheelHandler(object sender, MouseWheelEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 if (e.Delta > 0)
                 {
                     if (Properties.Settings.Default.SourceFontSize < 48)
-                        Properties.Settings.Default.SourceFontSize += 1;
+                        Properties.Settings.Default.SourceFontSize += 2;
 
                 }
                 else
                 {
-                    if (Properties.Settings.Default.SourceFontSize < 48)
-                        Properties.Settings.Default.SourceFontSize -= 1;
+                    if (Properties.Settings.Default.SourceFontSize > 8)
+                        Properties.Settings.Default.SourceFontSize -= 2;
                 }
+                e.Handled = true;
             }
         }
     }

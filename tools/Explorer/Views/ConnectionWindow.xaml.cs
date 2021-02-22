@@ -17,13 +17,14 @@ namespace XppReasoningWpf
     /// </summary>
     public partial class ConnectionWindow : Window
     {
-        private Model model;
+        private readonly Model model;
 
         public ConnectionWindow(Model model)
         {
-            InitializeComponent();
             this.DataContext = model;
             this.model = model;
+
+            InitializeComponent();
         }
 
         protected override void OnInitialized(EventArgs e)

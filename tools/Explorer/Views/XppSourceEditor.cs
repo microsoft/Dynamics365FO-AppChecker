@@ -14,8 +14,10 @@ namespace XppReasoningWpf
         public XppSourceEditor()
         {
             // FontFamily = "{Binding Source={x:Static settings:Settings.Default}, Path=SourceFont}"
-            var fontFamilyBinding = new Binding("SourceFont");
-            fontFamilyBinding.Source = Properties.Settings.Default;
+            var fontFamilyBinding = new Binding("SourceFont")
+            {
+                Source = Properties.Settings.Default
+            };
             this.SetBinding(FontFamilyProperty, fontFamilyBinding);
 
             // Configure the X++ folding manager. 
@@ -25,9 +27,9 @@ namespace XppReasoningWpf
             var xppFoldingManager = FoldingManager.Install(this.TextArea);
             xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
 
-            this.SyntaxHighlighting = this.LoadHighlightDefinition("Xpp-Mode.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("Xpp-Mode.xshd");
 
-            this.Model.Tick += (object sender, EventArgs e) =>
+            Model.Tick += (object sender, EventArgs e) =>
             {
                 xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
             };

@@ -9,11 +9,13 @@ namespace XppReasoningWpf
     {
         public PythonSourceEditor()
         {
-            var fontFamilyBinding = new Binding("SourceFont");
-            fontFamilyBinding.Source = Properties.Settings.Default;
+            var fontFamilyBinding = new Binding("SourceFont")
+            {
+                Source = Properties.Settings.Default
+            };
             this.SetBinding(FontFamilyProperty, fontFamilyBinding);
 
-            this.SyntaxHighlighting = this.LoadHighlightDefinition("Python-Mode.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("Python-Mode.xshd");
         }
     }
 }

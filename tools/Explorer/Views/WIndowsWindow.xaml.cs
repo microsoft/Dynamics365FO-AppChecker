@@ -12,15 +12,10 @@ namespace XppReasoningWpf.Views
     /// </summary>
     public partial class WindowsWindow : Window
     {
-        private TabControl SourceTabs;
-
         public WindowsWindow(TabControl sourceTabs)
         {
             InitializeComponent();
             this.DataContext = new SourceWindowViewModel(this, sourceTabs);
-
-            this.SourceTabs = sourceTabs; 
-            
          }
     }
 }

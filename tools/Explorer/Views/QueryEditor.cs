@@ -42,7 +42,7 @@ namespace XppReasoningWpf
             };
             this.SetBinding(ShowLineNumbersProperty, showLineNumbersBinding);
 
-            this.SyntaxHighlighting = this.LoadHighlightDefinition("XQuery.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("XQuery.xshd");
 
             this.Options = new TextEditorOptions
             {

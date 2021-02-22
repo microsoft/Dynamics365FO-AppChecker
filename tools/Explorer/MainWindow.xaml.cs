@@ -31,27 +31,9 @@ namespace XppReasoningWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        // public static ICommand ExitCommand = new ApplicationExitCommand();
+        public Model Model { get; set; }
 
-        public static ICommand SaveResultCommand = new RoutedUICommand("Save Result", "SaveResult", typeof(MainWindow));
-
-        public static ICommand IncreaseQueryFontSizeCommand = new RoutedUICommand("Increase query font size", "IncreaseQueryFontSize", typeof(MainWindow));
-        public static ICommand DecreaseQueryFontSizeCommand = new RoutedUICommand("Decrease query font size", "DecreaseQueryFontSize", typeof(MainWindow));
-        public static ICommand IncreaseSourceFontSizeCommand = new RoutedUICommand("Increase source font size", "IncreaseSourceFontSize", typeof(MainWindow));
-        public static ICommand DecreaseSourceFontSizeCommand = new RoutedUICommand("Decrease source font size", "DecreaseSourceFontSize", typeof(MainWindow));
-        public static ICommand IncreaseResultsFontSizeCommand = new RoutedUICommand("Increase results font size", "IncreaseResultsFontSize", typeof(MainWindow));
-        public static ICommand DecreaseResultsFontSizeCommand = new RoutedUICommand("Decrease results font size", "DecreaseResultsFontSize", typeof(MainWindow));
-        public static ICommand ShowExternalVariablesDialogCommand = new RoutedUICommand("External Variables", "ExternalVariables", typeof(MainWindow));
-
-        public static ICommand ExecuteHelpXQueryCommand = new RoutedUICommand("Help for XQuery", "HelpForXQuery", typeof(MainWindow));
-        public static ICommand ExecuteHelpBaseXCommand = new RoutedUICommand("Help for BaseX", "HelpForBaseX", typeof(MainWindow));
-
-        public static ICommand AboutBoxCommand =
-            new RoutedUICommand("About", "About", typeof(MainWindow));
-
-        public Model Model;
-
-        private ViewModels.ViewModel ViewModel;
+        private readonly ViewModels.ViewModel ViewModel;
 
         public MainWindow()
         {
@@ -179,44 +161,16 @@ namespace XppReasoningWpf
             await this.ViewModel.ClosedownAsync();
         }
 
-        private void CommandBinding_SaveResultExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            SaveFileDialog dialog = new SaveFileDialog
-            {
-                DefaultExt = ".xml",
-                AddExtension = true,
-                Filter = "XML files (*.xml)|*.xml|CSV (Comma delimited) (*.csv)|*.csv|All files (*.*)|*.*",
-            };
-
-            var documentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            dialog.InitialDirectory = string.Format(Properties.Settings.Default.QueriesPath, documentsFolder);
-
-            bool? res = dialog.ShowDialog();
-
-            if (res.HasValue && res.Value)
-            {
-                var stream = dialog.OpenFile();
-                this.ResultsEditor.Save(stream);
-            }
-        }
-
-        private void CommandBinding_SaveResultCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
         private static bool IsCompoundName(string name)
         {
             var parts = name.Split(':');
-            return parts.Count() == 2;
+            return parts.Length == 2;
         }
 
         private async Task<string> GetSourceDocAsync(string query)
         {
-            using (var session = await this.Model.GetSessionAsync(this.Model.SelectedDatabase.Name))
-            {
-                return await session.DoQueryAsync(query);
-            }
+            using var session = await this.Model.GetSessionAsync(this.Model.SelectedDatabase.Name);
+            return await session.DoQueryAsync(query);
         }
 
         /// <summary>
@@ -262,7 +216,7 @@ namespace XppReasoningWpf
                 }
                 else if (language == "C#")
                 {
-                    string xquery = "No source for " + name;
+                    string xquery;
                     if (IsCompoundName(name))
                     {
                         var parts = name.Split(':');
@@ -455,10 +409,9 @@ namespace XppReasoningWpf
                                         // Artifact contains an encoded definition of the kind of artifact (i.e.
                                         // class, table, query, or form) that is requested, like Artifact="form:MyForm".
                                         var parts = artifact.Split(':');
-                                        if (parts.Count() == 2)
+                                        if (parts.Length == 2)
                                         {
                                             var kind = parts[0].ToLower();
-                                            var name = parts[1];
 
                                             int sl = -1, sc = -1, el = -1, ec = -1;
                                             FindPositionsInSelf(positionElement, ref sl, ref sc, ref el, ref ec);
@@ -510,7 +463,7 @@ namespace XppReasoningWpf
             {
                 var parts = name.Split(':');
 
-                if (parts.Count() == 2)
+                if (parts.Length == 2)
                 {
                     // Only support class for now.
                     // dynamics://Open/Class/SrsReportRunController/Line/1413/Column/74/ToLine/1415/ToColumn/10 
@@ -626,92 +579,14 @@ namespace XppReasoningWpf
         }
 
         #region Font size handling
-        private void CommandBinding_IncreaseQueryFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.QueryFontSize += 2;
-        }
-        private void CommandBinding_DecreaseQueryFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.QueryFontSize -= 2;
-        }
-        private void CommandBinding_CanIncreaseQueryFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (this.queryTabPage == null)
-                e.CanExecute = false;
-            else
-            {
-                QueryEditor queryEditor = this.queryTabPage.SelectedContent as QueryEditor;
-                e.CanExecute = queryEditor == null ? false : queryEditor.FontSize < 48;
-            }
-        }
-        private void CommandBinding_CanDecreaseQueryFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (this.queryTabPage == null)
-                e.CanExecute = false;
-            else
-            {
-                QueryEditor queryEditor = this.queryTabPage.SelectedContent as QueryEditor;
-                e.CanExecute = queryEditor == null ? false : queryEditor.FontSize > 8;
-            }
-        }
 
-        private void CommandBinding_IncreaseResultsFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.ResultsFontSize += 2;
-        }
-        private void CommandBinding_DecreaseResultsFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.ResultsFontSize -= 2;
-        }
-        private void CommandBinding_CanIncreaseResultsFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = this.ResultsEditor == null ? false : this.ResultsEditor.FontSize < 48;
-        }
-        private void CommandBinding_CanDecreaseResultsFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = this.ResultsEditor == null ? false : this.ResultsEditor.FontSize > 8;
-        }
 
-        private void CommandBinding_IncreaseSourceFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.SourceFontSize += 2;
-        }
-        private void CommandBinding_DecreaseSourceFontSize(object sender, ExecutedRoutedEventArgs e)
-        {
-            Properties.Settings.Default.SourceFontSize -= 2;
-        }
-        private void CommandBinding_CanIncreaseSourceFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = Properties.Settings.Default.SourceFontSize < 48;
-        }
-        private void CommandBinding_CanDecreaseSourceFontSize(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = Properties.Settings.Default.SourceFontSize > 8;
-        }
+
+
 
         #endregion
 
-        private void CommandBinding_HelpBaseX(object sender, ExecutedRoutedEventArgs e)
-        {
-            Process.Start("http://BaseX.org");
-        }
 
-        private void CommandBinding_ShowExternalVariablesDialog(object sender, ExecutedRoutedEventArgs e)
-        {
-            var window = new ExternalVariablesControl();
-            window.ShowDialog();
-        }
-
-        private void CommandBinding_HelpXQuery(object sender, ExecutedRoutedEventArgs e)
-        {
-            Process.Start("http://www.w3.org/standards/xml/query");
-        }
-
-        private void CommandBinding_AboutBoxExecute(object sender, ExecutedRoutedEventArgs e)
-        {
-            var aboutBox = new XppReasoningWpf.Views.AboutBox();
-            aboutBox.Show();
-        }
 
         private async void ModelDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -720,10 +595,8 @@ namespace XppReasoningWpf
                 var db = e.AddedItems[0] as BaseXInterface.Database;
                 this.Model.Status = $"{db.Name}. Items: {db.Resources}, Size: {db.Size}";
 
-                using (var session = await this.Model.GetSessionAsync(""))
-                {
-                    this.ResultsEditor.Text = await session.DoQueryAsync($"db:info('{db.Name}')");
-                }
+                using var session = await this.Model.GetSessionAsync("");
+                this.ResultsEditor.Text = await session.DoQueryAsync($"db:info('{db.Name}')");
             }
         }
 

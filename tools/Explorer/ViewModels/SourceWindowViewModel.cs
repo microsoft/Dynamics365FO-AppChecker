@@ -11,7 +11,7 @@ namespace XppReasoningWpf.ViewModels
 {
     class SourceWindowViewModel
     {
-        private ObservableCollection<SourceWindowDescriptor> tabDescriptors = new ObservableCollection<SourceWindowDescriptor>();
+        private readonly ObservableCollection<SourceWindowDescriptor> tabDescriptors = new ObservableCollection<SourceWindowDescriptor>();
 
         private static string TabTitle(TabItem ti)
         {

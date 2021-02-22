@@ -17,45 +17,6 @@ Licensed under the MIT license.
         Title="{Binding Title}" Height="598" Width="981">
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:MainWindow.AboutBoxCommand}"
-                        Executed="CommandBinding_AboutBoxExecute"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.SaveResultCommand}"
-                        Executed="CommandBinding_SaveResultExecuted"
-                        CanExecute="CommandBinding_SaveResultCanExecute"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.IncreaseQueryFontSizeCommand}"
-                        Executed="CommandBinding_IncreaseQueryFontSize"
-                        CanExecute="CommandBinding_CanIncreaseQueryFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}"
-                        Executed="CommandBinding_DecreaseQueryFontSize"
-                        CanExecute="CommandBinding_CanDecreaseQueryFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.IncreaseResultsFontSizeCommand}"
-                        Executed="CommandBinding_IncreaseResultsFontSize"
-                        CanExecute="CommandBinding_CanIncreaseResultsFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.DecreaseResultsFontSizeCommand}"
-                        Executed="CommandBinding_DecreaseResultsFontSize"
-                        CanExecute="CommandBinding_CanDecreaseResultsFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.IncreaseSourceFontSizeCommand}"
-                        Executed="CommandBinding_IncreaseSourceFontSize"
-                        CanExecute="CommandBinding_CanIncreaseSourceFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}"
-                        Executed="CommandBinding_DecreaseQueryFontSize"
-                        CanExecute="CommandBinding_CanDecreaseQueryFontSize"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.ShowExternalVariablesDialogCommand}"
-                        Executed="CommandBinding_ShowExternalVariablesDialog"/>
-
-        <CommandBinding Command="{x:Static local:MainWindow.ExecuteHelpXQueryCommand}"
-                        Executed="CommandBinding_HelpXQuery"/>
-        <CommandBinding Command="{x:Static local:MainWindow.ExecuteHelpBaseXCommand}"
-                        Executed="CommandBinding_HelpBaseX"/>
-
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -136,7 +97,7 @@ Licensed under the MIT license.
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="External Variables..." Command="{x:Static local:MainWindow.ShowExternalVariablesDialogCommand}" />
+                <MenuItem Header="External Variables..." Command="{Binding ShowExternalVariablesDialogCommand}" />
                 <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}"/>
             </MenuItem>
             <MenuItem Header="Edit">
@@ -190,21 +151,21 @@ Licensed under the MIT license.
                 
 
             <MenuItem Header="Tasks">
-                <MenuItem x:Name="ExecuteQueryMenuItem" Command="{Binding ExecuteQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                <MenuItem x:Name="ExecuteQueryMenuItem" Command="{Binding ExecuteQueryCommand}" 
                           CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
                           Header="Execute Query" InputGestureText="F5" >
                     <MenuItem.Icon>
                         <Image Source="Images/Run_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="CheckQueryMenuItem" Command="{Binding CheckQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                <MenuItem x:Name="CheckQueryMenuItem" Command="{Binding CheckQueryCommand}" 
                           CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
                           Header="Check Query"  InputGestureText="Ctrl+F5">
                     <MenuItem.Icon>
                         <Image Source="Images/Checkmark_green_12x_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>                
-                <MenuItem x:Name="SubmitQueryMenuItem" Command="{Binding SubmitQueryCommand, diag:PresentationTraceSources.TraceLevel=High}" 
+                <MenuItem x:Name="SubmitQueryMenuItem" Command="{Binding SubmitQueryCommand}" 
                           CommandParameter="{Binding ElementName=queryTabPage, Path=SelectedContent}" 
                           Header="Submit Query" >
                     <MenuItem.Icon>
@@ -222,10 +183,10 @@ Licensed under the MIT license.
                 <MenuItem x:Name="WindowsMenuItem" Header="Windows..." Command="{Binding WindowsCommand}" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="XQuery on w3.org" Command="local:MainWindow.ExecuteHelpXQueryCommand" />
-                <MenuItem Header="BaseX" Command="local:MainWindow.ExecuteHelpBaseXCommand"/>
+                <MenuItem Header="XQuery on w3.org" Command="{Binding XQueryHelpCommand}" />
+                <MenuItem Header="BaseX" Command="{Binding BaseXHelpCommand}"/>
                 <Separator/>
-                <MenuItem Header="About" Command="local:MainWindow.AboutBoxCommand"/>
+                <MenuItem Header="About" Command="{Binding AboutBoxCommand}"/>
             </MenuItem>
         </Menu>
 
@@ -331,10 +292,10 @@ Licensed under the MIT license.
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
                             </Button>
                             <Separator></Separator>
-                            <Button Command="{x:Static local:MainWindow.IncreaseQueryFontSizeCommand}"  ToolTip="Increase font size">
+                            <Button Command="{Binding IncreaseQueryFontSizeCommand}"  ToolTip="Increase font size">
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
                             </Button>
-                            <Button Command="{x:Static local:MainWindow.DecreaseQueryFontSizeCommand}" ToolTip="Decrease font size">
+                            <Button Command="{Binding DecreaseQueryFontSizeCommand}" ToolTip="Decrease font size">
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/DecreaseFontSize_16x.png"/>
                             </Button>
                         </ToolBar>
@@ -358,7 +319,7 @@ Licensed under the MIT license.
                         </Grid.RowDefinitions>
 
                         <ToolBar  Grid.Row="0" ToolBarTray.IsLocked="True">
-                            <Button Command="{x:Static local:MainWindow.SaveResultCommand}" ToolTip="Save">
+                            <Button Command="{Binding SaveResultsCommand}" ToolTip="Save">
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Save_16x.png"></Image>
                             </Button>
                             <Separator/>
@@ -376,10 +337,10 @@ Licensed under the MIT license.
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/Redo_16x.png"></Image>
                             </Button>
                             <Separator></Separator>
-                            <Button Command="{x:Static local:MainWindow.IncreaseResultsFontSizeCommand}"  ToolTip="Increase font size">
+                            <Button Command="{Binding IncreaseResultsFontSizeCommand}"  ToolTip="Increase font size">
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/IncreaseFontSize_16x.png"/>
                             </Button>
-                            <Button Command="{x:Static local:MainWindow.DecreaseResultsFontSizeCommand}" ToolTip="Decrease font size">
+                            <Button Command="{Binding DecreaseResultsFontSizeCommand}" ToolTip="Decrease font size">
                                 <Image Style="{StaticResource toolbarImageStyle}" Source="Images/DecreaseFontSize_16x.png"/>
                             </Button>
                         </ToolBar>

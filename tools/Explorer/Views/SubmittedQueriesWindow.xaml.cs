@@ -13,7 +13,7 @@ namespace XppReasoningWpf.Views
     /// </summary>
     public partial class SubmittedQueriesWindow : Window
     {
-        private SubmittedQueriesViewModel viewModel;
+        private readonly SubmittedQueriesViewModel viewModel;
         private bool closing = false;
 
         public SubmittedQueriesWindow(Model model)

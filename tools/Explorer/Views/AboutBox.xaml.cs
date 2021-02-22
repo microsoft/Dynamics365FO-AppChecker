@@ -21,42 +21,24 @@ namespace XppReasoningWpf.Views
     /// </summary>
     public partial class AboutBox : Window
     {
-        private static Assembly assembly = Assembly.GetEntryAssembly();
+        private readonly static Assembly assembly = Assembly.GetEntryAssembly();
 
-        public string AssemblyVersion
-        {
-            get
-            {
-                return assembly.GetName().Version.ToString();
-            }
-        }
+        public static string AssemblyVersion => assembly.GetName().Version.ToString();
 
-        public string AssemblyName
-        {
-            get
-            {
-                return assembly.GetName().ToString();
-            }
-        }
+        public static string AssemblyName => assembly.GetName().ToString();
 
-       public string FrameworkName 
-        {
-            get
-            {
-                return assembly.GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
-            }
-        }
+        public static string FrameworkName =>assembly.GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
 
-        public string AssemblyTitle => assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-        public string Copyright => assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
-        public string Description => assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-        public string Company => assembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+        public static string AssemblyTitle => assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+
+        public static string Copyright => assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+        public static string Description => assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+        public static string Company => assembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
 
         public AboutBox()
         {
-            InitializeComponent();
             this.DataContext = this;
-
+            InitializeComponent();
         }
 
         public void Navigate(object sender, RequestNavigateEventArgs e)
