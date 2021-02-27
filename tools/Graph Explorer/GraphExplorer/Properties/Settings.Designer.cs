@@ -85,7 +85,7 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Socratex Graph Explorer")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Graph Explorer")]
         public string AppTitle {
             get {
                 return ((string)(this["AppTitle"]));

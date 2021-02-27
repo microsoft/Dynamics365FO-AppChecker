@@ -30,9 +30,9 @@ namespace SocratexGraphExplorer
 
         public MainWindow(string[] args)
         {
-            SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
-            splash.Show(false);
-            Thread.Sleep(2000);
+            //SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
+            //splash.Show(false);
+            //Thread.Sleep(2000);
 
             InitializeComponent();
             InitializeAsync();
@@ -65,7 +65,7 @@ namespace SocratexGraphExplorer
 
             this.DataContext = this.ViewModel;
 
-            splash.Close(TimeSpan.FromSeconds(0));
+            // splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
             // if (!model.IsDebugMode)

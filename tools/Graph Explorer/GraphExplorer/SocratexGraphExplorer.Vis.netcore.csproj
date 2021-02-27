@@ -10,13 +10,16 @@
     <AssemblyName>SocratexGraphExplorer</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU;x64</Platforms>
-    <ApplicationIcon>Fat Graph White Background.ico</ApplicationIcon>
+    <ApplicationIcon>Simple Graph.ico</ApplicationIcon>
     <Authors>Peter Villadsen</Authors>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</PackageProjectUrl>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Fat Graph White Background.ico" />
+    <None Remove="Images\Euler BW.png" />
+    <None Remove="Images\euler.png" />
+    <None Remove="Images\Splash Stark BW.png" />
     <None Remove="Resources\Cypher-mode.xshd" />
     <None Remove="Resources\DarkStyle.js" />
     <None Remove="Resources\GenericStyleDocument.js" />
@@ -195,15 +198,14 @@
         <Resource Include="Images\CloudRun_16x.png" />
         <Resource Include="Images\Colorful spinning wheel.gif" />
         <Resource Include="Images\ConnectToDatabase_16x.png" />
+        <Resource Include="Images\Euler BW.png" />
+        <Resource Include="Images\euler.png" />
         <Resource Include="Images\NewQuery_16x.png" />
         <Resource Include="Images\OpenFile_16x.png" />
         <Resource Include="Images\OpenFolder_16x.png" />
-        <Resource Include="Images\SplashScreen No Logo.png" />
-        <Resource Include="Images\SplashScreen with socrates.png" />
-        <Resource Include="Fat Graph White Background.ico" />
         <Resource Include="Images\Fat Graph White Background.png" />
         <Resource Include="Images\Simple Graph.png" />
-        <Resource Include="Images\High Contrast Socrates.png" />
+        <SplashScreen Include="Images\Splash Stark BW.png" />
         <EmbeddedResource Include="Resources\DarkStyle.js" />
         <EmbeddedResource Include="Resources\GenericStyleDocument.js" />
         <EmbeddedResource Include="Resources\Cypher-mode.xshd" />
