@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="Images\Euler BW.png" />
     <None Remove="Images\euler.png" />
+    <None Remove="Images\Splash Artsy.png" />
     <None Remove="Images\Splash Stark BW.png" />
     <None Remove="Resources\Cypher-mode.xshd" />
     <None Remove="Resources\DarkStyle.js" />
@@ -196,7 +197,6 @@
     </ItemGroup>
     <ItemGroup>
         <Resource Include="Images\CloudRun_16x.png" />
-        <Resource Include="Images\Colorful spinning wheel.gif" />
         <Resource Include="Images\ConnectToDatabase_16x.png" />
         <Resource Include="Images\Euler BW.png" />
         <Resource Include="Images\euler.png" />
@@ -205,7 +205,8 @@
         <Resource Include="Images\OpenFolder_16x.png" />
         <Resource Include="Images\Fat Graph White Background.png" />
         <Resource Include="Images\Simple Graph.png" />
-        <SplashScreen Include="Images\Splash Stark BW.png" />
+        <SplashScreen Include="Images\Splash Artsy.png" />
+        <Resource Include="Images\Splash Stark BW.png" />
         <EmbeddedResource Include="Resources\DarkStyle.js" />
         <EmbeddedResource Include="Resources\GenericStyleDocument.js" />
         <EmbeddedResource Include="Resources\Cypher-mode.xshd" />
