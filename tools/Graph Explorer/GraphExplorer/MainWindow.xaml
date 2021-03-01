@@ -21,8 +21,53 @@ Licensed under the MIT license.
         mc:Ignorable="d"
         Title="{Binding Title}" Height="700" Width="1200">
 
-    <Window.Resources>
+    <!--Add the WindowChrome object to allow customizing the title bar -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="32" />
+    </WindowChrome.WindowChrome>
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CaptionButtonStyle" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid x:Name="LayoutRoot" Background="Transparent" Width="44" Height="30">
+                                <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10" 
+                                   Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  TextOptions.TextFormattingMode="Display"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="LayoutRoot" Property="Background" Value="#E5E5E5"/>
+                                    <Setter TargetName="txt" Property="Foreground" Value="#000000"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--Minimize-->
+            <Style x:Key="MinimizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Setter Property="Content" Value="&#xE949;"/>
+            </Style>
+
+            <!--Maximize-->
+            <Style x:Key="MaximizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Setter Property="Content" Value="&#xE739;"/>
+            </Style>
+
+            <!--Restore-->
+            <Style x:Key="RestoreButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Setter Property="Content" Value="&#xE923;"/>
+            </Style>
+
+            <!--Close-->
+            <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+                <Setter Property="Content" Value="&#xE106;"/>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -32,250 +77,302 @@ Licensed under the MIT license.
         <KeyBinding Command="{Binding ExecuteQueryCommand}" Gesture="Ctrl+Enter"/>
     </Window.InputBindings>
 
-    <DockPanel>
-        <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem x:Name="FileMenu" Header="_File" >
-                <MenuItem Header="Open Cypher Query..."  InputGestureText="Ctrl+O" Command="{Binding OpenQueryCommand}">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="OpenInApp"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Save Cypher Query" InputGestureText="Ctrl+S" Command="{Binding SaveQueryCommand}">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ContentSave" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator/>
-                <MenuItem Header="Import Style..." Command="{Binding ImportStyleCommand}" ToolTip="Import a style JSON document defining the graph rendering.">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Shape" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Export Style..." Command="{Binding ExportStyleCommand}" ToolTip="Save a generic style. Import the style when it has been modified.">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ShapeOutline" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Printer"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="_Exit" Command="{Binding ApplicationExitCommand}" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ExitToApp" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Command="Cut" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ContentCut" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="Copy" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ContentCopy" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="Paste">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ContentPaste" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="Delete">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Delete"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="Undo">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Undo"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="Redo" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Redo"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="SelectAll" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="SelectAll"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
+    <!--Title bar button commands-->
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Maximize" />
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
+        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Restore" />
+    </Window.CommandBindings>-->
 
-            <MenuItem Header="Tasks">
-                <MenuItem x:Name="ExecuteQueryMenuItem" Header="Execute Query"  Command="{Binding ExecuteQueryCommand}" InputGestureText="F5" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Play"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Hide Selected"  Command="{Binding HideNodeCommand}" ToolTip="Remove the selected node from the view" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Hide"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Show only Selected"  Command="{Binding ShowOnlyNodeCommand}" ToolTip="Show only the selected node" />
-                <MenuItem Header="Show outgoing edges"  Command="{Binding ShowOutgoingEdges}" ToolTip="Show the outgoing edges from the selected node" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="RayStart"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Show incoming edges"  Command="{Binding ShowIncomingEdges}" ToolTip="Show the incoming edges to the selected node" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="RayEnd"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Show edges"  Command="{Binding ShowEdges}" ToolTip="Show both the incoming and outgoing edges to the selected node" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="RayVertex"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-            <MenuItem Header="Help">
-                <MenuItem Header="About" Command="{Binding AboutCommand}">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Help"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
+    <Border x:Name="MainWindowBorder" BorderThickness="0" >
+        <Grid x:Name="parentContainer" >
 
-        <StatusBar  DockPanel.Dock="Bottom" Height="50" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="140"/>
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-
-            <StatusBarItem Grid.Column="0">
-                <Label Content="{Binding ErrorMessage}" FontFamily="Courier" />
-            </StatusBarItem>
-
-            <StatusBarItem Grid.Column="1">
-                <Label Content="{Binding CaretPositionString}"></Label>
-            </StatusBarItem>
-
-        </StatusBar>
-
-        <Grid>
             <Grid.RowDefinitions>
-                <!-- Graph and information -->
-                <RowDefinition Height="70*"/>
-                <!-- Splitter -->
-                <RowDefinition Height="Auto"/>
-                <!-- Queries -->
-                <RowDefinition Height="200"/>
+                <RowDefinition Height ="Auto"/>
+                <RowDefinition Height ="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <!--Window chrome-->
+            <Grid Grid.Row="0" Height="30" Background="{DynamicResource MaterialDesignPaper}" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="7*"/>
-                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="140"/>
                 </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                    <!--App icon-->
+                    <Image Source="/Images/Euler.png" Width="32" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <TextBlock x:Name="Title" Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
+                </StackPanel>
 
-                <GroupBox Grid.Column="0" Header="Graph" >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="56"/>
-                            <ColumnDefinition x:Name="GraphColumn" Width="*"/>
-                            <ColumnDefinition x:Name="TextColumn" Width="0"/>
-                        </Grid.ColumnDefinitions>
-
-                        <ToolBarTray Orientation="Vertical" Grid.Column="0" Margin="-4,0,0,0">
-                            <ToolBar ToolBarTray.IsLocked="True">
-                                <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding GraphModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
-                                    <materialDesign:PackIcon Kind="Graphql"/>
-                                </RadioButton>
-                                <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding TextModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
-                                    <materialDesign:PackIcon Kind="Text"/>
-                                </RadioButton>
-                                <Separator/>
-                                <Button Command="{Binding ShowDatabaseParametersCommand}" ToolTip="Show database parameters">
-                                    <materialDesign:PackIcon Kind="Database" />
-                                </Button>
-                                <Button Command="{Binding ShowSettingsCommand}" ToolTip="Show Settings">
-                                    <materialDesign:PackIcon Kind="CogOutline"/>
-                                </Button>
-                            </ToolBar>
-                        </ToolBarTray>
-                        <wv2:WebView2 Grid.Column="1" x:Name="Browser" />
-                        <wv2:WebView2 Grid.Column="2" x:Name="TextBrowser" />
-                    </Grid>
-                </GroupBox>
-
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
-
-                <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
-                </GroupBox>
+                <!--Caption buttons-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2"  >
+                    <Button Style="{StaticResource MinimizeButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Minimize"
+                            Command="{x:Static SystemCommands.MinimizeWindowCommand}"/>
+                    <Button x:Name="RestoreButton" Visibility="Collapsed" Style="{StaticResource RestoreButtonStyle}" 
+                            Command="{x:Static SystemCommands.RestoreWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Restore"/>
+                    <Button x:Name="MaximizeButton" Visibility="Visible" Style="{StaticResource MaximizeButtonStyle}" 
+                            Command="{x:Static SystemCommands.MaximizeWindowCommand}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Maximize" />
+                    <Button Style="{StaticResource CloseButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Close"
+                            Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                </StackPanel>
             </Grid>
 
-            <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
-
-            <GroupBox Header="Queries"  Grid.Row="2" Margin="1,0,1,0">
-                <DockPanel x:Name="ToolbarAndEditor" Margin="-5">
-                    <ToolBarTray DockPanel.Dock="Top" x:Name="QueryToolbarTray" Orientation="Horizontal"  >
-                        <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ToolBarTray.IsLocked="True">
-                            <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
-                                <materialDesign:PackIcon Kind="OpenInApp"/>
-                            </Button>
-                            <Button Command="{Binding SaveQueryCommand}" ToolTip="Save">
-                                <materialDesign:PackIcon Kind="ContentSave" />
-                            </Button>
-                            <Button x:Name="ExecuteQueryButton"  Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" ToolBar.OverflowMode="Never" >
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Play"/>
-                                </StackPanel>
-                            </Button>
+            <!--App content-->
+            <Grid Grid.Row="1" x:Name="AppArea">
+                <DockPanel>
+                    <Menu IsMainMenu="True" DockPanel.Dock="Top">
+                        <MenuItem x:Name="FileMenu" Header="_File" >
+                            <MenuItem Header="Open Cypher Query..."  InputGestureText="Ctrl+O" Command="{Binding OpenQueryCommand}">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="OpenInApp"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Save Cypher Query" InputGestureText="Ctrl+S" Command="{Binding SaveQueryCommand}">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ContentSave" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                             <Separator/>
-                            <Button Command="Cut" ToolTip="Cut" ToolBar.OverflowMode="Never">
-                                <materialDesign:PackIcon Kind="ContentCut" />
-                            </Button>
-                            <Button Command="Copy" ToolTip="Copy" ToolBar.OverflowMode="Never">
-                                <materialDesign:PackIcon Kind="ContentCopy" />
-                            </Button>
-                            <Button Command="Paste" ToolTip="Paste" ToolBar.OverflowMode="Never">
-                                <materialDesign:PackIcon Kind="ContentPaste" />
-                            </Button>
-                            <Button Command="Delete" ToolTip="Delete" ToolBar.OverflowMode="Never">
-                                <materialDesign:PackIcon Kind="Delete" />
-                            </Button>
-                            <Separator/>
-                            <Button Command="Undo" ToolTip="Undo" >
-                                <materialDesign:PackIcon Kind="Undo" />
-                            </Button>
-                            <Button Command="Redo" ToolTip="Redo" >
-                                <materialDesign:PackIcon Kind="Redo" />
-                            </Button>
+                            <MenuItem Header="Import Style..." Command="{Binding ImportStyleCommand}" ToolTip="Import a style JSON document defining the graph rendering.">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Shape" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Export Style..." Command="{Binding ExportStyleCommand}" ToolTip="Save a generic style. Import the style when it has been modified.">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ShapeOutline" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Printer"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
                             <Separator></Separator>
-                            <Button  x:Name="IncreaseQueryFontSizeButton" Command="{Binding IncreaseQueryFontSize}"  ToolTip="Increase font size" >
-                                <materialDesign:PackIcon Kind="FormatFontSizeIncrease" />
-                            </Button>
-                            <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size" >
-                                <materialDesign:PackIcon Kind="FormatFontSizeDecrease" />
-                            </Button>
-                            <Separator/>
-                            <ListBox>
-                                <ListBoxItem ToolTip="Show line numbers" Selector.IsSelected="{Binding ShowLineNumbers}">
-                                    <materialDesign:PackIcon Kind="FormatListNumbered" />
-                                </ListBoxItem>
-                            </ListBox>
-                        </ToolBar>
-                    </ToolBarTray>
-                    <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,2,0,0"  Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" ShowLineNumbers="{Binding ShowLineNumbers}" FontFamily="Consolas" FontSize="{Binding QueryEditorFontSize}">
-                        match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
-                    </avalonedit:TextEditor>
+                            <MenuItem Header="_Exit" Command="{Binding ApplicationExitCommand}" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ExitToApp" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Edit">
+                            <MenuItem Command="Cut" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ContentCut" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="Copy" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ContentCopy" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="Paste">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ContentPaste" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="Delete">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Delete"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="Undo">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Undo"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="Redo" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Redo"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="SelectAll" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="SelectAll"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
 
+                        <MenuItem Header="Tasks">
+                            <MenuItem x:Name="ExecuteQueryMenuItem" Header="Execute Query"  Command="{Binding ExecuteQueryCommand}" InputGestureText="F5" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Play"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Hide Selected"  Command="{Binding HideNodeCommand}" ToolTip="Remove the selected node from the view" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Hide"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Show only Selected"  Command="{Binding ShowOnlyNodeCommand}" ToolTip="Show only the selected node" />
+                            <MenuItem Header="Show outgoing edges"  Command="{Binding ShowOutgoingEdges}" ToolTip="Show the outgoing edges from the selected node" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="RayStart"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Show incoming edges"  Command="{Binding ShowIncomingEdges}" ToolTip="Show the incoming edges to the selected node" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="RayEnd"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Show edges"  Command="{Binding ShowEdges}" ToolTip="Show both the incoming and outgoing edges to the selected node" >
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="RayVertex"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Help">
+                            <MenuItem Header="About" Command="{Binding AboutCommand}">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Help"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </Menu>
+
+                    <StatusBar  DockPanel.Dock="Bottom" Height="50" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}">
+                        <StatusBar.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="140"/>
+                                    </Grid.ColumnDefinitions>
+                                </Grid>
+                            </ItemsPanelTemplate>
+                        </StatusBar.ItemsPanel>
+
+                        <StatusBarItem Grid.Column="0">
+                            <Label Content="{Binding ErrorMessage}" FontFamily="Courier" />
+                        </StatusBarItem>
+
+                        <StatusBarItem Grid.Column="1">
+                            <Label Content="{Binding CaretPositionString}"></Label>
+                        </StatusBarItem>
+
+                    </StatusBar>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <!-- Graph and information -->
+                            <RowDefinition Height="70*"/>
+                            <!-- Splitter -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Queries -->
+                            <RowDefinition Height="200"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <GroupBox Grid.Column="0" Header="Graph" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="56"/>
+                                        <ColumnDefinition x:Name="GraphColumn" Width="*"/>
+                                        <ColumnDefinition x:Name="TextColumn" Width="0"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ToolBarTray Orientation="Vertical" Grid.Column="0" Margin="-4,0,0,0">
+                                        <ToolBar ToolBarTray.IsLocked="True">
+                                            <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding GraphModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
+                                                <materialDesign:PackIcon Kind="Graphql"/>
+                                            </RadioButton>
+                                            <RadioButton GroupName="RenderingMode" Style="{StaticResource MaterialDesignToolRadioButton}" IsChecked="{Binding TextModeSelected}" Foreground="{DynamicResource MaterialDesignBody}" >
+                                                <materialDesign:PackIcon Kind="Text"/>
+                                            </RadioButton>
+                                            <Separator/>
+                                            <Button Command="{Binding ShowDatabaseParametersCommand}" ToolTip="Show database parameters">
+                                                <materialDesign:PackIcon Kind="Database" />
+                                            </Button>
+                                            <Button Command="{Binding ShowSettingsCommand}" ToolTip="Show Settings">
+                                                <materialDesign:PackIcon Kind="CogOutline"/>
+                                            </Button>
+                                        </ToolBar>
+                                    </ToolBarTray>
+                                    <wv2:WebView2 Grid.Column="1" x:Name="Browser" />
+                                    <wv2:WebView2 Grid.Column="2" x:Name="TextBrowser" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+
+                            <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
+                            </GroupBox>
+                        </Grid>
+
+                        <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
+
+                        <GroupBox Header="Queries"  Grid.Row="2" Margin="1,0,1,0">
+                            <DockPanel x:Name="ToolbarAndEditor" Margin="-5">
+                                <ToolBarTray DockPanel.Dock="Top" x:Name="QueryToolbarTray" Orientation="Horizontal"  >
+                                    <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ToolBarTray.IsLocked="True">
+                                        <Button Command="{Binding OpenQueryCommand}" ToolTip="Open Query">
+                                            <materialDesign:PackIcon Kind="OpenInApp"/>
+                                        </Button>
+                                        <Button Command="{Binding SaveQueryCommand}" ToolTip="Save">
+                                            <materialDesign:PackIcon Kind="ContentSave" />
+                                        </Button>
+                                        <Button x:Name="ExecuteQueryButton"  Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" ToolBar.OverflowMode="Never" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Play"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Separator/>
+                                        <Button Command="Cut" ToolTip="Cut" ToolBar.OverflowMode="Never">
+                                            <materialDesign:PackIcon Kind="ContentCut" />
+                                        </Button>
+                                        <Button Command="Copy" ToolTip="Copy" ToolBar.OverflowMode="Never">
+                                            <materialDesign:PackIcon Kind="ContentCopy" />
+                                        </Button>
+                                        <Button Command="Paste" ToolTip="Paste" ToolBar.OverflowMode="Never">
+                                            <materialDesign:PackIcon Kind="ContentPaste" />
+                                        </Button>
+                                        <Button Command="Delete" ToolTip="Delete" ToolBar.OverflowMode="Never">
+                                            <materialDesign:PackIcon Kind="Delete" />
+                                        </Button>
+                                        <Separator/>
+                                        <Button Command="Undo" ToolTip="Undo" >
+                                            <materialDesign:PackIcon Kind="Undo" />
+                                        </Button>
+                                        <Button Command="Redo" ToolTip="Redo" >
+                                            <materialDesign:PackIcon Kind="Redo" />
+                                        </Button>
+                                        <Separator></Separator>
+                                        <Button  x:Name="IncreaseQueryFontSizeButton" Command="{Binding IncreaseQueryFontSize}"  ToolTip="Increase font size" >
+                                            <materialDesign:PackIcon Kind="FormatFontSizeIncrease" />
+                                        </Button>
+                                        <Button x:Name="DecreaseQueryFontSizeButton" Command="{Binding DecreaseQueryFontSize}" ToolTip="Decrease font size" >
+                                            <materialDesign:PackIcon Kind="FormatFontSizeDecrease" />
+                                        </Button>
+                                        <Separator/>
+                                        <ListBox>
+                                            <ListBoxItem ToolTip="Show line numbers" Selector.IsSelected="{Binding ShowLineNumbers}">
+                                                <materialDesign:PackIcon Kind="FormatListNumbered" />
+                                            </ListBoxItem>
+                                        </ListBox>
+                                    </ToolBar>
+                                </ToolBarTray>
+                                <avalonedit:TextEditor x:Name="CypherEditor" Margin="0,2,0,0"  Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" ShowLineNumbers="{Binding ShowLineNumbers}" FontFamily="Consolas" FontSize="{Binding QueryEditorFontSize}">
+                                    match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 20
+                                </avalonedit:TextEditor>
+
+                            </DockPanel>
+                        </GroupBox>
+                    </Grid>
                 </DockPanel>
-            </GroupBox>
+            </Grid>
+
         </Grid>
-    </DockPanel>
+    </Border>
+
+
+
+
 </Window>
