@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -329,6 +330,19 @@ namespace SocratexGraphExplorer.ViewModels
             );
         }
 
+        public ICommand ShowCypherRefcard
+        {
+            get => new RelayCommand(
+                p =>
+                {
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "https://neo4j.com/docs/cypher-refcard/current/",
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                });
+        }
         public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
