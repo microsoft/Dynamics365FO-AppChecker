@@ -684,7 +684,6 @@ namespace XppReasoningWpf.ViewModels
                 });
 
 
-            ////////////START
             this.IncreaseResultsFontSizeCommand = new RelayCommand(
                 p1 => Properties.Settings.Default.ResultsFontSize += 2,
                 p2 => this.view.ResultsEditor != null && this.view.ResultsEditor.FontSize < 48
@@ -784,7 +783,6 @@ namespace XppReasoningWpf.ViewModels
                 }
             );
 
-            /////////////END
             this.ExecuteQueryCommand = new RelayCommand(
                 async p =>
                 {

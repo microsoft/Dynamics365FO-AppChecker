@@ -119,7 +119,7 @@ namespace BaseXInterface
             if (externalVars != null)
             {
                 string bindingsString = CalculateBindingsString(externalVars);
-                result = await session.SetBindingsAsync(bindingsString);
+                _ = await session.SetBindingsAsync(bindingsString);
 
                 string externalDeclarations = ""; // CalculateExternalDeclarations(externalVars.Select(t => t.Item1).ToArray());
                 result = await session.ExecuteAsync(@"xquery " + externalDeclarations + query);

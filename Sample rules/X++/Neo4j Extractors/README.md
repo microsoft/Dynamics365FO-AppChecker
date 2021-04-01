@@ -2,6 +2,8 @@
 
 This directory contains files that can be used to generate files that can be quickly imported into the neo4j database. These files are comma separated files, that conceptually can be used for other purposes as well.
 
+The queries in the .xq files are evaluated in a BaseX instance. You may use the BulkQuery tool that is part of this github repo to do this work. It accepts the specification of a directory containing *.xq files and the name of a directory that will contain the .csv files.
+
 ## Naming ##
 The import format of Neo4j requires that the input files are split into data files (that contain the nodes) and relationship files (that contain the edges between the nodes). To make it clear which is which, a naming convention is used:
 

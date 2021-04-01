@@ -8,6 +8,7 @@
     --nodes=..\import\FormsMethodNodes.csv ^
     --nodes=..\import\InterfaceMethodNodes.csv ^
     --nodes=..\import\InterfaceNodes.csv ^
+    --nodes=..\import\TableFieldNodes.csv ^
     --nodes=..\import\TableMethodNodes.csv ^
     --nodes=..\import\TableNodes.csv ^
     --nodes=..\import\ViewFieldNodes.csv ^
@@ -35,6 +36,7 @@
     --relationships=..\import\Interface_DECLARES_Method.csv ^
     --relationships=..\import\Interface_INHERITS_Interface.csv ^
     --relationships=..\import\Table_DECLARES_Method.csv ^
+    --relationships=..\import\Table_FIELD_TableField.csv ^
     --relationships=..\import\Query_DECLARES_Method.csv ^
     --relationships=..\import\Query_REFERENCES_Table.csv ^
     --relationships=..\import\Map_DECLARES_Method.csv ^
