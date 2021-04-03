@@ -1,3 +1,15 @@
+(: Copyright (c) Microsoft Corporation.
+   Licensed under the MIT license. :)
+
+(: Find switch statements with case entries that declare items that 
+are reused in other cases. This is dangerous since there is a risk
+that the item is not declared, depending on the switch value.
+This is semantically correct in X++ but makes maintenance much more difficult :)
+
+(: Note: This does not find references updated with byref parameters :)
+(: @Language Xpp :)
+(: @Category Informational :)
+
 <CaseProblems>
 {
     for $a in /Class[@Package='ApplicationSuite']
