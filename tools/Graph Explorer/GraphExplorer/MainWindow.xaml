@@ -103,7 +103,7 @@ Licensed under the MIT license.
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" >
                     <!--App icon-->
                     <Image Source="/Images/Euler.png" Width="32" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                    <TextBlock x:Name="Title" Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
+                    <TextBlock Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
                 </StackPanel>
 
                 <!--Caption buttons-->
