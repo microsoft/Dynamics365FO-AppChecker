@@ -5,7 +5,6 @@
 Having more than one default part is semantically correct in X++
 but makes maintenance much more difficult :)
 
-(: Note: This does not find references updated with byref parameters :)
 (: @Language Xpp :)
 (: @Category Informational :)
 
