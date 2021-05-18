@@ -190,16 +190,7 @@ namespace BaseXInterface
 
         private async Task SendAsync(Stream s)
         {
-            while (true)
-            {
-                int t = s.ReadByte();
-                if (t == -1) break;
-                if (t == 0x00 || t == 0xFF)
-                    stream.WriteByte(Convert.ToByte(0xFF));
-
-                stream.WriteByte(Convert.ToByte(t));
-            }
-            stream.WriteByte(0);
+            this.SendStream(s);
             info = await ReceiveAsync();
             if (!(await this.OkAsync()))
             {
@@ -209,6 +200,20 @@ namespace BaseXInterface
 
         private void Send(Stream s)
         {
+            SendStream(s);
+            info = Receive();
+            if (!Ok())
+            {
+                throw new IOException(info);
+            }
+        }
+
+        /// <summary>
+        /// Send the content of the given stream, ending with a 0 byte.
+        /// </summary>
+        /// <param name="s">The stream to send.</param>
+        private void SendStream(Stream s)
+        {
             while (true)
             {
                 int t = s.ReadByte();
@@ -217,11 +222,6 @@ namespace BaseXInterface
                 stream.WriteByte(Convert.ToByte(t));
             }
             stream.WriteByte(0);
-            info = Receive();
-            if (!Ok())
-            {
-                throw new IOException(info);
-            }
         }
 
         private async Task<bool> OkAsync()
