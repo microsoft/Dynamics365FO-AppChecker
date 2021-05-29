@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SocratexGraphExplorer.Views
 {
-    internal class BraceFoldingStrategy
+    class JavaScriptBraceFoldingStrategy
     {
         /// <summary>
         /// Gets/Sets the opening brace. The default value is '{'.
@@ -23,7 +23,7 @@ namespace SocratexGraphExplorer.Views
         /// <summary>
         /// Creates a new BraceFoldingStrategy.
         /// </summary>
-        public BraceFoldingStrategy()
+        public JavaScriptBraceFoldingStrategy()
         {
             this.OpeningBrace = '{';
             this.ClosingBrace = '}';
@@ -31,8 +31,7 @@ namespace SocratexGraphExplorer.Views
 
         public void UpdateFoldings(FoldingManager manager, TextDocument document)
         {
-            int firstErrorOffset;
-            IEnumerable<NewFolding> foldings = CreateNewFoldings(document, out firstErrorOffset);
+            IEnumerable<NewFolding> foldings = CreateNewFoldings(document, out int firstErrorOffset);
             manager.UpdateFoldings(foldings, firstErrorOffset);
         }
 
@@ -82,3 +81,4 @@ namespace SocratexGraphExplorer.Views
         }
     }
 }
+

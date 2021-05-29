@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocratexGraphExplorer.SourceEditor.netcore", "SocratexGraphExplorer.SourceEditor.netcore\SocratexGraphExplorer.SourceEditor.netcore.csproj", "{C7D26A75-C28D-4ECD-A175-8F64E15008AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,14 @@ Global
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Release|x64.ActiveCfg = Release|Any CPU
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Release|x64.Build.0 = Release|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{C7D26A75-C28D-4ECD-A175-8F64E15008AF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

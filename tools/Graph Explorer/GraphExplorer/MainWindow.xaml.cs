@@ -18,6 +18,7 @@ using System.Linq;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Web.WebView2.Wpf;
 using System.Threading.Tasks;
+using SocratexGraphExplorer.SourceEditor;
 
 namespace SocratexGraphExplorer
 {
@@ -103,7 +104,7 @@ namespace SocratexGraphExplorer
             await this.Browser.EnsureCoreWebView2Async(null);
             await this.TextBrowser.EnsureCoreWebView2Async(null);
 
-            this.CypherEditor.SyntaxHighlighting = SourceEditor.LoadHighlightDefinition("SocratexGraphExplorer.Resources.Cypher-mode.xshd");
+            this.CypherEditor.SyntaxHighlighting = AvalonSourceEditor.LoadHighlightDefinition("SocratexGraphExplorer.Resources.Cypher-mode.xshd", typeof(MainWindow).Assembly);
 
             // Set up a function to call when the user clicks on something in the graph browser.
             Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>

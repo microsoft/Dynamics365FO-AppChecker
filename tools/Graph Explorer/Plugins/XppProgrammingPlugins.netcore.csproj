@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj" />
+    <ProjectReference Include="..\SocratexGraphExplorer.SourceEditor.netcore\SocratexGraphExplorer.SourceEditor.netcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
