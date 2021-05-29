@@ -181,6 +181,7 @@
     <None Remove="Resources\SourcecodeSymbols\ValueType_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\View_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\XMLFile_16x.svg" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

@@ -65,20 +65,20 @@ namespace SocratexGraphExplorer.XppPlugin
 
                 // TODO: Put this in when the postion is captured.
 
-                //var startLine = (long)node.Properties["StartLine"];
-                //var endLine = (long)node.Properties["EndLine"];
-                //var startCol = (long)node.Properties["StartCol"];
-                //var endCol = (long)node.Properties["EndCol"];
+                var startLine = (long)node.Properties["StartLine"];
+                var endLine = (long)node.Properties["EndLine"];
+                var startCol = (long)node.Properties["StartCol"];
+                var endCol = (long)node.Properties["EndCol"];
 
-                //var startOffset = this.MethodEditor.Document.GetOffset((int)startLine, (int)startCol);
-                //var endOffset = this.MethodEditor.Document.GetOffset((int)endLine, (int)endCol);
+                var startOffset = this.SourceEditor.Document.GetOffset((int)startLine, (int)startCol);
+                var endOffset = this.SourceEditor.Document.GetOffset((int)endLine, (int)endCol);
 
-                //this.MethodEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
+                this.SourceEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
 
-                //var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.MethodEditor.TextArea, startOffset, endOffset);
-                //this.MethodEditor.TextArea.Selection = selection;
+                var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.SourceEditor.TextArea, startOffset, endOffset);
+                this.SourceEditor.TextArea.Selection = selection;
 
-                //this.MethodEditor.TextArea.Caret.BringCaretToView();
+                this.SourceEditor.TextArea.Caret.BringCaretToView();
             }
         }
 
