@@ -53,13 +53,13 @@ namespace SocratexGraphExplorer.XppPlugin
         {
             this.node = node;
 
-            var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q";
+            var extendsQuery = "match (c:Class) -[:EXTENDS]-> (q) where id(c) = $nodeId return q";
             var extendsQueryPromise = model.ExecuteCypherAsync(extendsQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            var extendedByQuery = "match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return count(q) as cnt";
+            var extendedByQuery = "match (c:Class) <-[:EXTENDS]- (q) where id(c) = $nodeId return count(q) as cnt";
             var extendedByQueryPromise = model.ExecuteCypherAsync(extendedByQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            var implementsCountQuery = "match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return count(i) as cnt";
+            var implementsCountQuery = "match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)=$nodeId return count(i) as cnt";
             var implementsCountQueryPromise = model.ExecuteCypherAsync(implementsCountQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
@@ -105,32 +105,32 @@ namespace SocratexGraphExplorer.XppPlugin
 
         private async void ShowBaseClass(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS]-> (q) where id(c) = {nodeId} return q limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS]-> (q) where id(c) = $nodeId return q limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowBaseClasses(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS*]-> (q) where id(c) = {nodeId} return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:EXTENDS*]-> (q) where id(c) = $nodeId return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowDerivedClasses(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) <-[:EXTENDS]- (q) where id(c) = {nodeId} return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) <-[:EXTENDS]- (q) where id(c) = $nodeId return q", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowImplementedInterfaces(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)={nodeId} return i", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:IMPLEMENTS]-> (i) where id(c)=$nodeId return i", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:Method) where id(c) = $nodeId return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = $nodeId return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }

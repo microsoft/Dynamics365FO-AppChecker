@@ -1,5 +1,5 @@
 <Query Kind="Program">
-  <Reference Relative="..\..\BaseXInterface\bin\Debug\BaseXInterface.dll">C:\Users\pvillads\source\repos\SocrateX\Explorer\BaseXInterface\bin\Debug\BaseXInterface.dll</Reference>
+  <Reference Relative="..\..\BaseXInterface\bin\Debug\BaseXInterface.dll">C:\Users\pvillads\Desktop\Dynamics365FO-AppChecker\tools\BaseXInterface\bin\Debug\BaseXInterface.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationCore.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\WPF\PresentationFramework.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Xaml.dll</Reference>
@@ -8,10 +8,10 @@
   <Namespace>OxyPlot</Namespace>
   <Namespace>OxyPlot.Axes</Namespace>
   <Namespace>OxyPlot.Series</Namespace>
-  <Namespace>System.Xml.Linq</Namespace>
 </Query>
 
-void Main()
+[STAThread]
+async void Main()
 {
     var query = @"(: Calculates the visibility of all methods on classes and tables. :)
 let $results :=
@@ -20,11 +20,11 @@ let $results :=
   for $c in /Class | /Table
 
     let $allMethods := count($c/Method)
-    let $privateMethods := count($c/Method[@IsPrivate = 'True'])
-    let $protectedMethods := count($c/Method[@IsProtected = 'True'])
-    let $publicMethods := count($c/Method[@IsPublic = 'True'])
-    let $internalMethods := count($c/Method[@IsInternal = 'True'])
-    let $undecoratedMethods := count($c/Method[@IsInternal='False' and @IsPrivate='False' and @IsProtected='False' and @IsPublic='False'])
+    let $privateMethods := count($c/Method[@IsPrivate = 'true'])
+    let $protectedMethods := count($c/Method[@IsProtected = 'true'])
+    let $publicMethods := count($c/Method[@IsPublic = 'true'])
+    let $internalMethods := count($c/Method[@IsInternal = 'true'])
+    let $undecoratedMethods := count($c/Method[@IsInternal='false' and @IsPrivate='false' and @IsProtected='false' and @IsPublic='false'])
 
     return <Result Artifact='{$c/@Artifact}'
         PrivateMethodCount='{$privateMethods}'
@@ -43,13 +43,13 @@ return <Totals
   InternalMethodCount='{sum($results/Result/@InternalMethodCount)}' />";
 
     XDocument sv;
-    using (var session = s.GetSession("ApplicationFoundation"))
+    using (var session = await s.GetSessionAsync ("ApplicationFoundation"))
     {
         var queryResult = session.Execute("xquery " + query);
         sv = XDocument.Parse(queryResult, LoadOptions.SetLineInfo);
     }
 
-    // sv.Dump();
+    sv.Dump();
 
 	var model = new PlotModel();
 	model.Title = "Method Visibility over all classes and tables.";
@@ -73,14 +73,28 @@ return <Totals
 	series.Slices.Add(publicSlice);
 	series.Slices.Add(undecoratedSlice);
 	series.Slices.Add(internalSlice);
-	
-	var view = new OxyPlot.Wpf.PlotView() { Model = model };
 
-	var pngExporter = new OxyPlot.Wpf.PngExporter { Width = 600, Height = 400, Background = OxyColors.White };
-	var bitmap = pngExporter.ExportToBitmap(model);
-	System.Windows.Clipboard.SetImage(bitmap);
+	Thread newWindowThread = new Thread(new ThreadStart(() =>
+	{
+		// create and show the window
+		var view = new OxyPlot.Wpf.PlotView() { Model = model };
 
-	PanelManager.DisplayWpfElement(view, "Method Visibility");
+		var pngExporter = new OxyPlot.Wpf.PngExporter { Width = 600, Height = 400, Background = OxyColors.White };
+		var bitmap = pngExporter.ExportToBitmap(model);
+		System.Windows.Clipboard.SetImage(bitmap);
+
+		// start the Dispatcher processing  
+		System.Windows.Threading.Dispatcher.Run();
+		PanelManager.DisplayWpfElement(view, "Method Visibility");
+	}));
+	newWindowThread.SetApartmentState(ApartmentState.STA);
+
+	// make the thread a background thread  
+	newWindowThread.IsBackground = true;
+
+	// start the thread  
+	newWindowThread.Start();
+	Console.ReadLine();
 }
 
 static BaseXInterface.BaseXServer s = new BaseXInterface.BaseXServer

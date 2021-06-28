@@ -43,11 +43,11 @@ namespace SocratexGraphExplorer.XppPlugin
             this.node = node;
 
             var incomingCallsQuery = model.ExecuteCypherAsync(
-                 "match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = {nodeId} return count(r) as methods, sum(r.Count) as count",
+                 "match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
                  new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             var outGoingCallsQuery = model.ExecuteCypherAsync(
-                "match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = {nodeId} return count(r) as methods, sum(r.Count) as count",
+                "match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
                 new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
@@ -66,7 +66,7 @@ namespace SocratexGraphExplorer.XppPlugin
             var parts = artifact.Split('/');
             var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
-            var query = "match (p) where p.Artifact={artifact} return p limit 1";
+            var query = "match (p) where p.Artifact=$artifact return p limit 1";
             var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
 
             if (c != null)
@@ -122,17 +122,17 @@ namespace SocratexGraphExplorer.XppPlugin
 
         private async void ShowDeclaringEntityClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match p=(c) -[*]-> (n:Method) where id(n) = {nodeId} return p order by length(p) desc limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match p=(c) -[*]-> (n:Method) where id(n) = $nodeId return p order by length(p) desc limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowCallersButtonClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c) -[:CALLS]-> (n) where id(n) = {nodeId} return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c) -[:CALLS]-> (n) where id(n) = $nodeId return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowCalleesButtonClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c) <-[:CALLS]- (n) where id(n) = {nodeId} return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c) <-[:CALLS]- (n) where id(n) = $nodeId return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }
