@@ -77,14 +77,6 @@ Licensed under the MIT license.
         <KeyBinding Command="{Binding ExecuteQueryCommand}" Gesture="Ctrl+Enter"/>
     </Window.InputBindings>
 
-    <!--Title bar button commands-->
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Close" />
-        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Maximize" />
-        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
-        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Restore" />
-    </Window.CommandBindings>-->
-
     <Border x:Name="MainWindowBorder" BorderThickness="0" >
         <Grid x:Name="parentContainer" >
 
@@ -101,12 +93,12 @@ Licensed under the MIT license.
                     <ColumnDefinition Width="140"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" >
-                    <!--App icon-->
+                    <!-- App icon -->
                     <Image Source="/Images/Euler.png" Width="32" Margin="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignBody}"/>
                 </StackPanel>
 
-                <!--Caption buttons-->
+                <!--Caption buttons on the right -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="2"  >
 
                     <Button x:Name="MinimizeButton"  Style="{StaticResource MinimizeButtonStyle}" Visibility="Visible" ToolTip="Minimize" 
