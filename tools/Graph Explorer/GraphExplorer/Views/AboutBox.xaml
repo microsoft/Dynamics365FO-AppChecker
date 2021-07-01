@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Width="141" Height="155" Source="../Images/High contrast Socrates.png" HorizontalAlignment="Center" />
+            <Image Grid.Column="0" Width="141" Height="155" Source="../Images/Euler BW.png" HorizontalAlignment="Center" />
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -82,8 +82,7 @@
             The graph is rendered with <Hyperlink RequestNavigate="Navigate" NavigateUri="https://visjs.org">vis.js</Hyperlink>
             under the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://opensource.org/licenses/MIT">MIT license</Hyperlink>.
                 
-            The splash screen artwork was created from a picture by Derek Key on <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.flickr.com/photos/derekskey/9135166134">flickr</Hyperlink> 
-            and used under the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://creativecommons.org/licenses/by/2.0">Creative Commons 2.0 license</Hyperlink>.
+            The about box artwork was created from the painting of Leonhard Euler by Jakob Emanuel Handmann (1753) in the public domain.
             The graph rendering optionally uses icons provided in the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.microsoft.com/en-us/download/details.aspx?id=35825">Visual Studio image library</Hyperlink> 
             in accordance with the requirements in the EULA.
                 

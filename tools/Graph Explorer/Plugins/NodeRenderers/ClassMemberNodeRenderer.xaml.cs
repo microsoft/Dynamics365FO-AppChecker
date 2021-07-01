@@ -52,7 +52,7 @@ namespace SocratexGraphExplorer.XppPlugin
             var parts = artifact.Split('/');
             var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
-            var query = "match (p) where p.Artifact={artifact} return p limit 1";
+            var query = "match (p) where p.Artifact=$artifact return p limit 1";
             var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
 
             if (c != null)
@@ -65,20 +65,20 @@ namespace SocratexGraphExplorer.XppPlugin
 
                 // TODO: Put this in when the postion is captured.
 
-                //var startLine = (long)node.Properties["StartLine"];
-                //var endLine = (long)node.Properties["EndLine"];
-                //var startCol = (long)node.Properties["StartCol"];
-                //var endCol = (long)node.Properties["EndCol"];
+                var startLine = (long)node.Properties["StartLine"];
+                var endLine = (long)node.Properties["EndLine"];
+                var startCol = (long)node.Properties["StartCol"];
+                var endCol = (long)node.Properties["EndCol"];
 
-                //var startOffset = this.MethodEditor.Document.GetOffset((int)startLine, (int)startCol);
-                //var endOffset = this.MethodEditor.Document.GetOffset((int)endLine, (int)endCol);
+                var startOffset = this.SourceEditor.Document.GetOffset((int)startLine, (int)startCol);
+                var endOffset = this.SourceEditor.Document.GetOffset((int)endLine, (int)endCol);
 
-                //this.MethodEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
+                this.SourceEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
 
-                //var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.MethodEditor.TextArea, startOffset, endOffset);
-                //this.MethodEditor.TextArea.Selection = selection;
+                var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.SourceEditor.TextArea, startOffset, endOffset);
+                this.SourceEditor.TextArea.Selection = selection;
 
-                //this.MethodEditor.TextArea.Caret.BringCaretToView();
+                this.SourceEditor.TextArea.Caret.BringCaretToView();
             }
         }
 
@@ -95,17 +95,17 @@ namespace SocratexGraphExplorer.XppPlugin
 
         private async void ShowDeclaringEntityClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match p=(c) -[*]-> (n:Method) where id(n) = {nodeId} return p order by length(p) desc limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match p=(c) -[*]-> (n:Method) where id(n) = $nodeId return p order by length(p) desc limit 1", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowCallersButtonClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c) -[:CALLS]-> (n) where id(n) = {nodeId} return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c) -[:CALLS]-> (n) where id(n) = $nodeId return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowCalleesButtonClicked(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c) <-[:CALLS]- (n) where id(n) = {nodeId} return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c) <-[:CALLS]- (n) where id(n) = $nodeId return c", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }

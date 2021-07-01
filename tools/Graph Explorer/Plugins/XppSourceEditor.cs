@@ -9,6 +9,10 @@ using System.Windows.Data;
 
 namespace SocratexGraphExplorer.XppPlugin
 {
+    /// <summary>
+    /// Custom editor for editing X++ source text. It is based on the Avaloneditor, but has the 
+    /// X++ colorization rules and brace matching.
+    /// </summary>
     class XppSourceEditor : SourceEditor
     {
         public XppSourceEditor(): base()
@@ -23,13 +27,13 @@ namespace SocratexGraphExplorer.XppPlugin
             // Configure the X++ folding manager. 
             // The indentation strategy is probably not needed since the view is readonly...
             this.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.CSharp.CSharpIndentationStrategy(this.Options);
-            var xppFoldingStrategy = new BraceFoldingStrategy();
+            var xppFoldingStrategy = new XppBraceFoldingStrategy();
             var xppFoldingManager = FoldingManager.Install(this.TextArea);
             xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
 
             this.IsReadOnly = true;
 
-            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.XppPlugin.Resources.Xpp-Mode.xshd");
+            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.XppPlugin.Resources.Xpp-Mode.xshd", typeof(XppSourceEditor).Assembly);
         }
     }
 }

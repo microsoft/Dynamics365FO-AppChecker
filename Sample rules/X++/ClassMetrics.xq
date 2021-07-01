@@ -2,7 +2,21 @@
    Licensed under the MIT license. :)
 
 (: Provide interesting metrics for classes. The metrics provided
-follow the naming conventions used in the literature. :)
+follow the naming conventions used in the literature: 
+
+IsAbstract: Whether or not the class is abstract.
+IsInterface: Whether or not the name is an interface (i.e. not a class).
+Extends: The parent class of this class, if any.
+NOAM: The number of abstract methods.
+LOC: Lines of Code.
+NOS: Number of statements.
+NOM: Number of methods.
+NOPM: The number of private methods.
+NOA (Number of Attributes): The number of fields.
+NOPA: Number of public fields.
+WMC: Weighted Method Complexity, the sum of the method complexities across all methods.
+:)
+
 (: @Category Informational :)
 (: @Language Xpp :)
 

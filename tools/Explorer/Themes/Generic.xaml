@@ -294,7 +294,7 @@
 										VerticalAlignment="Center"
 									    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
 									    Margin="{TemplateBinding Padding}"
-									    RecognizesAccessKey="True"/>
+									    RecognizesAccessKey="False"/>
 							</Border>
 
 							<Button x:Name="PART_CloseButton" 

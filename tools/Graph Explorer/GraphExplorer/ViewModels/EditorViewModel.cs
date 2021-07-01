@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -223,7 +224,7 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
-                var query = "match (n) -[]-> (q) where id(n) = {nodeId} return q";
+                var query = "match (n) -[]-> (q) where id(n) = $nodeId return q";
                 var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var outgoing = Model.HarvestNodeIdsFromGraph(result);
@@ -247,7 +248,7 @@ namespace SocratexGraphExplorer.ViewModels
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
 
-                var query = "match (n) <-[]- (q) where id(n) = {nodeId} return q";
+                var query = "match (n) <-[]- (q) where id(n) = $nodeId return q";
                 var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var incoming = Model.HarvestNodeIdsFromGraph(result);
@@ -270,7 +271,7 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 // This is additive to the existing graph
                 // Find all the edges (both incoming and outgoing) from the current node:
-                var q = "match (f) -[]- (n) where id(n) = {nodeId} return f";
+                var q = "match (f) -[]- (n) where id(n) = $nodeId return f";
                 var result = await this.model.ExecuteCypherAsync(q, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
                 var outgoing = Model.HarvestNodeIdsFromGraph(result);
@@ -329,6 +330,19 @@ namespace SocratexGraphExplorer.ViewModels
             );
         }
 
+        public ICommand ShowCypherRefcard
+        {
+            get => new RelayCommand(
+                p =>
+                {
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "https://neo4j.com/docs/cypher-refcard/current/",
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                });
+        }
         public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
@@ -720,10 +734,10 @@ namespace SocratexGraphExplorer.ViewModels
         {
             if (nodes != null)
             {
-                var query = "match (n) where id(n) in {nodeIds} "
+                var query = "match (n) where id(n) in $nodeIds "
                       + "optional match (n) -[r]- (m) "
-                      + "where id(n) in {nodeIds} " +
-                        "  and id(m) in {nodeIds} " +
+                      + "where id(n) in $nodeIds " +
+                        "  and id(m) in $nodeIds " +
                         "return n,m,r";
 
                 var results = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });

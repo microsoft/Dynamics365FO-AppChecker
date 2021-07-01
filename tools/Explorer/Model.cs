@@ -21,17 +21,23 @@ namespace XppReasoningWpf
     /// </summary>
     public class Model : INotifyPropertyChanged
     {
+        public delegate void DatabaseChangingDelegate(string databaseName);
+        public delegate void DatabaseChangedDelegate(string databaseName);
+
         private readonly IDictionary<string, string> jobIdToQuery = new Dictionary<string, string>();
 
         /// <summary>
         /// This event is triggered when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+        public event DatabaseChangingDelegate DatabaseChanging;
+        public event DatabaseChangedDelegate DatabaseChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
 
         public string Username
         {
@@ -190,8 +196,8 @@ namespace XppReasoningWpf
         public void CreateServer(string server, int port, string username, string password)
         {
             this.Server = new BaseXServer(server, port, username, password);
-            this.Server.DatabaseOpening += (databaseName) => { this.OnPropertyChanged("DatabaseOpening"); };
-            this.Server.DatabaseOpened += (databaseName) => { this.OnPropertyChanged("DatabaseOpened"); };
+            this.Server.DatabaseOpening += (databaseName) => { this.DatabaseChanging?.Invoke(databaseName); };
+            this.Server.DatabaseOpened += (databaseName) => { this.DatabaseChanged?.Invoke(databaseName); };
         }
 
         public async Task CloseConnectionToServerAsync()

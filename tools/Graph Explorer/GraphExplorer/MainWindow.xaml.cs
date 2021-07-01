@@ -17,6 +17,8 @@ using MaterialDesignColors;
 using System.Linq;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Web.WebView2.Wpf;
+using System.Threading.Tasks;
+using SocratexGraphExplorer.SourceEditor;
 
 namespace SocratexGraphExplorer
 {
@@ -30,12 +32,15 @@ namespace SocratexGraphExplorer
 
         public MainWindow(string[] args)
         {
-            SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
-            splash.Show(false);
-            Thread.Sleep(2000);
+            //SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
+            //splash.Show(false);
+            //Thread.Sleep(2000);
 
             InitializeComponent();
-            InitializeAsync();
+            StateChanged += MainWindowStateChangeRaised;
+
+            InitializeAsync().ContinueWith((f) => {
+            });
 
             this.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
             {
@@ -65,7 +70,7 @@ namespace SocratexGraphExplorer
 
             this.DataContext = this.ViewModel;
 
-            splash.Close(TimeSpan.FromSeconds(0));
+            // splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
             // if (!model.IsDebugMode)
@@ -93,13 +98,13 @@ namespace SocratexGraphExplorer
             this.model.CreateNeo4jDriver(password);
         }
 
-        private async void InitializeAsync()
+        private async Task InitializeAsync()
         {
             // Make sure everything is set up before doing anything with the browser
             await this.Browser.EnsureCoreWebView2Async(null);
             await this.TextBrowser.EnsureCoreWebView2Async(null);
 
-            this.CypherEditor.SyntaxHighlighting = SourceEditor.LoadHighlightDefinition("SocratexGraphExplorer.Resources.Cypher-mode.xshd");
+            this.CypherEditor.SyntaxHighlighting = AvalonSourceEditor.LoadHighlightDefinition("SocratexGraphExplorer.Resources.Cypher-mode.xshd", typeof(MainWindow).Assembly);
 
             // Set up a function to call when the user clicks on something in the graph browser.
             Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>
@@ -116,7 +121,7 @@ namespace SocratexGraphExplorer
                 {
                     var id = e["nodeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) where id(c) = {id} return c limit 1";
+                    var cypher = "MATCH (c) where id(c) = $id return c limit 1";
                     this.ViewModel.SelectedNode = id;
                     var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(nodeResult);
@@ -126,7 +131,7 @@ namespace SocratexGraphExplorer
                 {
                     var id = e["edgeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) -[r]- (d) where id(r) = {id} return r limit 1";
+                    var cypher = "MATCH (c) -[r]- (d) where id(r) = $id return r limit 1";
                     this.ViewModel.SelectedEdge = id;
                     var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(edgeResult);
@@ -170,7 +175,6 @@ namespace SocratexGraphExplorer
     </body>
 </html>");
             this.ViewModel.GraphModeSelected = true;
-
         }
 
         protected override void OnClosed(EventArgs e)
@@ -194,6 +198,53 @@ namespace SocratexGraphExplorer
 
             browser.NavigationCompleted -= Browser_NavigationCompleted;
         }
-        
+
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        // Minimize
+        private void CommandBinding_Executed_Minimize(object sender, ExecutedRoutedEventArgs e)
+        {
+            // SystemCommands.MinimizeWindow(this);
+        }
+
+        // Maximize
+        private void CommandBinding_Executed_Maximize(object sender, ExecutedRoutedEventArgs e)
+        {
+            // SystemCommands.MaximizeWindow(this);
+        }
+
+        // Restore
+        private void CommandBinding_Executed_Restore(object sender, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.RestoreWindow(this);
+        }
+
+        // Close
+        private void CommandBinding_Executed_Close(object sender, ExecutedRoutedEventArgs e)
+        {
+            // SystemCommands.CloseWindow(this);
+        }
+
+        // State change. This code compensates for the fact that the windows chrome
+        // adds a phantom border of 8 pixels around the windows frame.
+        private void MainWindowStateChangeRaised(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                MainWindowBorder.BorderThickness = new Thickness(8);
+                RestoreButton.Visibility = Visibility.Visible;
+                MaximizeButton.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                MainWindowBorder.BorderThickness = new Thickness(0);
+                RestoreButton.Visibility = Visibility.Collapsed;
+                MaximizeButton.Visibility = Visibility.Visible;
+            }
+        }
+
     }
 }

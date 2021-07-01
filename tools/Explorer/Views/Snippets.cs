@@ -80,6 +80,7 @@ namespace XppReasoningWpf
                     new SnippetTextElement { Text = "(: Show the statistics of the database given its name  :)\n" },
                     new SnippetTextElement { Text = "(: Note: This will consume resources for big databases :)\n" },
                     new SnippetTextElement { Text = "(: if the database is not already open.                :)\n" },
+                    new SnippetTextElement { Text = "declare variable $database external;\n" },
                     new SnippetTextElement { Text = "db:info($database)" }
                 }
             };

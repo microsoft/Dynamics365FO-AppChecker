@@ -28,9 +28,9 @@ namespace SocratexGraphExplorer.Views
             // Configure the X++ folding manager. 
             // The indentation strategy is probably not needed since the view is readonly...
             this.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.CSharp.CSharpIndentationStrategy(this.Options);
-            var xppFoldingStrategy = new BraceFoldingStrategy();
-            var xppFoldingManager = FoldingManager.Install(this.TextArea);
-            xppFoldingStrategy.UpdateFoldings(xppFoldingManager, this.Document);
+            var foldingStrategy = new JavaScriptBraceFoldingStrategy();
+            var foldingManager = FoldingManager.Install(this.TextArea);
+            foldingStrategy.UpdateFoldings(foldingManager, this.Document);
 
             //using (var stream = Assembly.GetAssembly(typeof(ICSharpCode.AvalonEdit.TextEditor)).GetManifestResourceStream("ICSharpCode.AvalonEdit.Highlighting.Resources.JavaScript-Mode.xshd"))
             //{

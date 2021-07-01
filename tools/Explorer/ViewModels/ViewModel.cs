@@ -454,8 +454,16 @@ namespace XppReasoningWpf.ViewModels
             this.view = view;
             this.model = model;
 
-           // Take care of events bubbling up from the model.
-           model.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
+            model.DatabaseChanging += (databaseName) => {
+                this.Status = $"Opening database {databaseName}...";
+            };
+
+            model.DatabaseChanged += (databaseName) => {
+                this.Status = "";
+            };
+
+            // Take care of events bubbling up from the model.
+            model.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
                 if (e.PropertyName == "CaretPositionString")
                 {
@@ -473,14 +481,6 @@ namespace XppReasoningWpf.ViewModels
                 {
                     this.SelectedDatabase = model.SelectedDatabase;
                     this.UpdateConnectionInfo();
-                }
-                else if (e.PropertyName == "DatabaseOpening")
-                {
-                    this.Status = "Opening database...";
-                }
-                else if (e.PropertyName == "DatabaseOpened")
-                {
-                    this.Status = "";
                 }
                 else if (e.PropertyName == "QueryResult")
                 {
@@ -684,7 +684,6 @@ namespace XppReasoningWpf.ViewModels
                 });
 
 
-            ////////////START
             this.IncreaseResultsFontSizeCommand = new RelayCommand(
                 p1 => Properties.Settings.Default.ResultsFontSize += 2,
                 p2 => this.view.ResultsEditor != null && this.view.ResultsEditor.FontSize < 48
@@ -784,7 +783,6 @@ namespace XppReasoningWpf.ViewModels
                 }
             );
 
-            /////////////END
             this.ExecuteQueryCommand = new RelayCommand(
                 async p =>
                 {
