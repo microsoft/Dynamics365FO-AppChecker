@@ -260,7 +260,7 @@ Licensed under the MIT license.
                             <RowDefinition Height="70*"/>
                             <!-- Splitter -->
                             <RowDefinition Height="Auto"/>
-                            <!-- Queries -->
+                            <!-- Queries pane -->
                             <RowDefinition Height="200"/>
                         </Grid.RowDefinitions>
 
