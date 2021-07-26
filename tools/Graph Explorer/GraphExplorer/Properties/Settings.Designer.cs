@@ -12,7 +12,7 @@ namespace SocratexGraphExplorer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -157,6 +157,30 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DarkMode {
+            get {
+                return ((bool)(this["DarkMode"]));
+            }
+            set {
+                this["DarkMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SourceFileDirectory {
+            get {
+                return ((string)(this["SourceFileDirectory"]));
+            }
+            set {
+                this["SourceFileDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("function graphSurfaceDefaultBackgroundColor() {\r\n    return \'white\';\r\n}\r\n\r\nfuncti" +
             "on graphSurfaceDefaultForegroundColor() {\r\n    return \'darkgray\';\r\n}\r\n\r\nfunction" +
             " createGraphNode(node) {\r\n    if (node.labels[0] == \'Class\') {\r\n        var imag" +
@@ -190,9 +214,9 @@ namespace SocratexGraphExplorer.Properties {
             "        min: 10, max: 30,\r\n                label: { // Make sure font size is in" +
             " this range.\r\n                    min: 8, max: 24\r\n                }\r\n          " +
             "  }\r\n        },\r\n        edges: {\r\n            arrows: \"to\",\r\n            shadow" +
-            ": false,\r\n            smooth: true,\r\n            scaling: {\r\n            min: 2," +
-            " \'max\': 12, \'label\': { \'enabled\': true, \'min\': 9, \'max\': 14}\r\n            }\r\n   " +
-            "     }\r\n    }\r\n}")]
+            ": false,\r\n            smooth: true,\r\n            scaling: {\r\n                min" +
+            ": 2, \'max\': 12, \'label\': { \'enabled\': true, \'min\': 9, \'max\': 14}\r\n            }\r" +
+            "\n        }\r\n    }\r\n}")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));
@@ -204,13 +228,25 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DarkMode {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowNavigationButtons {
             get {
-                return ((bool)(this["DarkMode"]));
+                return ((bool)(this["ShowNavigationButtons"]));
             }
             set {
-                this["DarkMode"] = value;
+                this["ShowNavigationButtons"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AllowKeyboardNavigation {
+            get {
+                return ((bool)(this["AllowKeyboardNavigation"]));
+            }
+            set {
+                this["AllowKeyboardNavigation"] = value;
             }
         }
     }

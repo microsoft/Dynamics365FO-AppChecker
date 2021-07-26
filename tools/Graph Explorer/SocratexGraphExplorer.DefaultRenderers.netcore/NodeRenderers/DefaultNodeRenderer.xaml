@@ -3,39 +3,70 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml"         
              xmlns:local="clr-namespace:SocratexGraphExplorer.DefaultsPlugin"
-             Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}"
+             Foreground="{DynamicResource MaterialDesignBody}" 
+             Background="{DynamicResource MaterialDesignPaper}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock x:Name="Header" Grid.Row="0" FontSize="24" Foreground="LightGray">Node information</TextBlock>
-        <GroupBox Grid.Row="1" Header="Info">
-            <ListView x:Name="PropertiesGrid" ItemsSource="{Binding Properties}" Padding="0">
-                <ListView.Resources>
-                    <Style x:Key="HeadingStyle" TargetType="{x:Type GridViewColumnHeader}">
-                        <Setter Property="Background" Value="LightGray"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Left" />
-                        <Setter Property="FontSize" Value="12" />
-                    </Style>
 
-                    <Style TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="12"/>
-                        <EventSetter Event="MouseRightButtonUp" Handler="OnMouseRightButtonUp"/>
-                    </Style>
 
-                </ListView.Resources>
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=Key}" Width="150" HeaderContainerStyle="{StaticResource HeadingStyle}"/>
-                        <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Path=Value}" Width="150" HeaderContainerStyle="{StaticResource HeadingStyle}">
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </GroupBox>
-    </Grid>
+    <UserControl.Resources>
+        <Style x:Key="ChipsHeadline" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <Setter Property="Margin" Value="0,16,0,16"/>
+        </Style>
+        <Style x:Key="noHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+    </UserControl.Resources>
+    
+    
+    <TabControl Grid.Row="1"  Style="{StaticResource MaterialDesignTabControl}" mde:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
+        <TabItem Header="SELECTED"  >
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <md:Chip Grid.Row="0" x:Name="Selected" Foreground="{DynamicResource MaterialDesignBody}" Background="red" FontSize="16" Margin="0,10,0,12"/>
+                <ListView Grid.Row="1" x:Name="PropertiesGrid" ItemsSource="{Binding Properties}" Padding="0" SelectionMode="Single"  >
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Focusable" Value="False" />
+
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    
+                    <ListView.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="12"/>
+                            <EventSetter Event="MouseRightButtonUp" Handler="OnMouseRightButtonUp"/>
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="false" ColumnHeaderContainerStyle="{StaticResource noHeaderStyle}" >
+                            <GridViewColumn  Width="150" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Key}" FontWeight="Bold"></TextBlock>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            
+                            
+                            <GridViewColumn  DisplayMemberBinding="{Binding Path=Value}" Width="150" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="ALL"></TabItem>
+    </TabControl>
 </UserControl>

@@ -56,16 +56,18 @@ namespace SocratexGraphExplorer.XppPlugin
         {
             this.node = node;
 
-            this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
-            properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
-            properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Name", Value = (node.Properties["Name"].ToString()) });
+            this.Properties.Clear();
 
-            properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Private methods", Value = (node.Properties["NOPM"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
+            this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
+            this.properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Name", Value = (node.Properties["Name"].ToString()) });
+
+            this.properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Private methods", Value = (node.Properties["NOPM"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
 
             var base64Source = node.Properties["base64Source"] as string;
             var sourceArray = Convert.FromBase64String(base64Source);

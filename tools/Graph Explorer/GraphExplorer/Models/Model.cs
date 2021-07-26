@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,11 +19,6 @@ namespace SocratexGraphExplorer.Models
     public class Model : IModel, INotifyPropertyChanged
     {
         public string WebRootPath { private set; get; }
-
-        /// <summary>
-        /// The driver for accessing the graph database.
-        /// </summary>
-        private IDriver Driver { get; set; }
 
         /// <summary>
         /// Backing field for the nodes shown in the graph
@@ -39,7 +34,7 @@ namespace SocratexGraphExplorer.Models
             set 
             { 
                 this.nodesShown = value;
-                this.OnPropertyChanged(nameof(NodesShown));
+                this.OnPropertyChanged(nameof(this.NodesShown));
             }
         }
 
@@ -50,7 +45,7 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 this.queryResults = value;
-                this.OnPropertyChanged(nameof(QueryResults));
+                this.OnPropertyChanged(nameof(this.QueryResults));
             }
         }
         
@@ -87,7 +82,7 @@ namespace SocratexGraphExplorer.Models
                 if (value != Properties.Settings.Default.Configuration)
                 {
                     Properties.Settings.Default.Configuration = value;
-                    this.OnPropertyChanged(nameof(StyleDocumentSource));
+                    this.OnPropertyChanged(nameof(this.StyleDocumentSource));
                 }
             }
         }
@@ -104,7 +99,7 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 this.errorMessage = value;
-                this.OnPropertyChanged(nameof(ErrorMessage));
+                this.OnPropertyChanged(nameof(this.ErrorMessage));
             }
         }
 
@@ -121,7 +116,7 @@ namespace SocratexGraphExplorer.Models
                 if (this.caretPositionString != value)
                 {
                     this.caretPositionString = value;
-                    this.OnPropertyChanged(nameof(CaretPositionString));
+                    this.OnPropertyChanged(nameof(this.CaretPositionString));
                 }
             }
         }
@@ -133,7 +128,7 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 this.editorPosition = value;
-                this.OnPropertyChanged(nameof(EditorPosition));
+                this.OnPropertyChanged(nameof(this.EditorPosition));
             }
         }
 
@@ -146,8 +141,8 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 Properties.Settings.Default.Username = value;
-                this.OnPropertyChanged(nameof(ConnectionString));
-                this.OnPropertyChanged(nameof(Username));
+                this.OnPropertyChanged(nameof(this.ConnectionString));
+                this.OnPropertyChanged(nameof(this.Username));
             }
         }
 
@@ -160,8 +155,8 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 Properties.Settings.Default.Server = value;
-                this.OnPropertyChanged(nameof(ConnectionString));
-                this.OnPropertyChanged(nameof(Server));
+                this.OnPropertyChanged(nameof(this.ConnectionString));
+                this.OnPropertyChanged(nameof(this.Server));
             }
         }
 
@@ -174,7 +169,7 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 Properties.Settings.Default.Port = value;
-                this.OnPropertyChanged(nameof(Port));
+                this.OnPropertyChanged(nameof(this.Port));
             }
         }
 
@@ -192,7 +187,7 @@ namespace SocratexGraphExplorer.Models
                 if (value != Properties.Settings.Default.QueryFontSize)
                 {
                     Properties.Settings.Default.QueryFontSize = value;
-                    this.OnPropertyChanged(nameof(QueryFontSize));
+                    this.OnPropertyChanged(nameof(this.QueryFontSize));
                 }
             }
         }
@@ -218,7 +213,33 @@ namespace SocratexGraphExplorer.Models
             set
             {
                 Properties.Settings.Default.ConnectResultNodes = value;
-                OnPropertyChanged(nameof(ConnectResultNodes));
+                this.OnPropertyChanged(nameof(this.ConnectResultNodes));
+            }
+        }
+
+        public bool ShowNavigationButtons
+        {
+            get
+            {
+                return Properties.Settings.Default.ShowNavigationButtons;
+            }
+            set
+            {
+                Properties.Settings.Default.ShowNavigationButtons = value;
+                this.OnPropertyChanged(nameof(this.ShowNavigationButtons));
+            }
+        }
+
+        public bool AllowKeyboardNavigation
+        {
+            get
+            {
+                return Properties.Settings.Default.AllowKeyboardNavigation;
+            }
+            set
+            {
+                Properties.Settings.Default.AllowKeyboardNavigation = value;
+                this.OnPropertyChanged(nameof(this.AllowKeyboardNavigation));
             }
         }
 
@@ -231,17 +252,11 @@ namespace SocratexGraphExplorer.Models
             set 
             {
                 Properties.Settings.Default.ShowLineNumbers = value;
-                OnPropertyChanged(nameof(ShowLineNumbers));
+                this.OnPropertyChanged(nameof(this.ShowLineNumbers));
             }
         }
 
         public string QueryFont => Properties.Settings.Default.QueryFont;
-
-        public IDriver CreateNeo4jDriver(string password)
-        {
-            this.Driver = GraphDatabase.Driver(string.Format("bolt://{0}:{1}", this.Server, this.Port), AuthTokens.Basic(this.Username, password));
-            return this.Driver;
-        }
 
         /// <summary>
         /// Specifies whether the UI is rendered in dark or light mode.
@@ -253,14 +268,14 @@ namespace SocratexGraphExplorer.Models
                 if (value != Properties.Settings.Default.DarkMode)
                 {
                     Properties.Settings.Default.DarkMode = value;
-                    this.OnPropertyChanged(nameof(IsDarkMode));
+                    this.OnPropertyChanged(nameof(this.IsDarkMode));
                 }
             }
         }
 
         public Model()
         {
-            Properties.Settings.Default.PropertyChanged += SettingsChanged;
+            Properties.Settings.Default.PropertyChanged += this.SettingsChanged;
 
             // Create the directory where the web artifacts live.
             this.WebRootPath = CreateTemporaryDirectory();
@@ -362,363 +377,7 @@ namespace SocratexGraphExplorer.Models
             }
         }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="records"></param>
-        /// <returns></returns>
-        public static string GenerateJSON(List<IRecord> records)
-        {
-            var nodes = new Dictionary<long,object>();
-            var edges = new Dictionary<long, object>();
-            var values = new List<object>();
 
-            var inDegrees = new Dictionary<long, long>();  // Map from nodeId onto in degree
-            var outDegrees = new Dictionary<long, long>(); // Map from nodeId onto out degree
-
-            void GenerateRelationship(IRelationship relationship)
-            {
-                if (!edges.ContainsKey(relationship.Id))
-                {
-                    var edge = new Dictionary<string, object>
-                    {
-                        ["id"] = relationship.Id,
-                        ["type"] = relationship.Type,
-                        ["from"] = relationship.StartNodeId,
-                        ["to"] = relationship.EndNodeId
-                    };
-
-                    if (outDegrees.ContainsKey(relationship.StartNodeId))
-                        outDegrees[relationship.StartNodeId] += 1;
-                    else
-                        outDegrees[relationship.StartNodeId] = 1;
-
-                    if (inDegrees.ContainsKey(relationship.EndNodeId))
-                        inDegrees[relationship.EndNodeId] += 1;
-                    else
-                        inDegrees[relationship.EndNodeId] = 1;
-
-                    var props = new Dictionary<string, object>();
-                    foreach (var kvp in relationship.Properties.OrderBy(p => p.Key))
-                    {
-                        props[kvp.Key] = kvp.Value;
-                    }
-                    edge["properties"] = props;
-
-                    edges[relationship.Id] = edge;
-                }
-            }
-
-            void GeneratePath(IPath value)
-            {
-                // Extract the nodes and the bpath between them
-                GenerateNode(value.Start);
-                GenerateNode(value.End);
-
-                foreach (var relationship in value.Relationships)
-                {
-                    GenerateRelationship(relationship);
-                }
-            }
-
-            void GenerateNode(INode node)
-            {
-                if (!nodes.ContainsKey(node.Id))
-                {
-                    var n = new Dictionary<string, object>
-                    {
-                        ["id"] = node.Id,
-                        ["labels"] = node.Labels.ToArray()
-                    };
-
-                    var props = new Dictionary<string, object>();
-                    foreach (var kvp in node.Properties.OrderBy(p => p.Key))
-                    {
-                        props[kvp.Key] = kvp.Value;
-                    }
-
-                    n["properties"] = props;
-                    nodes[node.Id] = n;
-                }
-            }
-
-            void GenerateList(List<object> l)
-            {
-                //var v = new List<object>();
-                //// TODO. Something is wrong here.
-                //foreach (var element in l)
-                //{
-                //    Generate(element);
-                //}
-                values.Add(l);
-            }
-
-            void GenerateObject(object o)
-            {
-                if (o != null)
-                    values.Add(o);
-            }
-
-            void Generate(object value)
-            {
-                if (value is IPath)
-                    GeneratePath(value as IPath);
-                else if (value is INode)
-                    GenerateNode(value as INode);
-                else if (value is IRelationship)
-                    GenerateRelationship(value as IRelationship);
-                else if (value is List<object>)
-                    GenerateList(value as List<object>);
-                else
-                    GenerateObject(value);
-            }
-
-            foreach (var record in records)
-            {
-                var kvps = record.Values;
-
-                foreach (var kvp in kvps)
-                {
-                    Generate(kvp.Value);
-                }
-            }
-
-
-            foreach (var nodeId in nodes.Keys)
-            {
-                var node = nodes[nodeId] as Dictionary<string, object>;
-                var nodeProperties = node["properties"] as Dictionary<string, object>;
-
-                if (inDegrees.ContainsKey(nodeId))
-                {
-                    nodeProperties["$indegree"] = inDegrees[nodeId];
-                }
-                else
-                {
-                    nodeProperties["$indegree"] = 0;
-                }
-
-                if (outDegrees.ContainsKey(nodeId))
-                {
-                    nodeProperties["$outdegree"] = outDegrees[nodeId];
-                }
-                else
-                {
-                    nodeProperties["$outdegree"] = 0;
-                }
-            }
-
-            var result = new Dictionary<string, object>
-            {
-                ["nodes"] = nodes.Values,
-                ["edges"] = edges.Values,
-                ["values"] = values
-            };
-
-            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.Indented);
-            return serialized;
-        }
-
-        /// <summary>
-        /// Generate a HTML text representation from the data returned
-        /// from Neo4j.
-        /// </summary>
-        /// <param name="records">The records fetched from neo4j</param>
-        /// <returns>The HTML representation of the records in human readable form.</returns>
-        public static string GenerateHtml(List<IRecord> records)
-        {
-            static void GeneratePath(StringBuilder b, int indent, IPath value)
-            {
-                var indentString = new string(' ', indent);
-                b.AppendLine(indentString + "{");
-                b.Append(indentString + "  start:");
-                GenerateNode(b, indent + 2, value.Start);
-                b.Append(indentString + "  end:");
-                GenerateNode(b, indent + 2, value.End);
-                b.AppendLine(indentString + "  segments: [");
-
-                var firstSegment = true;
-                foreach(var relation in value.Relationships)
-                {
-                    if (!firstSegment)
-                        b.AppendLine(",");
-                    else
-                        firstSegment = false;
-
-                    b.AppendLine(indentString + "    {");
-                    b.AppendLine(indentString + "      start: " + relation.StartNodeId.ToString() + ",");
-                    b.AppendLine(indentString + "      relationship: {");
-                    b.AppendLine(indentString + "        id: " + relation.Id.ToString() + ",");
-                    b.AppendLine(indentString + "        type: " + relation.Type + ",");
-                    b.AppendLine(indentString + "        start: " + relation.StartNodeId.ToString() + ",");
-                    b.AppendLine(indentString + "        end: " + relation.EndNodeId.ToString() + ",");
-                    b.AppendLine(indentString + "        properties: {");
-
-                    var first = true;
-                    foreach (var prop in relation.Properties.OrderBy(p => p.Key))
-                    {
-                        if (!first)
-                            b.AppendLine(",");
-                        else
-                            first = false;
-                        b.Append(indentString + "          " + prop.Key + ": " + prop.Value.ToString());
-                    }
-                    b.AppendLine();
-                    b.AppendLine(indentString + "        }");
-                    b.AppendLine(indentString + "      },");
-                    b.AppendLine(indentString + "      end: " + relation.EndNodeId.ToString());
-                    b.Append("    }");
-                }
-                b.AppendLine();
-                b.AppendLine(indentString + "  ],");
-                b.AppendLine(indentString + "  length: " + value.Relationships.Count());
-                b.AppendLine("}");
-            }
-
-            static void GenerateNode(StringBuilder b, int indent, INode node)
-            {
-                var indentString = new string(' ', indent);
-
-                b.AppendLine(indentString + "{");
-                b.AppendLine(indentString + "  id: " + node.Id.ToString() + ",");
-
-                b.AppendLine(indentString + "  labels: [");
-                bool first = true;
-                foreach (var label in node.Labels)
-                {
-                    if (!first)
-                        b.AppendLine(",");
-                    else
-                        first = false;
-                    b.Append(indentString + "    " + label);
-                }
-                b.AppendLine();
-                b.AppendLine(indentString + "  ],");
-
-                b.AppendLine(indentString + "  properties: {");
-                first = true;
-                foreach (var prop in node.Properties.OrderBy(p => p.Key))
-                {
-                    if (!first)
-                        b.AppendLine(",");
-                    else
-                        first = false;
-                    b.Append(indentString + "    " + prop.Key + ": " + prop.Value.ToString());
-                }
-                b.AppendLine();
-                b.AppendLine(indentString + "  }");
-
-                b.AppendLine(indentString + "}");
-            }
-
-            static void GenerateRelationship(StringBuilder b, int indent, IRelationship relationship)
-            {
-                var indentString = new string(' ', indent);
-
-                b.AppendLine(indentString + "{");
-                b.AppendLine(indentString + "  id: " + relationship.Id.ToString() + ",");
-                b.AppendLine(indentString + "  type: " + relationship.Type + ",");
-                b.AppendLine(indentString + "  start: " + relationship.StartNodeId.ToString() + ", ");
-                b.AppendLine(indentString + "  end: " + relationship.EndNodeId.ToString() + ", ");
-
-                b.AppendLine(indentString + "  properties: {");
-                var first = true;
-                foreach (var prop in relationship.Properties.OrderBy(p => p.Key))
-                {
-                    if (!first)
-                        b.AppendLine(",");
-                    else
-                        first = false;
-                    b.Append(indentString + "    " + prop.Key + ": " + prop.Value.ToString());
-                }
-                b.AppendLine();
-                b.AppendLine(indentString + "  }");
-            }
-
-            static void GenerateList(StringBuilder b, List<object> l)
-            {
-                bool first = true;
-                b.Append("[");
-                foreach (var element in l)
-                {
-                    if (!first)
-                        b.Append(", ");
-
-                    Generate(b, 0, element);
-                    first = false;
-                }
-                b.Append("]");
-            }
-
-            static void GenerateString(StringBuilder b, string s)
-            {
-                b.Append(s);
-            }
-
-            static void Generate(StringBuilder b, int indent, object value)
-            {
-                if (value is IPath)
-                    GeneratePath(b, indent, value as IPath);
-                else if (value is INode)
-                    GenerateNode(b, indent, value as INode);
-                else if (value is IRelationship)
-                    GenerateRelationship(b, indent, value as IRelationship);
-                else if (value is List<object>)
-                    GenerateList(b, value as List<object>);
-                else
-                    GenerateString(b, value.ToString());
-            }
-
-            var builder = new StringBuilder();
-            builder.AppendLine("<html>");
-            builder.AppendLine("<style>");
-            builder.AppendLine("    table, th, td {");
-            builder.AppendLine("        border: 1px solid black;");
-            builder.AppendLine("        font-size: " + Properties.Settings.Default.TextResultsFontSize.ToString() + ";");
-            builder.AppendLine("        border-collapse: collapse;");
-            builder.AppendLine("    }");
-            builder.AppendLine("</style>");
-            builder.AppendLine("<body>");
-            builder.AppendLine("<table style='width:100%;'>");
-
-            builder.AppendLine("  <tr>");
-            if (records.Any())
-            {
-                foreach (var heading in records.First().Keys)
-                {
-                    builder.AppendLine("    <th>" + heading + "</th>");
-                }
-            }
-            builder.AppendLine("  </tr>");
-
-            foreach (var record in records)
-            {
-                builder.AppendLine("  <tr>");
-
-                var keys = record.Values.Keys.GetEnumerator();
-                var values = record.Values.Values;
-
-                foreach (var value in values)
-                {
-                    builder.AppendLine("    <td><pre>");
-
-                    if (value != null)
-                    {
-                        Generate(builder, 0, value);
-
-                        keys.MoveNext();
-                        string key = keys.Current;
-                    }
-                    builder.AppendLine("    </pre></td>");
-                }
-                builder.AppendLine("  </tr>");
-            }
-
-            builder.AppendLine("</table>");
-            builder.AppendLine("</body>");
-            builder.AppendLine("</html>");
-            return builder.ToString();
-        }
      
         public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
         {
@@ -754,19 +413,20 @@ namespace SocratexGraphExplorer.Models
 
         /// <summary>
         /// Determines if the list of records can be rendered as a graph. This is true if
-        /// there are no atomic values (like strings, ints, etc.) in the list of records.
+        /// there are no atomic values (like strings, ints, lists, etc.) in the list of records.
         /// </summary>
         /// <param name="res">The list containing the records.</param>
         /// <returns>True if the records can be interpreted as as graph, and false otherwise.</returns>
         public static bool CanBeRenderedAsGraph(IList<IRecord> res)
         {
-            return res.All(rec => rec.Values.All(v => v.Value is INode || v.Value is IPath || v.Value is IRelationship));
-        }
+            bool IsNotAtomic(object o)
+            {
+                return o == null || o is INode || o is IPath || o is IRelationship;
+            }
 
-        public Task<IResultCursor> ExecuteQueryAsync(string cypherSource, IDictionary<string, object> parameters = null)
-        { 
-            IAsyncSession session = this.Driver.AsyncSession();
-            return session.RunAsync(cypherSource, parameters);
+            return res.All(rec => rec.Values.All(v => IsNotAtomic(v.Value)
+                || ((v.Value is KeyValuePair<string, object> kv) && IsNotAtomic(kv.Value))
+            ));
         }
 
         /// <summary>
@@ -780,11 +440,9 @@ namespace SocratexGraphExplorer.Models
         {
             this.ErrorMessage = "Running query...";
 
-            IAsyncSession session = this.Driver.AsyncSession();
-
             try
             {
-                IResultCursor cursor = await session.RunAsync(cypherSource, parameters);
+                IResultCursor cursor = await Neo4jDatabase.ExecuteQueryAsync(cypherSource, parameters);
                 List<IRecord> res = await cursor.ToListAsync();
 
                 this.ErrorMessage = "Done.";

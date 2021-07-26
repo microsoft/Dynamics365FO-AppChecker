@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
-        mc:Ignorable="d" Loaded="UserControl_Loaded"
+        mc:Ignorable="d" 
         d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -28,18 +28,36 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/> <!-- Database selector -->
+            <RowDefinition Height="Auto"/> <!-- Node prompt -->
+            <RowDefinition Height="Auto"/> <!-- node wrap panel -->
+            <RowDefinition Height="Auto"/> <!-- Relationship prompt -->
+            <RowDefinition Height="Auto"/> <!-- Relationship wrap panel -->
         </Grid.RowDefinitions>
-        
-        <TextBlock x:Name="LabelsPrompt" Grid.Row="0" Style="{StaticResource ChipsHeadline}"></TextBlock>
-        <WrapPanel x:Name="Nodes" Grid.Row="1">
-        </WrapPanel>
-        
-        <TextBlock x:Name="RelationshipsPrompt" Grid.Row="2" Style="{StaticResource ChipsHeadline}">Relationship Types</TextBlock>
-        <WrapPanel x:Name="Relationships" Grid.Row="3">
-        </WrapPanel>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Use database:" FontSize="20" Margin="0,6,4,0" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Databases}" SelectedItem="{Binding Database}" SelectionChanged="DatabaseChanged" Margin="2,-2,8,0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBox Text="{Binding Name}" FontSize="20" BorderThickness="0" Focusable="False" Margin="0,0,0,-4"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <TextBlock x:Name="LabelsPrompt" Grid.Row="1" Style="{StaticResource ChipsHeadline}"></TextBlock>
+        <WrapPanel x:Name="Nodes" Grid.Row="2" Orientation="Horizontal" />
+
+        <TextBlock x:Name="RelationshipsPrompt" Grid.Row="3" Style="{StaticResource ChipsHeadline}">Relationship Types</TextBlock>
+        <WrapPanel x:Name="Relationships" Grid.Row="4" Orientation="Horizontal" />
+
+
     </Grid>
 </UserControl>

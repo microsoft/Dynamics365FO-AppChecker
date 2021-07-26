@@ -31,7 +31,7 @@ namespace SocratexGraphExplorer.XppPlugin
         {
             this.model = model;
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.DataContext = this;
             this.MethodEditor = new XppSourceEditor();
@@ -51,15 +51,15 @@ namespace SocratexGraphExplorer.XppPlugin
                 new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
-            properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
-            properties.Add(new PropertyItem() { Key = "Package", Value = node.Properties["Package"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Artifact", Value = node.Properties["Artifact"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Lines of Code", Value = node.Properties["LOC"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Complexity", Value = node.Properties["CMP"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Visibility", Value = node.Properties["Visibility"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Final", Value = node.Properties["IsFinal"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Abstract", Value = node.Properties["IsAbstract"].ToString() });
-            properties.Add(new PropertyItem() { Key = "Static", Value = node.Properties["IsStatic"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Package", Value = node.Properties["Package"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Artifact", Value = node.Properties["Artifact"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Lines of Code", Value = node.Properties["LOC"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Complexity", Value = node.Properties["CMP"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Visibility", Value = node.Properties["Visibility"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Final", Value = node.Properties["IsFinal"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Abstract", Value = node.Properties["IsAbstract"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Static", Value = node.Properties["IsStatic"].ToString() });
 
             var artifact = node.Properties["Artifact"].ToString();
 
@@ -96,15 +96,15 @@ namespace SocratexGraphExplorer.XppPlugin
             var incomingCallsResult = await incomingCallsQuery;
             if (incomingCallsResult != null)
             {
-                properties.Add(new PropertyItem() { Key = "Incoming calls", Value = incomingCallsResult[0].Values["count"].ToString() });
-                properties.Add(new PropertyItem() { Key = "Calling methods", Value = incomingCallsResult[0].Values["methods"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Incoming calls", Value = incomingCallsResult[0].Values["count"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Calling methods", Value = incomingCallsResult[0].Values["methods"].ToString() });
             }
 
             var outgoingCallsResult = await outGoingCallsQuery;
             if (outgoingCallsResult != null)
             {
-                properties.Add(new PropertyItem() { Key = "Outgoing calls", Value = outgoingCallsResult[0].Values["count"].ToString() });
-                properties.Add(new PropertyItem() { Key = "Called methods", Value = outgoingCallsResult[0].Values["methods"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Outgoing calls", Value = outgoingCallsResult[0].Values["count"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Called methods", Value = outgoingCallsResult[0].Values["methods"].ToString() });
             }
 
         }

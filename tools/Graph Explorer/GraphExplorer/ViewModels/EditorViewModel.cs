@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using mde = MaterialDesignExtensions.Controls;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
@@ -23,6 +24,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using MaterialDesignExtensions.Controls;
+using MaterialDesignExtensions.Converters;
+using MaterialDesignExtensions.Model;
 
 namespace SocratexGraphExplorer.ViewModels
 {
@@ -71,6 +75,23 @@ namespace SocratexGraphExplorer.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private IEnumerable<DatabaseDescriptor> databases;
+
+        /// <summary>
+        /// Gets or sets the databases in the neo4j instance.
+        /// </summary>
+        public IEnumerable<DatabaseDescriptor> Databases {
+            get { return this.databases; }
+            set
+            {
+                if (value != this.databases)
+                {
+                    this.databases = value;
+                    this.OnPropertyChanged(nameof(this.Databases));
+                }
+            }
+        }
+
         /// <summary>
         /// The event is triggered when a node is selected on the browser surface
         /// </summary>
@@ -85,7 +106,7 @@ namespace SocratexGraphExplorer.ViewModels
                 if (this.selectedNode != value)
                 {
                     this.selectedNode = value;
-                    this.OnPropertyChanged(nameof(SelectedNode));
+                    this.OnPropertyChanged(nameof(this.SelectedNode));
                 }
             }
         }
@@ -104,7 +125,7 @@ namespace SocratexGraphExplorer.ViewModels
                 if (this.selectedEdge != value)
                 {
                     this.selectedEdge = value;
-                    this.OnPropertyChanged(nameof(SelectedEdge));
+                    this.OnPropertyChanged(nameof(this.SelectedEdge));
                 }
             }
         }
@@ -116,7 +137,7 @@ namespace SocratexGraphExplorer.ViewModels
             set
             {
                 this.renderingMode = value;
-                this.OnPropertyChanged(nameof(RenderingMode));
+                this.OnPropertyChanged(nameof(this.RenderingMode));
             }
         }
 
@@ -130,6 +151,7 @@ namespace SocratexGraphExplorer.ViewModels
 
                 if (value)
                 {
+                    // Show the graph rendering surface
                     this.view.GraphColumn.Width = new GridLength(2, GridUnitType.Star);
                     this.view.TextColumn.Width = new GridLength(0);
 
@@ -137,11 +159,12 @@ namespace SocratexGraphExplorer.ViewModels
                 }
                 else
                 {
+                    // Show the text rendering surface
                     this.view.GraphColumn.Width = new GridLength(0);
                     this.RenderingMode = RenderingMode.Text;
                 }
 
-                this.OnPropertyChanged(nameof(GraphModeSelected));
+                this.OnPropertyChanged(nameof(this.GraphModeSelected));
             }
         }
 
@@ -163,7 +186,7 @@ namespace SocratexGraphExplorer.ViewModels
                 {
                     this.view.TextColumn.Width = new GridLength(0);
                 }
-                this.OnPropertyChanged(nameof(TextModeSelected));
+                this.OnPropertyChanged(nameof(this.TextModeSelected));
             }
         }
         private void OnPropertyChanged(string propertyName)
@@ -171,7 +194,36 @@ namespace SocratexGraphExplorer.ViewModels
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string Title => Properties.Settings.Default.AppTitle + "  - " + this.model.ConnectionString;
+        private DatabaseDescriptor database = null;
+        /// <summary>
+        /// This is the currently selected database
+        /// </summary>
+        public DatabaseDescriptor Database
+        {
+            get { return this.database; }
+            set
+            {
+                if (value != this.database)
+                {
+                    this.database = value;
+                    Neo4jDatabase.Database = value;
+                    this.OnPropertyChanged(nameof(this.Database));
+                    this.OnPropertyChanged(nameof(this.Title));
+                }
+            }
+        }
+
+        public string Title {
+            get {
+                var s = Properties.Settings.Default.AppTitle + " - ";
+                s += this.model.ConnectionString;
+                if (this.Database != null)
+                {
+                    s += " : " + this.Database.Name;
+                }
+                return s;
+            }
+        }
 
         private readonly ICommand executeQueryCommand;
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
@@ -187,7 +239,7 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ApplicationExitCommand => new RelayCommand(
             p =>
             {
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             }
         );
 
@@ -298,7 +350,7 @@ namespace SocratexGraphExplorer.ViewModels
             get { return this.model.ErrorMessage; }
             set
             {
-                this.OnPropertyChanged(nameof(ErrorMessage));
+                this.OnPropertyChanged(nameof(this.ErrorMessage));
             }
         }
 
@@ -361,7 +413,7 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ShowDatabaseParametersCommand
         {
             get => new RelayCommand(
-                p =>
+                async p =>
                 {
                     this.ShowDatabaseInfoPanel();
                 }
@@ -371,52 +423,63 @@ namespace SocratexGraphExplorer.ViewModels
         public ICommand ImportStyleCommand
         {
             get => new RelayCommand(
-                p =>
+                async p =>
                 {
-                    // Open a Javascript (.js) file with the file open dialog
-                    var openFileDialog = new OpenFileDialog()
-                    {
-                        CheckFileExists = true,
-                        AddExtension = true,
-                        DefaultExt = ".js",
-                        Filter = "Javascript|*.js",
-                        Multiselect = false,
-                        Title = "Select style document to import",
-                    };
+                    // TODO experimental
+                    DataLab d = await DataLab.CreateDataLaboratory(); 
+                    d.Show();
 
-                    if (openFileDialog.ShowDialog() == true)
-                    {
-                        var styleScriptSource = File.ReadAllText(openFileDialog.FileName);
-                        this.model.StyleDocumentSource = styleScriptSource;
-                    }
+                    // TODO Put in the material dialog here.
+                    // Open a Javascript (.js) file with the file open dialog
+                    //var openFileDialog = new OpenFileDialog()
+                    //{
+                    //    CheckFileExists = true,
+                    //    AddExtension = true,
+                    //    DefaultExt = ".js",
+                    //    Filter = "Javascript|*.js",
+                    //    Multiselect = false,
+                    //    Title = "Select style document to import",
+                    //};
+
+                    //if (openFileDialog.ShowDialog() == true)
+                    //{
+                    //    var styleScriptSource = System.IO.File.ReadAllText(openFileDialog.FileName);
+                    //    this.model.StyleDocumentSource = styleScriptSource;
+                    //}
                 });
         }
 
         public ICommand ExportStyleCommand
         {
             get => new RelayCommand(
-                p =>
+                async p =>
                 {
+                    // Temporary: Use this as a launchpoint for the rendering options dialog
+                    var d = new RenderingOptions();
+                    d.Show();
+
+                    var labels = await Neo4jDatabase.GetNodeLabels();
+
                     // Export the bare-bones style Javascript style document.
-                    var saveFileDialog = new SaveFileDialog()
-                    {
-                        AddExtension = true,
-                        CheckFileExists = true,
-                        CheckPathExists = true,
-                        DefaultExt = "js",
-                        Filter = "Javascript|*.js",
-                        OverwritePrompt = true,
-                        Title = "Save generic style document",
-                    };
+                    //var saveFileDialog = new SaveFileDialog()
+                    //{
+                    //    AddExtension = true,
+                    //    CheckFileExists = true,
+                    //    CheckPathExists = true,
+                    //    DefaultExt = "js",
+                    //    Filter = "Javascript|*.js",
+                    //    OverwritePrompt = true,
+                    //    Title = "Save generic style document",
+                    //};
 
-                    if (saveFileDialog.ShowDialog() == true)
-                    {
-                        var assembly = Assembly.GetExecutingAssembly();
-                        var s = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources.GenericStyleDocument.js");
+                    //if (saveFileDialog.ShowDialog() == true)
+                    //{
+                    //    var assembly = Assembly.GetExecutingAssembly();
+                    //    var s = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources.GenericStyleDocument.js");
 
-                        using var reader = new StreamReader(s);
-                        File.WriteAllText(saveFileDialog.FileName, reader.ReadToEnd());
-                    }
+                    //    using var reader = new StreamReader(s);
+                    //    File.WriteAllText(saveFileDialog.FileName, reader.ReadToEnd());
+                    //}
                 });
         }
 
@@ -454,7 +517,7 @@ namespace SocratexGraphExplorer.ViewModels
             }
             set
             {
-                this.OnPropertyChanged(nameof(CaretPositionString));
+                this.OnPropertyChanged(nameof(this.CaretPositionString));
             }
         }
 
@@ -466,7 +529,7 @@ namespace SocratexGraphExplorer.ViewModels
                 if (this.model.StyleDocumentSource != value)
                 {
                     this.model.StyleDocumentSource = value;
-                    this.OnPropertyChanged(nameof(StyleDocumentSource));
+                    this.OnPropertyChanged(nameof(this.StyleDocumentSource));
                 }
             }
         }
@@ -479,7 +542,7 @@ namespace SocratexGraphExplorer.ViewModels
                 if (value != this.model.ShowLineNumbers)
                 {
                     this.model.ShowLineNumbers = value;
-                    this.OnPropertyChanged(nameof(ShowLineNumbers));
+                    this.OnPropertyChanged(nameof(this.ShowLineNumbers));
                 }
             }
         }
@@ -493,8 +556,34 @@ namespace SocratexGraphExplorer.ViewModels
                 if (value != this.model.IsDarkMode)
                 {
                     this.model.IsDarkMode = value;
-                    this.OnPropertyChanged(nameof(IsDarkMode));
+                    this.OnPropertyChanged(nameof(this.IsDarkMode));
                 }
+            }
+        }
+
+        public bool ShowNavigationButtons
+        {
+            get
+            {
+                return this.model.ShowNavigationButtons;
+            }
+            set
+            {
+                this.model.ShowNavigationButtons = value;
+                this.OnPropertyChanged(nameof(this.ShowNavigationButtons));
+            }
+        }
+
+        public bool AllowKeyboardNavigation
+        {
+            get
+            {
+                return Properties.Settings.Default.AllowKeyboardNavigation;
+            }
+            set
+            {
+                Properties.Settings.Default.AllowKeyboardNavigation = value;
+                this.OnPropertyChanged(nameof(this.AllowKeyboardNavigation));
             }
         }
 
@@ -512,6 +601,19 @@ namespace SocratexGraphExplorer.ViewModels
             IBaseTheme baseTheme = darkMode ? (IBaseTheme)new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
             theme.SetBaseTheme(baseTheme);
             paletteHelper.SetTheme(theme);
+        }
+
+        public async Task OnInitializedAsync()
+        {
+            this.Databases = await Neo4jDatabase.GetDatabases();
+            if (this.Databases != null)
+            {
+                var d = this.Databases.Where(d => d.IsDefault).FirstOrDefault();
+                if (d != null)
+                {
+                    this.Database = d;
+                }
+            }
         }
 
         public EditorViewModel(MainWindow v, Models.Model model)
@@ -555,8 +657,8 @@ namespace SocratexGraphExplorer.ViewModels
                 Console.WriteLine(e.Message);
             }
 
-            NodeSelected += UpdateNodeInfoPage;
-            EdgeSelected += UpdateEdgeInfoPage;
+            NodeSelected += this.UpdateNodeInfoPage;
+            EdgeSelected += this.UpdateEdgeInfoPage;
 
             this.SetTheme(this.model.IsDarkMode);
 
@@ -570,13 +672,13 @@ namespace SocratexGraphExplorer.ViewModels
             {
                 if (e.PropertyName == nameof(Model.QueryFontSize))
                 {
-                    QueryEditorFontSize = this.model.QueryFontSize;
-                    this.OnPropertyChanged(nameof(QueryEditorFontSize));
+                    this.QueryEditorFontSize = this.model.QueryFontSize;
+                    this.OnPropertyChanged(nameof(this.QueryEditorFontSize));
                 }
                 else if (e.PropertyName == nameof(Model.ErrorMessage))
                 {
                     this.ErrorMessage = this.model.ErrorMessage;
-                    this.OnPropertyChanged(nameof(ErrorMessage));
+                    this.OnPropertyChanged(nameof(this.ErrorMessage));
                 }
                 else if (e.PropertyName == nameof(Model.CaretPositionString))
                 {
@@ -594,6 +696,10 @@ namespace SocratexGraphExplorer.ViewModels
                     this.SetTheme(this.model.IsDarkMode);
 
                     // Update the view
+                    await this.RepaintNodesAsync(this.model.NodesShown);
+                }
+                else if (e.PropertyName == nameof(this.AllowKeyboardNavigation) || e.PropertyName == nameof(this.ShowNavigationButtons))
+                {
                     await this.RepaintNodesAsync(this.model.NodesShown);
                 }
                 else if (e.PropertyName == nameof(Model.StyleDocumentSource))
@@ -617,7 +723,7 @@ namespace SocratexGraphExplorer.ViewModels
                     var idx = script.IndexOf("Config.js?ts=") + "Config.js?ts=".Length;
 
                     var cnt = 0;
-                    while (char.IsDigit(script[idx + cnt])) 
+                    while (char.IsDigit(script[idx + cnt]))
                         cnt++;
 
                     script = script.Remove(idx, cnt);
@@ -625,7 +731,7 @@ namespace SocratexGraphExplorer.ViewModels
 
                     File.WriteAllText(fileName, script);
 
-                    this.view.Browser.NavigationCompleted += Browser_NavigationCompleted;
+                    this.view.Browser.NavigationCompleted += this.Browser_NavigationCompleted;
 
                     this.view.Browser.Reload();
                 }
@@ -636,15 +742,10 @@ namespace SocratexGraphExplorer.ViewModels
                 }
                 else if (e.PropertyName == nameof(Model.QueryResults))
                 {
-                    if (this.GraphModeSelected)
-                    {
-                        this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
-                    }
-                    else
-                    {
-                        var html = Model.GenerateHtml(this.model.QueryResults);
-                        this.view.TextBrowser.NavigateToString(html);
-                    }
+                    // Update the set of nodes shown on the surface.
+                    this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
+
+
                 }
             };
 
@@ -660,31 +761,42 @@ namespace SocratexGraphExplorer.ViewModels
                      List<IRecord> result = await this.model.ExecuteCypherAsync(source);
                      if (result != null)
                      {
+                         var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(result);
+
                          // The query executed correctly. 
-                         if (this.model.ConnectResultNodes)
+                         // If the user wanted to see all the edges from the selected nodes, a new
+                         // query is fired.
+                         if (this.model.ConnectResultNodes && canBeRenderedAsGraph)
                          {
+                             // Calculate the new result where all the edges are included.
+                             var nodes = Model.HarvestNodeIdsFromGraph(result);
+                             result = await this.GetGraphFromNodes(nodes);
+                         }
 
-                             if (this.GraphModeSelected && !Model.CanBeRenderedAsGraph(result))
-                             {
-                                 this.GraphModeSelected = false;
-                                 this.TextModeSelected = true;
-                             }
-                             this.model.QueryResults = result;
+                         // Store the results in the model.
+                         this.model.QueryResults = result;
 
+                         // Go from graph mode to text mode if the result cannot be rendered as a graph.
+                         // Do not switch back to graph mode automatically?
+
+                         if (this.GraphModeSelected && !canBeRenderedAsGraph)
+                         {
+                             this.GraphModeSelected = false;
+                             this.TextModeSelected = true;
+                         }
+
+                         if (this.graphModeSelected)
+                         {
+                             // Render the data in the graph view
+                             string resultJson = Neo4jDatabase.GenerateJSON(result);
+
+                             await this.RepaintNodesAsync(resultJson);
                          }
                          else
                          {
-
-                             string resultJson = Model.GenerateJSON(result);
-
-                             var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
-                             var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;
-
-                             var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
-                             var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
-
-                             await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor));
-
+                             // Draw as html
+                             var html = Neo4jDatabase.GenerateHtml(this.model.QueryResults);
+                             this.view.TextBrowser.NavigateToString(html);
                          }
                      }
                  },
@@ -710,7 +822,7 @@ namespace SocratexGraphExplorer.ViewModels
             // Redraw what was there with the new style.
             await this.SetGraphSizeAsync(browser);
             await this.RepaintNodesAsync(this.model.NodesShown);
-            browser.NavigationCompleted -= Browser_NavigationCompleted;
+            browser.NavigationCompleted -= this.Browser_NavigationCompleted;
         }
 
         /// <summary>
@@ -730,6 +842,13 @@ namespace SocratexGraphExplorer.ViewModels
             return editor.Document.Text;
         }
 
+        /// <summary>
+        /// Get the graph that contains the nodes provided, and also all the edges
+        /// between the nodes.
+        /// </summary>
+        /// <param name="nodes">The set of nodes in the graph</param>
+        /// <returns>The set of records to render, including all the edges connecting the 
+        /// nodes provided.</returns>
         private async Task<List<IRecord>> GetGraphFromNodes(HashSet<long> nodes)
         {
             if (nodes != null)
@@ -740,8 +859,8 @@ namespace SocratexGraphExplorer.ViewModels
                         "  and id(m) in $nodeIds " +
                         "return n,m,r";
 
-                var results = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
-                return results;
+                var results = await Neo4jDatabase.ExecuteQueryAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
+                return await results.ToListAsync();
             }
 
             return null;
@@ -752,22 +871,31 @@ namespace SocratexGraphExplorer.ViewModels
             return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
         }
 
+        public async Task RepaintNodesAsync(string json)
+        {
+            await view.Browser.EnsureCoreWebView2Async();
+
+            var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
+            var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;
+
+            var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
+            var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
+
+            var showNavigationButtons = this.ShowNavigationButtons;
+            var allowKeyboardNavigation = this.AllowKeyboardNavigation;
+
+            var drawInvocation = string.Format("draw({0}, '{1}', '{2}', {3}, {4});", json, backgroundColor, foregroundColor, showNavigationButtons.ToString().ToLowerInvariant(), allowKeyboardNavigation.ToString().ToLowerInvariant());
+            await view.Browser.ExecuteScriptAsync(drawInvocation);
+        }
+
         public async Task RepaintNodesAsync(HashSet<long> nodes)
         {
+            // TODO this does not look correct. It seems to always get the nodes connected by edges that are not included in the query
             var results = await this.GetGraphFromNodes(nodes);
             if (results != null)
             {
-                string resultJson = Model.GenerateJSON(results);
-
-                await view.Browser.EnsureCoreWebView2Async();
-
-                var backgroundColorBrush = this.view.FindResource("MaterialDesignPaper") as SolidColorBrush;
-                var foregroundColorBrush = this.view.FindResource("MaterialDesignBody") as SolidColorBrush;
-
-                var backgroundColor = JavascriptColorString(backgroundColorBrush.Color);
-                var foregroundColor = JavascriptColorString(foregroundColorBrush.Color);
-
-                await view.Browser.ExecuteScriptAsync(string.Format("draw({0}, '{1}', '{2}');", resultJson, backgroundColor, foregroundColor));
+                string resultJson = Neo4jDatabase.GenerateJSON(results);
+                await RepaintNodesAsync(resultJson);
             }
         }
 
@@ -844,38 +972,55 @@ namespace SocratexGraphExplorer.ViewModels
             });
         }
 
-        private void SaveQueryFile()
+        private async void SaveQueryFile()
         {
-            SaveFileDialog dialog = new SaveFileDialog
+            var dialogArgs = new mde.SaveFileDialogArguments()
             {
-                DefaultExt = ".cypher",
-                AddExtension = true,
-                Filter = "Cypher files (*.cypher)|*.cypher|All files (*.*)|*.*",
+                Width = 800,
+                Height = 1600,
+                Filters = "Cypher files|*.cypher|All files|*.*",
+                FilterIndex = 0,
+                ShowHiddenFilesAndDirectories = false,
+                ShowSystemFilesAndDirectories = false,
+                CreateNewDirectoryEnabled = true,
+                ForceFileExtensionOfFileFilter = true,
+                PathPartsAsButtons = true,
+                CurrentDirectory = Properties.Settings.Default.SourceFileDirectory,
             };
 
-            bool? res = dialog.ShowDialog();
+            var result = await mde.SaveFileDialog.ShowDialogAsync("RootDialog", dialogArgs);
 
-            if (res.HasValue && res.Value)
+            if (result.Confirmed)
             {
-                this.view.CypherEditor.Save(dialog.FileName);
+                this.view.CypherEditor.Save(result.File);
             }
         }
 
-        private void OpenQueryFile()
+        /// <summary>
+        /// Open a file open dialog to read a cypher file.
+        /// </summary>
+        private async void OpenQueryFile()
         {
-            OpenFileDialog dialog = new OpenFileDialog
+            // open file
+            var dialogArgs = new mde.OpenFileDialogArguments()
             {
-                DefaultExt = ".cypher",
-                Multiselect = false,
-                Filter = "Cypher files (*.cypher)|*.cypher|All files (*.*)|*.*",
+                Width = 800,
+                Height = 1600,
+                Filters = "Cypher files|*.cypher|All files|*.*",
+                FilterIndex = 0,
+                ShowHiddenFilesAndDirectories = false,
+                CurrentDirectory = Properties.Settings.Default.SourceFileDirectory,
             };
 
-            bool? res = dialog.ShowDialog();
+            var result = await mde.OpenFileDialog.ShowDialogAsync("RootDialog", dialogArgs);
 
-            if (res.HasValue && res.Value)
+            if (result.Confirmed)
             {
-                var stream = dialog.OpenFile();
-                this.view.CypherEditor.Load(stream);
+                var file = result.FileInfo;
+                using (var stream = file.OpenRead())
+                {
+                    this.view.CypherEditor.Load(stream);
+                }
             }
         }
 

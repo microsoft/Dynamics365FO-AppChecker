@@ -19,7 +19,7 @@ namespace SocratexGraphExplorer.DefaultsPlugin
 
         public DefaultNodeRenderer(IModel model)
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.Properties = new ObservableCollection<PropertyItem>();
             this.Model = model;
@@ -42,9 +42,10 @@ namespace SocratexGraphExplorer.DefaultsPlugin
         {
             this.node = node;
 
-            this.Header.Text = string.Format("Node {0}", node.Labels[0]);
-            this.Properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
+            this.Selected.Content = string.Format("{0}", node.Labels[0]);
+            this.Properties.Clear();
 
+            this.Properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
             foreach (var property in node.Properties)
             {
                 this.Properties.Add(new PropertyItem() { Key = property.Key, Value = property.Value.ToString() });

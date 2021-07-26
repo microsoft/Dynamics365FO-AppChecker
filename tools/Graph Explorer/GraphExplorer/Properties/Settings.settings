@@ -35,6 +35,12 @@
     <Setting Name="ShowLineNumbers" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="DarkMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SourceFileDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="Configuration" Type="System.String" Scope="User">
       <Value Profile="(Default)">function graphSurfaceDefaultBackgroundColor() {
     return 'white';
@@ -100,14 +106,17 @@ function options() {
             shadow: false,
             smooth: true,
             scaling: {
-            min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14}
+                min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14}
             }
         }
     }
 }</Value>
     </Setting>
-    <Setting Name="DarkMode" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="ShowNavigationButtons" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AllowKeyboardNavigation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

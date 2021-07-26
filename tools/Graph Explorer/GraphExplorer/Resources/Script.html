@@ -25,7 +25,7 @@
             document.getElementById('mynetwork').style.height = height + 'px';
         }
 
-        function draw(nodesAndEdgesInJson, backgroundColor, foregroundColor) {
+        function draw(nodesAndEdgesInJson, backgroundColor, foregroundColor, showNavigationButtons, allowKeyboardNavigation) {
             // Set the colors of the foreground and background. The colors passed from
             // the application are in conformance with the visual preferences of the 
             // user, but you may assign any static value you want for the colors to
@@ -49,13 +49,46 @@
 
             data = { nodes: graphNodes, edges: graphEdges };
 
-            network = new vis.Network(container, data, options());
+            var options =
+            {
+                interaction: {
+                    hover: true,
+                    selectConnectedEdges: false,
+                    navigationButtons: showNavigationButtons,
+                    keyboard: allowKeyboardNavigation,
+                },
+                manipulation: {
+                    enabled: false, // true enables adding nodes to the graph
+                },
+                nodes: {
+                    size: 10, // For nodes that do not have specific size or where no value attribute is provided
+                    font: { strokeWidth: 2 }, // This is the amount of space around the text in nodes or edges.
+                    shape: 'dot',
+                    scaling: {
+                        min: 10, max: 30,
+                        label: { // Make sure font size is in this range.
+                            min: 8, max: 24
+                        }
+                    }
+                },
+                edges: {
+                    arrows: "to",
+                    shadow: false,
+                    smooth: true,
+                    scaling: {
+                        min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14 }
+                    }
+                }
+            }
+
+            network = new vis.Network(container, data, options);
 
             // Wire in the messaging so that the C# is notified of clicking in 
             // nodes or edges.
             network.on('selectNode', function (params) {
                     window.chrome.webview.postMessage({ 'nodeId': params.nodes[0] });
-                });
+            });
+
             network.on('selectEdge', function (params) {
                     window.chrome.webview.postMessage({ 'edgeId': params.edges[0] });
                 });

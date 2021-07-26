@@ -5,11 +5,12 @@
     using System.Runtime.Versioning;
     using System.Windows;
     using System.Windows.Navigation;
+    using MaterialDesignExtensions.Controls;
 
     /// <summary>
     /// Interaction logic for AboutBox.xaml
     /// </summary>
-    public partial class AboutBox : Window
+    public partial class AboutBox : MaterialWindow
     {
         private static Assembly assembly = Assembly.GetEntryAssembly();
 

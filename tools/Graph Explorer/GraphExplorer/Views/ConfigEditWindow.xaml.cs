@@ -14,10 +14,12 @@ using System.Windows.Shapes;
 
 namespace SocratexGraphExplorer.Views
 {
+    using MaterialDesignExtensions.Controls;
+
     /// <summary>
     /// Interaction logic for ConfigEditWindow.xaml
     /// </summary>
-    public partial class ConfigEditWindow : Window
+    public partial class ConfigEditWindow : MaterialWindow
     {
         private EditorViewModel ViewModel { get; set; }
         private JavaScriptEditor Editor { get; set; }
@@ -26,7 +28,7 @@ namespace SocratexGraphExplorer.Views
         {
             this.ViewModel = viewModel;
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.Editor = new JavaScriptEditor
             {

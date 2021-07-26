@@ -1,4 +1,4 @@
-﻿<Window x:Class="SocratexGraphExplorer.Views.AboutBox"
+﻿<mde:MaterialWindow x:Class="SocratexGraphExplorer.Views.AboutBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,6 +9,9 @@
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextHintingMode="Auto"
+        xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"         
+        BorderBackgroundBrush="{DynamicResource MaterialDesignPaper}"
+        BorderForegroundBrush="{DynamicResource MaterialDesignBody}"        
         FontFamily="{DynamicResource MaterialDesignFont}"
         Background="{DynamicResource MaterialDesignPaper}"
         mc:Ignorable="d"
@@ -88,7 +91,11 @@
                 
             This tool connects to a running <Hyperlink RequestNavigate="Navigate" NavigateUri="https://neo4j.com">Neo4j</Hyperlink> graph database with code supplied 
             by Neo4j under the <Hyperlink RequestNavigate="Navigate" NavigateUri="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</Hyperlink>.
+                
+            The tool is written with WPF using the <Hyperlink RequestNavigate="Navigate" NavigateUri="http://materialdesigninxaml.net">Material design in XAML toolkit</Hyperlink> and the
+            <Hyperlink RequestNavigate="Navigate" NavigateUri="http://materialdesigninxaml.net">extensions</Hyperlink> provided by spiegelp, both under the 
+            <Hyperlink RequestNavigate="Navigate" NavigateUri="https://opensource.org/licenses/MIT">MIT license</Hyperlink>.                                                                                                 
             </TextBlock>
         </ScrollViewer>
     </Grid>
-</Window>
+</mde:MaterialWindow>

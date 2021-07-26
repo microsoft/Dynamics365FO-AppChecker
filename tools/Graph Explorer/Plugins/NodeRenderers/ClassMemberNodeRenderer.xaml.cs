@@ -28,7 +28,7 @@ namespace SocratexGraphExplorer.XppPlugin
             this.model = model;
             this.Properties = new ObservableCollection<PropertyItem>();
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.DataContext = this;
             this.SourceEditor = new XppSourceEditor();
@@ -38,6 +38,8 @@ namespace SocratexGraphExplorer.XppPlugin
         public async void SelectNodeAsync(INode node)
         {
             this.node = node;
+
+            this.Properties.Clear();
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
             this.Properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });

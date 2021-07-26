@@ -4,43 +4,45 @@
 using Microsoft.Web.WebView2.Core;
 using SocratexGraphExplorer.Models;
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using SocratexGraphExplorer.Views;
-using System.Configuration;
 using System.IO;
-using MaterialDesignColors;
-using System.Linq;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Web.WebView2.Wpf;
 using System.Threading.Tasks;
 using SocratexGraphExplorer.SourceEditor;
 
 namespace SocratexGraphExplorer
 {
+    using MaterialDesignExtensions.Controls;
+    using System.Threading;
+    using System.Windows.Threading;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MaterialWindow
     {
+        // public const string DialogHostName = "dialogHost";
+
+        public string DialogHostName
+        {
+            get
+            {
+                return "dialogHost";
+            }
+        }
+
         public ViewModels.EditorViewModel ViewModel { private set; get; }
         private readonly Model model;
 
         public MainWindow(string[] args)
         {
-            //SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
-            //splash.Show(false);
-            //Thread.Sleep(2000);
+            this.InitializeComponent();
 
-            InitializeComponent();
-            StateChanged += MainWindowStateChangeRaised;
-
-            InitializeAsync().ContinueWith((f) => {
-            });
+            //this.InitializeAsync().ContinueWith((f) => {
+            //});
 
             this.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
             {
@@ -65,15 +67,13 @@ namespace SocratexGraphExplorer
             this.model = new Models.Model();
             this.ViewModel = new ViewModels.EditorViewModel(this, model);
 
-            this.InputBindings.Add(new KeyBinding(ViewModel.ExecuteQueryCommand, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
-            this.InputBindings.Add(new KeyBinding(ViewModel.ExecuteQueryCommand, new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl-E")));
+            this.InputBindings.Add(new KeyBinding(this.ViewModel.ExecuteQueryCommand, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
+            this.InputBindings.Add(new KeyBinding(this.ViewModel.ExecuteQueryCommand, new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl-E")));
 
             this.DataContext = this.ViewModel;
 
-            // splash.Close(TimeSpan.FromSeconds(0));
-
             string password;
-            // if (!model.IsDebugMode)
+            if (!this.model.IsDebugMode)
             {
                 // Now show the connection dialog
                 var connectionWindow = new Views.ConnectionWindow(this.model);
@@ -88,16 +88,25 @@ namespace SocratexGraphExplorer
                 }
                 password = connectionWindow.Password;
             }
-            //else
-            //{
-            //    password = "test";
-            //}
+            else
+            {
+                password = "test";
+            }
 
             // Now that the value of the connection parameters have been set,
             // the global connection to the database can be established.
-            this.model.CreateNeo4jDriver(password);
+            Neo4jDatabase.CreateDriver(this.model.Username, password, this.model.Server, this.model.Port);
+
+            this.InitializeAsync().ContinueWith(async (f) => {
+                await this.ViewModel.OnInitializedAsync();
+            });
+
         }
 
+        /// <summary>
+        /// No cypher queries can be done here, since the driver has not been set up yet
+        /// </summary>
+        /// <returns></returns>
         private async Task InitializeAsync()
         {
             // Make sure everything is set up before doing anything with the browser
@@ -123,6 +132,7 @@ namespace SocratexGraphExplorer
 
                     var cypher = "MATCH (c) where id(c) = $id return c limit 1";
                     this.ViewModel.SelectedNode = id;
+                    
                     var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(nodeResult);
 
@@ -149,7 +159,7 @@ namespace SocratexGraphExplorer
                 await this.ViewModel.SetGraphSizeAsync(browser);
             };
 
-            this.Browser.NavigationCompleted += Browser_NavigationCompleted;
+            this.Browser.NavigationCompleted += this.Browser_NavigationCompleted;
             // The debugger does not work in Edge if the source does not come from a file.
             // Load the script into a temporary file, and use that file in the URI that
             // the debugger loads.
@@ -171,11 +181,17 @@ namespace SocratexGraphExplorer
         </style>
     </head>
     <body class='container'>
-        No information
+        Welcome to the Neo4j Graph Explorer
     </body>
 </html>");
             this.ViewModel.GraphModeSelected = true;
         }
+
+        //protected override async void OnActivated(EventArgs e)
+        //{
+        //    base.OnActivated(e);
+        //    await this.ViewModel.OnActivatedAsync();
+        //}
 
         protected override void OnClosed(EventArgs e)
         {
@@ -196,55 +212,12 @@ namespace SocratexGraphExplorer
             await browser.EnsureCoreWebView2Async();
             await this.ViewModel.SetGraphSizeAsync(browser);
 
-            browser.NavigationCompleted -= Browser_NavigationCompleted;
+            browser.NavigationCompleted -= this.Browser_NavigationCompleted;
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
-
-        // Minimize
-        private void CommandBinding_Executed_Minimize(object sender, ExecutedRoutedEventArgs e)
-        {
-            // SystemCommands.MinimizeWindow(this);
-        }
-
-        // Maximize
-        private void CommandBinding_Executed_Maximize(object sender, ExecutedRoutedEventArgs e)
-        {
-            // SystemCommands.MaximizeWindow(this);
-        }
-
-        // Restore
-        private void CommandBinding_Executed_Restore(object sender, ExecutedRoutedEventArgs e)
-        {
-            SystemCommands.RestoreWindow(this);
-        }
-
-        // Close
-        private void CommandBinding_Executed_Close(object sender, ExecutedRoutedEventArgs e)
-        {
-            // SystemCommands.CloseWindow(this);
-        }
-
-        // State change. This code compensates for the fact that the windows chrome
-        // adds a phantom border of 8 pixels around the windows frame.
-        private void MainWindowStateChangeRaised(object sender, EventArgs e)
-        {
-            if (WindowState == WindowState.Maximized)
-            {
-                MainWindowBorder.BorderThickness = new Thickness(8);
-                RestoreButton.Visibility = Visibility.Visible;
-                MaximizeButton.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                MainWindowBorder.BorderThickness = new Thickness(0);
-                RestoreButton.Visibility = Visibility.Collapsed;
-                MaximizeButton.Visibility = Visibility.Visible;
-            }
-        }
-
     }
 }

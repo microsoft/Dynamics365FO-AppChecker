@@ -181,6 +181,7 @@
     <None Remove="Resources\SourcecodeSymbols\ValueType_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\View_16x.svg" />
     <None Remove="Resources\SourcecodeSymbols\XMLFile_16x.svg" />
+    <None Remove="Simple Graph.ico" />
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="LICENSE.txt">
       <Pack>True</Pack>
@@ -190,10 +191,12 @@
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
         <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
+        <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
         <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.864.35" />
         <PackageReference Include="Neo4j.Driver" Version="4.3.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.0.0" />
     </ItemGroup>
     <ItemGroup>
         <Resource Include="Images\CloudRun_16x.png" />
@@ -367,6 +370,7 @@
         <EmbeddedResource Include="Resources\SourcecodeSymbols\ValueType_16x.svg" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\View_16x.svg" />
         <EmbeddedResource Include="Resources\SourcecodeSymbols\XMLFile_16x.svg" />
+        <EmbeddedResource Include="Simple Graph.ico" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Plugins\XppProgrammingPlugins.netcore.csproj" />

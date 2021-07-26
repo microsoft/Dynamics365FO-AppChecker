@@ -42,7 +42,7 @@ namespace SocratexGraphExplorer.XppPlugin
         {
             this.model = model;
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.DataContext = this;
             this.ClassEditor = new XppSourceEditor();
@@ -63,9 +63,12 @@ namespace SocratexGraphExplorer.XppPlugin
             var implementsCountQueryPromise = model.ExecuteCypherAsync(implementsCountQuery, new Dictionary<string, object>() { { "nodeId", node.Id } });
 
             this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
-            properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
-            properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Name", Value = (node.Properties["Name"].ToString()) });
+
+            this.Properties.Clear();
+
+            this.properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Package", Value = (node.Properties["Package"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Name", Value = (node.Properties["Name"].ToString()) });
 
             var extendsName = "Object";
             var extendsQueryResult = await extendsQueryPromise;
@@ -73,29 +76,29 @@ namespace SocratexGraphExplorer.XppPlugin
             {
                 extendsName = (extendsQueryResult[0].Values["q"] as INode).Properties["Name"].ToString();
             }
-            properties.Add(new PropertyItem() { Key = "Extends", Value = extendsName });
+            this.properties.Add(new PropertyItem() { Key = "Extends", Value = extendsName });
 
             var extendedByQueryResult = await extendedByQueryPromise;
             if (extendedByQueryResult != null)
             {
-                properties.Add(new PropertyItem() { Key = "Extended by", Value = extendedByQueryResult[0].Values["cnt"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Extended by", Value = extendedByQueryResult[0].Values["cnt"].ToString() });
             }
 
             var implementsCountQueryResult = await implementsCountQueryPromise;
             if (implementsCountQueryResult != null)
             {
-                properties.Add(new PropertyItem() { Key = "Implements", Value = implementsCountQueryResult[0].Values["cnt"].ToString() });
+                this.properties.Add(new PropertyItem() { Key = "Implements", Value = implementsCountQueryResult[0].Values["cnt"].ToString() });
             }
 
-            properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Abstract methods", Value = (node.Properties["NOAM"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Fields", Value = (node.Properties["NOA"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Final", Value = (node.Properties["IsFinal"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Abstract", Value = (node.Properties["IsAbstract"].ToString()) });
-            properties.Add(new PropertyItem() { Key = "Static", Value = (node.Properties["IsStatic"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Lines of Code", Value = (node.Properties["LOC"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Weighted Method Count", Value = (node.Properties["WMC"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Abstract methods", Value = (node.Properties["NOAM"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Fields", Value = (node.Properties["NOA"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Methods", Value = (node.Properties["NOM"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Statements", Value = (node.Properties["NOS"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Final", Value = (node.Properties["IsFinal"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Abstract", Value = (node.Properties["IsAbstract"].ToString()) });
+            this.properties.Add(new PropertyItem() { Key = "Static", Value = (node.Properties["IsStatic"].ToString()) });
 
             var base64Source = node.Properties["base64Source"] as string;
             var sourceArray = Convert.FromBase64String(base64Source);

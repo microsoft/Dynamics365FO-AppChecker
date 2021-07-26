@@ -27,7 +27,7 @@ namespace SocratexGraphExplorer.Views
 
         public ConnectionWindow(Model model)
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.DataContext = model;
             this.model = model;
