@@ -33,7 +33,7 @@ namespace GraphExplorer.XppPlugin
 
             this.IsReadOnly = true;
 
-            this.SyntaxHighlighting = LoadHighlightDefinition("SocratexGraphExplorer.XppPlugin.Resources.Xpp-Mode.xshd", typeof(XppSourceEditor).Assembly);
+            this.SyntaxHighlighting = LoadHighlightDefinition("GraphExplorer.XppPlugin.Resources.Xpp-Mode.xshd", typeof(XppSourceEditor).Assembly);
         }
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Peter Villadsen</Authors>
-    <PackageId>SocratexGraphExplorer.DefaultRenderers</PackageId>
+    <PackageId>GraphExplorer.DefaultRenderers</PackageId>
     <Company>Microsoft</Company>
     <Product>Socratex Graph Explorer</Product>
     <Description>Provides default renderers for nodes and edges that do not have any specific renderers.</Description>
@@ -11,7 +11,7 @@
     <UseWPF>true</UseWPF>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/microsoft/Dynamics365FO-AppChecker</PackageProjectUrl>
-    <RootNamespace>SocratexGraphExplorer.DefaultsPlugin</RootNamespace>
+    <RootNamespace>GraphExplorer.DefaultsPlugin</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

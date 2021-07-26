@@ -16,7 +16,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         mc:Ignorable="d"
         xmlns:local="clr-namespace:GraphExplorer.Views"
-        Title="Socratex Explorer" Height="400" Width="650">
+        Title="Graph Explorer" Height="400" Width="650">
     
     <Window.Resources>
         <Style x:Key="TextBlockStyle" TargetType="TextBlock">

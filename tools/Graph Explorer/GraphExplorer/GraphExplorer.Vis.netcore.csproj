@@ -6,8 +6,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
 
-    <RootNamespace>SocratexGraphExplorer</RootNamespace>
-    <AssemblyName>SocratexGraphExplorer</AssemblyName>
+    <RootNamespace>GraphExplorer</RootNamespace>
+    <AssemblyName>GraphExplorer</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>Simple Graph.ico</ApplicationIcon>

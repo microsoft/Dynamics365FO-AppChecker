@@ -64,7 +64,7 @@ namespace GraphExplorer.Models
         {
             get {
                 var assembly = Assembly.GetExecutingAssembly();
-                var scriptTextStream = assembly.GetManifestResourceStream("SocratexGraphExplorer.Resources.Script.html");
+                var scriptTextStream = assembly.GetManifestResourceStream("GraphExplorer.Resources.Script.html");
 
                 using var reader = new StreamReader(scriptTextStream);
                 return reader.ReadToEnd();
@@ -294,7 +294,7 @@ namespace GraphExplorer.Models
             var resourcesPath = Path.Combine(this.WebRootPath, "Resources");
             Directory.CreateDirectory(resourcesPath);
 
-            var resourcePrefix = "SocratexGraphExplorer.Resources.SourcecodeSymbols";
+            var resourcePrefix = "GraphExplorer.Resources.SourcecodeSymbols";
             foreach (var resource in assembly.GetManifestResourceNames())
             {
                 // Skip names outside of your desired subfolder

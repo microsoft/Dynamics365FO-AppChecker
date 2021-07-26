@@ -113,7 +113,7 @@ namespace GraphExplorer
             await this.Browser.EnsureCoreWebView2Async(null);
             await this.TextBrowser.EnsureCoreWebView2Async(null);
 
-            this.CypherEditor.SyntaxHighlighting = AvalonSourceEditor.LoadHighlightDefinition("SocratexGraphExplorer.Resources.Cypher-mode.xshd", typeof(MainWindow).Assembly);
+            this.CypherEditor.SyntaxHighlighting = AvalonSourceEditor.LoadHighlightDefinition("GraphExplorer.Resources.Cypher-mode.xshd", typeof(MainWindow).Assembly);
 
             // Set up a function to call when the user clicks on something in the graph browser.
             Browser.WebMessageReceived += async (object sender, CoreWebView2WebMessageReceivedEventArgs args) =>

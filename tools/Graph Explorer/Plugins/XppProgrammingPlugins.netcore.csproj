@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <AssemblyName>XppPlugin</AssemblyName>
-    <RootNamespace>SocratexGraphExplorer.XppPlugin</RootNamespace>
+    <RootNamespace>GraphExplorer.XppPlugin</RootNamespace>
     <Authors>Peter Villadsen</Authors>
     <Company>Microsoft</Company>
     <Product>Socratex Graph Explorer</Product>

@@ -4,10 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>SocratexGraphExplorer.Common.netcore</AssemblyName>
-    <RootNamespace>SocratexGraphExplorer.Common</RootNamespace>
+    <RootNamespace>GraphExplorer.Common</RootNamespace>
     <Authors>Peter Villadsen</Authors>
     <Company>Microsoft</Company>
-    <Product>Socratex Graph Explorer</Product>
+    <Product>Graph Explorer</Product>
     <Description>Data types that are common to the main app and the renderers that provide specialized viewers for nodes and edges in a particular vocabulary.</Description>
     <Copyright>Copyright © 2020</Copyright>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>

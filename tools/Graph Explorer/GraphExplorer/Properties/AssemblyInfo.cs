@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("Graph Explorer")]
 [assembly: AssemblyDescription("An application that rendering graphs from a graph database with a domain specific graphics vocabulary.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Socratex Graph Explorer")]
-[assembly: AssemblyCopyright("Copyright © 2020")]
+[assembly: AssemblyCompany("Villisoft")]
+[assembly: AssemblyProduct("Graph Explorer")]
+[assembly: AssemblyCopyright("Copyright © 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
