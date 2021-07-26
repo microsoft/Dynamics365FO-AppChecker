@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace SocratexGraphExplorer
+namespace GraphExplorer
 {
     public class RelayCommand : ICommand
     {

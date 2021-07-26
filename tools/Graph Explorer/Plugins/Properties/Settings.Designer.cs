@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SocratexGraphExplorer.XppPlugin.Properties {
+namespace GraphExplorer.XppPlugin.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

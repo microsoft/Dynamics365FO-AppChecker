@@ -2,8 +2,8 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
-using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
+using GraphExplorer.Models;
+using GraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Xml;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     class JavaScriptEditor : SourceEditor
     {

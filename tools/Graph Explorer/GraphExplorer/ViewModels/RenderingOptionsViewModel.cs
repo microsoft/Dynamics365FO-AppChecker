@@ -1,8 +1,8 @@
 ﻿using MaterialDesignColors;
 using MaterialDesignColors.Recommended;
 using Neo4j.Driver;
-using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.Views;
+using GraphExplorer.Models;
+using GraphExplorer.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SocratexGraphExplorer.ViewModels
+namespace GraphExplorer.ViewModels
 {
     internal class RenderingOptionsViewModel : INotifyPropertyChanged
     {

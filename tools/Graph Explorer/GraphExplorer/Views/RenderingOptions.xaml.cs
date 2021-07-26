@@ -1,5 +1,5 @@
-﻿using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
+﻿using GraphExplorer.Models;
+using GraphExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     using MaterialDesignExtensions.Controls;
 

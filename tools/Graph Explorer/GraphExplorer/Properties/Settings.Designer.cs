@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SocratexGraphExplorer.Properties {
+namespace GraphExplorer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -181,6 +181,30 @@ namespace SocratexGraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowNavigationButtons {
+            get {
+                return ((bool)(this["ShowNavigationButtons"]));
+            }
+            set {
+                this["ShowNavigationButtons"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AllowKeyboardNavigation {
+            get {
+                return ((bool)(this["AllowKeyboardNavigation"]));
+            }
+            set {
+                this["AllowKeyboardNavigation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("function graphSurfaceDefaultBackgroundColor() {\r\n    return \'white\';\r\n}\r\n\r\nfuncti" +
             "on graphSurfaceDefaultForegroundColor() {\r\n    return \'darkgray\';\r\n}\r\n\r\nfunction" +
             " createGraphNode(node) {\r\n    if (node.labels[0] == \'Class\') {\r\n        var imag" +
@@ -204,49 +228,13 @@ namespace SocratexGraphExplorer.Properties {
             "S\') {\r\n        return { id: edge.id, from: edge.from, to: edge.to, value: edge.p" +
             "roperties.Count, label: edge.type, title: \'Calls: \' + edge.properties.Count, col" +
             "or: {color: \'darkgrey\'}};\r\n    }\r\n    else {\r\n        return { id: edge.id, from" +
-            ": edge.from, to: edge.to, label: edge.type };\r\n    }\r\n}\r\n\r\nfunction options() {\r" +
-            "\n    return {\r\n        interaction: { hover: true, selectConnectedEdges: false }" +
-            ",\r\n        manipulation: {\r\n            enabled: false, // true enables adding n" +
-            "odes to the graph\r\n        },\r\n        nodes: {\r\n            size: 10, // For no" +
-            "des that do not have specific size or where no value attribute is provided\r\n    " +
-            "        font: { strokeWidth: 2 }, // This is the amount of space around the text" +
-            " in nodes or edges.\r\n            shape: \'dot\',\r\n            scaling: {\r\n        " +
-            "        min: 10, max: 30,\r\n                label: { // Make sure font size is in" +
-            " this range.\r\n                    min: 8, max: 24\r\n                }\r\n          " +
-            "  }\r\n        },\r\n        edges: {\r\n            arrows: \"to\",\r\n            shadow" +
-            ": false,\r\n            smooth: true,\r\n            scaling: {\r\n                min" +
-            ": 2, \'max\': 12, \'label\': { \'enabled\': true, \'min\': 9, \'max\': 14}\r\n            }\r" +
-            "\n        }\r\n    }\r\n}")]
+            ": edge.from, to: edge.to, label: edge.type };\r\n    }\r\n}\r\n")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));
             }
             set {
                 this["Configuration"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowNavigationButtons {
-            get {
-                return ((bool)(this["ShowNavigationButtons"]));
-            }
-            set {
-                this["ShowNavigationButtons"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AllowKeyboardNavigation {
-            get {
-                return ((bool)(this["AllowKeyboardNavigation"]));
-            }
-            set {
-                this["AllowKeyboardNavigation"] = value;
             }
         }
     }

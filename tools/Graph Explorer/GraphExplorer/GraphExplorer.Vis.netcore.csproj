@@ -374,9 +374,9 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Plugins\XppProgrammingPlugins.netcore.csproj" />
-      <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj" />
-      <ProjectReference Include="..\SocratexGraphExplorer.DefaultRenderers.netcore\SocratexGraphExplorer.DefaultRenderers.netcore.csproj" />
-      <ProjectReference Include="..\SocratexGraphExplorer.SourceEditor.netcore\SocratexGraphExplorer.SourceEditor.netcore.csproj" />
+      <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\GraphExplorer.Common.netcore.csproj" />
+      <ProjectReference Include="..\SocratexGraphExplorer.DefaultRenderers.netcore\GraphExplorer.DefaultRenderers.netcore.csproj" />
+      <ProjectReference Include="..\SocratexGraphExplorer.SourceEditor.netcore\GraphExplorer.SourceEditor.netcore.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Properties\Settings.Designer.cs">

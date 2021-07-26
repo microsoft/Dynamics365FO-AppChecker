@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SocratexGraphExplorer.Common
+namespace GraphExplorer.Common
 {
     public interface IPlugin
     { 

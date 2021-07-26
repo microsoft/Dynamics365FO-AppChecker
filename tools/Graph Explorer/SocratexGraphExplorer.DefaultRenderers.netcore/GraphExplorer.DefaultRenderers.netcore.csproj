@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj" />
+    <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\GraphExplorer.Common.netcore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

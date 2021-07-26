@@ -14,7 +14,7 @@ using System.Windows.Input;
 using System.Xml;
 //using MaterialDesignThemes.Wpf;
 
-namespace SocratexGraphExplorer.SourceEditor
+namespace GraphExplorer.SourceEditor
 {
 
     /// <summary>

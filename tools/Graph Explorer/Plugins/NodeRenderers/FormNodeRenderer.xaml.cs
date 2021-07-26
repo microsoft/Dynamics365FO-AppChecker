@@ -1,5 +1,5 @@
 ﻿using Neo4j.Driver;
-using SocratexGraphExplorer.Common;
+using GraphExplorer.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.XppPlugin
+namespace GraphExplorer.XppPlugin
 {
     /// <summary>
     /// Interaction logic for ClassInformationControl.xaml

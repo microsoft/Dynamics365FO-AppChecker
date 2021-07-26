@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SocratexGraphExplorer.Properties {
+namespace GraphExplorer.Properties {
     using System;
     
     

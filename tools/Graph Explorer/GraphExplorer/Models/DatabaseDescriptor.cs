@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SocratexGraphExplorer.Models
+namespace GraphExplorer.Models
 {
     /// <summary>
     /// This class describes a neo4j database.

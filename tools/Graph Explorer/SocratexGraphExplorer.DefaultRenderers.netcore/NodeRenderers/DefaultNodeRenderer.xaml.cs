@@ -1,11 +1,11 @@
 ﻿using Neo4j.Driver;
-using SocratexGraphExplorer.Common;
+using GraphExplorer.Common;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.DefaultsPlugin
+namespace GraphExplorer.DefaultsPlugin
 {
     /// <summary>
     /// Interaction logic for the Default node renderer, that is used when

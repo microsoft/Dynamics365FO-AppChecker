@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     using System;
     using ICSharpCode.AvalonEdit;
@@ -16,9 +16,9 @@ namespace SocratexGraphExplorer.Views
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
     using System.Xml;
-    using SocratexGraphExplorer.Models;
+    using GraphExplorer.Models;
     using MaterialDesignThemes.Wpf;
-    using SocratexGraphExplorer.SourceEditor;
+    using GraphExplorer.SourceEditor;
 
     /// <summary>
     /// Base class for all the text editors.s

@@ -1,4 +1,4 @@
-﻿<mde:MaterialWindow x:Class="SocratexGraphExplorer.Views.AboutBox"
+﻿<mde:MaterialWindow x:Class="GraphExplorer.Views.AboutBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,7 +15,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Background="{DynamicResource MaterialDesignPaper}"
         mc:Ignorable="d"
-        xmlns:local="clr-namespace:SocratexGraphExplorer.Views"
+        xmlns:local="clr-namespace:GraphExplorer.Views"
         Title="Socratex Explorer" Height="400" Width="650">
     
     <Window.Resources>

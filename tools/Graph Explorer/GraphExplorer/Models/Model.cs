@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using Neo4j.Driver;
-using SocratexGraphExplorer.Common;
+using GraphExplorer.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SocratexGraphExplorer.Models
+namespace GraphExplorer.Models
 {
     public class Model : IModel, INotifyPropertyChanged
     {

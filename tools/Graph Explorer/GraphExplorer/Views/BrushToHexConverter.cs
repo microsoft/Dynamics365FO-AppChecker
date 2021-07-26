@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     public class BrushToHexConverter : IValueConverter
     {

@@ -7,9 +7,9 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using Microsoft.Win32;
 using Neo4j.Driver;
-using SocratexGraphExplorer.Common;
-using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.Views;
+using GraphExplorer.Common;
+using GraphExplorer.Models;
+using GraphExplorer.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +28,7 @@ using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
 
-namespace SocratexGraphExplorer.ViewModels
+namespace GraphExplorer.ViewModels
 {
     delegate void NodeSelectedDelegate(INode node);
     delegate void EdgeSelectedDelegate(IRelationship edge);

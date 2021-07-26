@@ -1,4 +1,4 @@
-﻿namespace SocratexGraphExplorer.DefaultsPlugin
+﻿namespace GraphExplorer.DefaultsPlugin
 {
     public class PropertyItem
     {

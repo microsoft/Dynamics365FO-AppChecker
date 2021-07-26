@@ -1,5 +1,5 @@
 ﻿using MaterialDesignExtensions.Controls;
-using SocratexGraphExplorer.Models;
+using GraphExplorer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,7 @@ using Neo4j.Driver;
 using System.Linq;
 using unvell.ReoGrid.IO.OpenXML.Schema;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     /// <summary>
     /// Interaction logic for DataLab.xaml

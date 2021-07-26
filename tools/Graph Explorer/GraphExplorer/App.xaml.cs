@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
-namespace SocratexGraphExplorer
+namespace GraphExplorer
 {
     /// <summary>
     /// Interaction logic for App.xaml

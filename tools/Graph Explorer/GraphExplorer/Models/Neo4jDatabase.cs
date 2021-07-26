@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 
-namespace SocratexGraphExplorer.Models
+namespace GraphExplorer.Models
 {
     internal static class Neo4jDatabase
     {

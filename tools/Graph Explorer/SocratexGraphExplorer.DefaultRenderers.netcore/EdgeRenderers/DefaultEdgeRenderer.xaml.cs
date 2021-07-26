@@ -1,12 +1,12 @@
 ﻿using Neo4j.Driver;
-using SocratexGraphExplorer.Common;
-using SocratexGraphExplorer.DefaultsPlugin;
+using GraphExplorer.Common;
+using GraphExplorer.DefaultsPlugin;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.DefaultsPlugin
+namespace GraphExplorer.DefaultsPlugin
 {
     /// <summary>
     /// Interaction logic for the Default edge renderer, that is used when

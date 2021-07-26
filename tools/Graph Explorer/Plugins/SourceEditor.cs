@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace SocratexGraphExplorer.XppPlugin
+namespace GraphExplorer.XppPlugin
 {
     using System;
     using ICSharpCode.AvalonEdit;
@@ -15,7 +15,7 @@ namespace SocratexGraphExplorer.XppPlugin
     using System.Windows.Input;
     using System.Xml;
     using MaterialDesignThemes.Wpf;
-    using SocratexGraphExplorer.SourceEditor;
+    using GraphExplorer.SourceEditor;
 
     /// <summary>
     /// Base class for all the text editors.s

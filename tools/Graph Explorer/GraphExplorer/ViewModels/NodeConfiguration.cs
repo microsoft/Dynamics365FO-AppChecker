@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
-namespace SocratexGraphExplorer.ViewModels
+namespace GraphExplorer.ViewModels
 {
     /// <summary>
     /// Class defining properties relating to a node

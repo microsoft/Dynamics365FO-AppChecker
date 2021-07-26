@@ -11,9 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
-    using SocratexGraphExplorer.ViewModels;
+    using GraphExplorer.ViewModels;
 using System.ComponentModel.Composition.Primitives;
 
 /// <summary>

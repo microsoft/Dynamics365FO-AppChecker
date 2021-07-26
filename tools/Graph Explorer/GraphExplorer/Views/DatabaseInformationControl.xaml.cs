@@ -1,11 +1,11 @@
-﻿using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.ViewModels;
+﻿using GraphExplorer.Models;
+using GraphExplorer.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     /// <summary>
     /// Interaction logic for DatabaseInformationControl.xaml

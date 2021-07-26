@@ -1,4 +1,4 @@
-﻿namespace SocratexGraphExplorer.Views
+﻿namespace GraphExplorer.Views
 {
     using System.Diagnostics;
     using System.Reflection;

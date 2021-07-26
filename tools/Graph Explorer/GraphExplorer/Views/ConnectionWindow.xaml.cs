@@ -1,4 +1,4 @@
-﻿using SocratexGraphExplorer.Models;
+﻿using GraphExplorer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace SocratexGraphExplorer.Views
+namespace GraphExplorer.Views
 {
     /// <summary>
     /// Interaction logic for ConnectionWindow.xaml

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SocratexGraphExplorer.Models
+namespace GraphExplorer.Models
 {
     internal class RenderingOptionsModel
     {

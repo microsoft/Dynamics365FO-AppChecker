@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
-using SocratexGraphExplorer.Common;
+using GraphExplorer.Common;
 
-namespace SocratexGraphExplorer.XppPlugin
+namespace GraphExplorer.XppPlugin
 {
     [Export(typeof(INodeRendererPlugin))]
     [ExportMetadata("Label", "Table")]

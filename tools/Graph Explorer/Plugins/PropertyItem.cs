@@ -1,4 +1,4 @@
-﻿namespace SocratexGraphExplorer.XppPlugin
+﻿namespace GraphExplorer.XppPlugin
 {
     public class PropertyItem
     {

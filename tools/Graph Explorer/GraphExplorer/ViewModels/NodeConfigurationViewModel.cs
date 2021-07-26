@@ -1,12 +1,12 @@
-﻿using SocratexGraphExplorer.Models;
-using SocratexGraphExplorer.Views;
+﻿using GraphExplorer.Models;
+using GraphExplorer.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 
-namespace SocratexGraphExplorer.ViewModels
+namespace GraphExplorer.ViewModels
 {
     public class NodeConfigurationViewModel : INotifyPropertyChanged
     {

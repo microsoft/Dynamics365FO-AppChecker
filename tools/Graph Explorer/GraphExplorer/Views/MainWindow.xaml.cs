@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.Web.WebView2.Core;
-using SocratexGraphExplorer.Models;
+using GraphExplorer.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,9 +11,9 @@ using System.Windows.Input;
 using System.IO;
 using Microsoft.Web.WebView2.Wpf;
 using System.Threading.Tasks;
-using SocratexGraphExplorer.SourceEditor;
+using GraphExplorer.SourceEditor;
 
-namespace SocratexGraphExplorer
+namespace GraphExplorer
 {
     using MaterialDesignExtensions.Controls;
     using System.Threading;

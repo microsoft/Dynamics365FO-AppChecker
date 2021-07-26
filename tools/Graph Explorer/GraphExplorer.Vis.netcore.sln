@@ -3,20 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocratexGraphExplorer.Vis.netcore", "GraphExplorer\SocratexGraphExplorer.Vis.netcore.csproj", "{BA204B2B-A10A-443F-BEEA-80A6CCA76E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.Vis.netcore", "GraphExplorer\GraphExplorer.Vis.netcore.csproj", "{BA204B2B-A10A-443F-BEEA-80A6CCA76E98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocratexGraphExplorer.Common.netcore", "SocratexGraphExplorer.Common.netcore\SocratexGraphExplorer.Common.netcore.csproj", "{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.Common.netcore", "SocratexGraphExplorer.Common.netcore\GraphExplorer.Common.netcore.csproj", "{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XppProgrammingPlugins.netcore", "Plugins\XppProgrammingPlugins.netcore.csproj", "{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocratexGraphExplorer.DefaultRenderers.netcore", "SocratexGraphExplorer.DefaultRenderers.netcore\SocratexGraphExplorer.DefaultRenderers.netcore.csproj", "{949A99EC-B663-4730-A6B8-02ED602B8DD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.DefaultRenderers.netcore", "SocratexGraphExplorer.DefaultRenderers.netcore\GraphExplorer.DefaultRenderers.netcore.csproj", "{949A99EC-B663-4730-A6B8-02ED602B8DD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9432DF43-CFA5-44BD-9390-B30C62AA65E7}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocratexGraphExplorer.SourceEditor.netcore", "SocratexGraphExplorer.SourceEditor.netcore\SocratexGraphExplorer.SourceEditor.netcore.csproj", "{C7D26A75-C28D-4ECD-A175-8F64E15008AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.SourceEditor.netcore", "SocratexGraphExplorer.SourceEditor.netcore\GraphExplorer.SourceEditor.netcore.csproj", "{C7D26A75-C28D-4ECD-A175-8F64E15008AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

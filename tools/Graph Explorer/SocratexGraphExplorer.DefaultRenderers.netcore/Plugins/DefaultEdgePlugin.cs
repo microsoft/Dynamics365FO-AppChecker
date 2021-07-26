@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
-using SocratexGraphExplorer.Common;
+using GraphExplorer.Common;
 
-namespace SocratexGraphExplorer.DefaultsPlugin
+namespace GraphExplorer.DefaultsPlugin
 {
     [Export(typeof(IEdgeRendererPlugin))]
     [ExportMetadata("Label", "()")]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SocratexGraphExplorer.XppPlugin
+namespace GraphExplorer.XppPlugin
 {
     /// <summary>
     /// Custom editor for editing X++ source text. It is based on the Avaloneditor, but has the 

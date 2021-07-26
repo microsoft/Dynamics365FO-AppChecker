@@ -41,6 +41,12 @@
     <Setting Name="SourceFileDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ShowNavigationButtons" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AllowKeyboardNavigation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="Configuration" Type="System.String" Scope="User">
       <Value Profile="(Default)">function graphSurfaceDefaultBackgroundColor() {
     return 'white';
@@ -83,40 +89,7 @@ function createGraphEdge(edge) {
         return { id: edge.id, from: edge.from, to: edge.to, label: edge.type };
     }
 }
-
-function options() {
-    return {
-        interaction: { hover: true, selectConnectedEdges: false },
-        manipulation: {
-            enabled: false, // true enables adding nodes to the graph
-        },
-        nodes: {
-            size: 10, // For nodes that do not have specific size or where no value attribute is provided
-            font: { strokeWidth: 2 }, // This is the amount of space around the text in nodes or edges.
-            shape: 'dot',
-            scaling: {
-                min: 10, max: 30,
-                label: { // Make sure font size is in this range.
-                    min: 8, max: 24
-                }
-            }
-        },
-        edges: {
-            arrows: "to",
-            shadow: false,
-            smooth: true,
-            scaling: {
-                min: 2, 'max': 12, 'label': { 'enabled': true, 'min': 9, 'max': 14}
-            }
-        }
-    }
-}</Value>
-    </Setting>
-    <Setting Name="ShowNavigationButtons" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="AllowKeyboardNavigation" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+</Value>
     </Setting>
   </Settings>
 </SettingsFile>
