@@ -5,7 +5,6 @@ using mde = MaterialDesignExtensions.Controls;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
-using Microsoft.Win32;
 using Neo4j.Driver;
 using GraphExplorer.Common;
 using GraphExplorer.Models;
@@ -27,6 +26,7 @@ using System.Windows.Media;
 using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
+using unvell.ReoGrid.Actions;
 
 namespace GraphExplorer.ViewModels
 {
@@ -38,6 +38,8 @@ namespace GraphExplorer.ViewModels
     public class EditorViewModel : INotifyPropertyChanged
     {
         private readonly MainWindow view;
+        public DataLaboratory Laboratory { get; set; }
+
         private readonly Models.Model model;
         private long selectedNode = 0;
         private long selectedEdge = 0;
@@ -229,7 +231,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
 
         public ICommand AboutCommand => new RelayCommand(
-            p =>
+            _ =>
             {
                 var aboutBox = new AboutBox();
                 aboutBox.Show();
@@ -237,7 +239,7 @@ namespace GraphExplorer.ViewModels
         );
 
         public ICommand ApplicationExitCommand => new RelayCommand(
-            p =>
+            _ =>
             {
                 Application.Current.Shutdown();
             }
@@ -420,15 +422,67 @@ namespace GraphExplorer.ViewModels
             );
         }
 
+        #region "Data laboratory"
+
+        public object DatalaboratoryNodes => this.Laboratory.Nodes;
+        public object DatalaboratoryEdges  => this.Laboratory.Edges;
+
+        public ICommand ShowDataLaboratoryCommand
+        {
+            get => new RelayCommand(
+                async p =>
+                {
+                    // TODO when the window is active, the icon on the left hand bar should change to the 
+                    // version that designates hiding the window.
+                    if (this.Laboratory == null)
+                    {
+                        this.Laboratory = await DataLaboratory.CreateDataLaboratory(this);
+                    }
+                    this.Laboratory.Show();
+                }
+            );
+        }
+
+        public ICommand HideCommand => new RelayCommand(
+            p =>
+            {
+                var control = p as unvell.ReoGrid.ReoGridControl;
+                control.DoAction(new HideColumnsAction(
+                    control.CurrentWorksheet.SelectionRange.Col, control.CurrentWorksheet.SelectionRange.Cols));
+            }
+        );
+
+        public ICommand UnhideCommand => new RelayCommand(
+            p =>
+            {
+                var control = p as unvell.ReoGrid.ReoGridControl;
+                control.DoAction(new UnhideColumnsAction(
+                    control.CurrentWorksheet.SelectionRange.Col, control.CurrentWorksheet.SelectionRange.Cols));
+            }
+        );
+
+        public ICommand AdjustWidthCommand => new RelayCommand(
+            p =>
+            {
+                var control = p as unvell.ReoGrid.ReoGridControl;
+                _ = control.CurrentWorksheet.AutoFitColumnWidth(control.CurrentWorksheet.SelectionRange.Col, true);
+            }
+        );
+        public ICommand CopyColumnCommand => new RelayCommand(
+            p =>
+            {
+                var control = p as unvell.ReoGrid.ReoGridControl;
+                control.CurrentWorksheet.Copy();
+            }
+        );
+
+        #endregion
+
         public ICommand ImportStyleCommand
         {
             get => new RelayCommand(
                 async p =>
                 {
-                    // TODO experimental
-                    DataLab d = await DataLab.CreateDataLaboratory(); 
-                    d.Show();
-
                     // TODO Put in the material dialog here.
                     // Open a Javascript (.js) file with the file open dialog
                     //var openFileDialog = new OpenFileDialog()
@@ -486,7 +540,7 @@ namespace GraphExplorer.ViewModels
         public ICommand SaveQueryCommand
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     this.SaveQueryFile();
                 });
@@ -495,7 +549,7 @@ namespace GraphExplorer.ViewModels
         public ICommand OpenQueryCommand
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     this.OpenQueryFile();
                 });
@@ -788,6 +842,7 @@ namespace GraphExplorer.ViewModels
                          if (this.graphModeSelected)
                          {
                              // Render the data in the graph view
+                             // TODO replace with graph.GenerateJSON
                              string resultJson = Neo4jDatabase.GenerateJSON(result);
 
                              await this.RepaintNodesAsync(resultJson);
@@ -803,7 +858,7 @@ namespace GraphExplorer.ViewModels
 
                  // Running is allowed when there is text there to submit as a query and
                  // there is a connection to the database.
-                 p =>
+                 _ =>
                  {
                      return v.CypherEditor.Document.Text.Any();
                  });
@@ -859,7 +914,7 @@ namespace GraphExplorer.ViewModels
                         "  and id(m) in $nodeIds " +
                         "return n,m,r";
 
-                var results = await Neo4jDatabase.ExecuteQueryAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
+                var results = await Neo4jDatabase.ExecuteCypherQueryAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
                 return await results.ToListAsync();
             }
 
@@ -894,6 +949,7 @@ namespace GraphExplorer.ViewModels
             var results = await this.GetGraphFromNodes(nodes);
             if (results != null)
             {
+                // TODO replace with method on Graph class.
                 string resultJson = Neo4jDatabase.GenerateJSON(results);
                 await RepaintNodesAsync(resultJson);
             }

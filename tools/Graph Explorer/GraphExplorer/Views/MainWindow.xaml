@@ -220,9 +220,14 @@ Licensed under the MIT license.
                                                 <Button Command="{Binding ShowDatabaseParametersCommand}" ToolTip="Show database parameters">
                                                     <materialDesign:PackIcon Kind="Database" />
                                                 </Button>
+                                                <Button Command="{Binding ShowDataLaboratoryCommand}" ToolTip="Show Data Laboratory">
+                                                    <materialDesign:PackIcon Kind="TableLarge" />
+                                                    <!-- Use TableLargeRemove when active -->
+                                                </Button>
                                                 <Button Command="{Binding ShowSettingsCommand}" ToolTip="Show Settings">
                                                     <materialDesign:PackIcon Kind="CogOutline"/>
                                                 </Button>
+
                                             </ToolBar>
                                         </ToolBarTray>
                                         <wv2:WebView2 Grid.Column="1" x:Name="Browser" />

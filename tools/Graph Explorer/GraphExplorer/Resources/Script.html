@@ -38,12 +38,12 @@
 
             // Convert the graph rendering agnostic format to the vis.js format 
             var graphNodes = [];
-            nodesAndEdgesInJson .nodes.forEach(n => {
+            nodesAndEdgesInJson.Nodes.forEach(n => {
                 graphNodes.push(createGraphNode(n));
             });
 
             var graphEdges = [];
-            nodesAndEdgesInJson .edges.forEach(e => {
+            nodesAndEdgesInJson.Edges.forEach(e => {
                 graphEdges.push(createGraphEdge(e));
             });
 

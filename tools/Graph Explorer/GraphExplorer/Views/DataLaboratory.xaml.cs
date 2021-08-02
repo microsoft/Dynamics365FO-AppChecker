@@ -17,26 +17,30 @@ using unvell.ReoGrid;
 using Neo4j.Driver;
 using System.Linq;
 using unvell.ReoGrid.IO.OpenXML.Schema;
+using GraphExplorer.ViewModels;
 
 namespace GraphExplorer.Views
 {
     /// <summary>
     /// Interaction logic for DataLab.xaml
     /// </summary>
-    public partial class DataLab : MaterialWindow
+    public partial class DataLaboratory : MaterialWindow
     {
-        public async static Task<DataLab> CreateDataLaboratory()
+        private EditorViewModel ViewModel {get; set; }
+
+        public async static Task<DataLaboratory> CreateDataLaboratory(EditorViewModel viewModel)
         {
-            var res = new DataLab();
+            var res = new DataLaboratory(viewModel);
+            res.DataContext = viewModel;
             await res.InitializeAsync();
             return res;
         }
 
         private async Task InitializeAsync()
         {
-            var cursor = await Neo4jDatabase.ExecuteQueryAsync("match (c:Class) -[r]->(p) return * limit 3");
-            var records = await cursor.ToListAsync();
-            var dict = Neo4jDatabase.GenerateJSONParts(records);
+            var graph = await Neo4jDatabase.ExecuteQueryAsync("match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 30");
+            //var records = await cursor.ToListAsync();
+            //var dict = Neo4jDatabase.GenerateJSONParts(records);
 
             // Get rid of the predefined worksheet. We will add our own below:
             this.Nodes.Worksheets.RemoveAt(0);
@@ -45,13 +49,14 @@ namespace GraphExplorer.Views
             IDictionary<string, int> propertyColumns = null;
 
             int row = 0;
-            var nodes = dict["nodes"];
+            var nodes = graph.Nodes;
             int maxcol = 2;
 
-            foreach (IDictionary<string, object> node in nodes as Dictionary<long, object>.ValueCollection)
+            unvell.ReoGrid.Worksheet worksheet = null;
+            foreach (var node in nodes)
             {
-                var id = node["id"] ;
-                var labels = node["labels"] as string[];
+                var id = node.Id;
+                var labels = node.Labels;
 
                 // Assume only one for now
                 var label = "";
@@ -60,12 +65,14 @@ namespace GraphExplorer.Views
                     label = labels[0];
                 }
 
-                var worksheet = this.Nodes.Worksheets.Where(w => w.Name == label).FirstOrDefault();
+                worksheet = this.Nodes.Worksheets.Where(w => w.Name == label).FirstOrDefault();
                 if (worksheet == null)
                 {
                     // Create the worksheet
                     worksheet = this.Nodes.Worksheets.Create(label);
                     this.Nodes.Worksheets.Add(worksheet);
+
+                    worksheet.FreezeToCell(0, 2, FreezeArea.Left);
                     row = 0;
 
                     propertyColumns = new Dictionary<string, int>();
@@ -81,7 +88,7 @@ namespace GraphExplorer.Views
                 worksheet.SetCellData(new CellPosition(row, 0), id);
                 worksheet.SetCellData(new CellPosition(row, 1), label);
 
-                var properties = node["properties"] as IDictionary<string, object>;
+                var properties = node.Properties;
 
                 foreach (var property in properties)
                 {
@@ -105,21 +112,29 @@ namespace GraphExplorer.Views
                 row += 1;
             }
 
-            var edges = dict["edges"];
-            foreach (IDictionary<string, object> edge in edges as Dictionary<long, object>.ValueCollection)
+            if (worksheet != null)
             {
-                var id = edge["id"];
-                var from = edge["from"];
-                var to = edge["to"];
-                var type = edge["type"] as string;
-                var properties = edge["properties"] as IDictionary<string, object>;
+                worksheet.RowCount = row + 1;
+                worksheet.ColumnCount = maxcol;
+            }
 
-                var worksheet = this.Edges.Worksheets.Where(w => w.Name == type).FirstOrDefault();
+            var edges = graph.Edges;
+            foreach (var edge in edges)
+            {
+                var id = edge.Id;
+                var from = edge.From;
+                var to = edge.To;
+                var type = edge.Type;
+                var properties = edge.Properties;
+
+                worksheet = this.Edges.Worksheets.Where(w => w.Name == type).FirstOrDefault();
                 if (worksheet == null)
                 {
                     // Create the worksheet
                     worksheet = this.Edges.Worksheets.Create(type);
                     this.Edges.Worksheets.Add(worksheet);
+
+                    worksheet.FreezeToCell(0, 4, FreezeArea.Left);
                     row = 0;
 
                     propertyColumns = new Dictionary<string, int>();
@@ -139,7 +154,7 @@ namespace GraphExplorer.Views
                 worksheet.SetCellData(new CellPosition(row, 2), from);
                 worksheet.SetCellData(new CellPosition(row, 3), to);
 
-                properties = edge["properties"] as IDictionary<string, object>;
+                properties = edge.Properties;
 
                 foreach (var property in properties)
                 {
@@ -162,10 +177,18 @@ namespace GraphExplorer.Views
 
                 row += 1;
             }
+
+            if (worksheet != null)
+            {
+                worksheet.RowCount = row + 1;
+                worksheet.ColumnCount = maxcol;
+            }
         }
 
-        private DataLab()
+        private DataLaboratory(EditorViewModel viewModel)
         {
+            this.ViewModel = viewModel;
+
             this.InitializeComponent();
 
             var backgroundColorBrush = this.FindResource("MaterialDesignPaper") as SolidColorBrush;
@@ -182,7 +205,7 @@ namespace GraphExplorer.Views
             this.Nodes.ControlStyle = rgcs;
             this.Edges.ControlStyle = rgcs;
 
-            // For all the worksheets: Record a handler for onclicked in a cell. Alson,
+            // For all the worksheets: Record a handler for onclicked in a cell. Also,
             // the first column (i.e. the id column) is not editable.
             //foreach (var sheet in this.Nodes.Worksheets)
             //{
@@ -210,6 +233,12 @@ namespace GraphExplorer.Views
             // in the database can be authored.
             // e.Cell.Tag = id
             // throw new NotImplementedException();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            this.ViewModel.Laboratory = null;
         }
     }
 }

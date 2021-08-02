@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.Models
 {
@@ -221,26 +222,28 @@ namespace GraphExplorer.Models
             builder.AppendLine("</table>");
             builder.AppendLine("</body>");
             builder.AppendLine("</html>");
+
             return builder.ToString();
         }
 
         public static string GenerateJSON(List<IRecord> records)
         {
-            var dict = GenerateJSONParts(records);
-            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(dict, Newtonsoft.Json.Formatting.Indented);
+            var graph = GenerateGraph(records);
+            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(graph, Newtonsoft.Json.Formatting.Indented);
             return serialized;
         }
 
         /// <summary>
-        /// Generate the information about the nodes, edges and values in the incoming 
-        /// list of records.
+        /// Generate a graph instance from the list of records provided by the
+        /// Neo4j database.
         /// </summary>
-        /// <param name="records">The graph to generate the JSON for</param>
-        /// <returns>A dictionary with entries for nodes, edges and values.</returns>
-        public static IDictionary<string, object> GenerateJSONParts(List<IRecord> records)
+        /// <param name="records">The incoming records</param>
+        /// <returns>A graph instance with the nodes, edges and values provided by
+        /// the neo4j graph database.</returns>
+        public static Graph GenerateGraph(List<IRecord> records)
         {
-            var nodes = new Dictionary<long, object>();
-            var edges = new Dictionary<long, object>();
+            var nodes = new Dictionary<long, Node>();
+            var edges = new Dictionary<long, Edge>();
             var values = new List<object>();
 
             var inDegrees = new Dictionary<long, long>();  // Map from nodeId onto in degree
@@ -250,12 +253,12 @@ namespace GraphExplorer.Models
             {
                 if (!edges.ContainsKey(relationship.Id))
                 {
-                    var edge = new Dictionary<string, object>
+                    var edge = new Edge
                     {
-                        ["id"] = relationship.Id,
-                        ["type"] = relationship.Type,
-                        ["from"] = relationship.StartNodeId,
-                        ["to"] = relationship.EndNodeId
+                        Id = relationship.Id,
+                        Type = relationship.Type,
+                        From = relationship.StartNodeId,
+                        To = relationship.EndNodeId
                     };
 
                     if (outDegrees.ContainsKey(relationship.StartNodeId))
@@ -273,7 +276,8 @@ namespace GraphExplorer.Models
                     {
                         props[kvp.Key] = kvp.Value;
                     }
-                    edge["properties"] = props;
+                    
+                    edge.Properties = props;
 
                     edges[relationship.Id] = edge;
                 }
@@ -286,7 +290,7 @@ namespace GraphExplorer.Models
                 GenerateNode(value.End);
 
                 foreach (var relationship in value.Relationships)
-                {
+                 {
                     GenerateRelationship(relationship);
                 }
             }
@@ -295,10 +299,10 @@ namespace GraphExplorer.Models
             {
                 if (!nodes.ContainsKey(node.Id))
                 {
-                    var n = new Dictionary<string, object>
+                    var n = new Node
                     {
-                        ["id"] = node.Id,
-                        ["labels"] = node.Labels.ToArray()
+                        Id = node.Id,
+                        Labels = node.Labels.ToArray()
                     };
 
                     var props = new Dictionary<string, object>();
@@ -307,7 +311,7 @@ namespace GraphExplorer.Models
                         props[kvp.Key] = kvp.Value;
                     }
 
-                    n["properties"] = props;
+                    n.Properties = props;
                     nodes[node.Id] = n;
                 }
             }
@@ -352,8 +356,8 @@ namespace GraphExplorer.Models
             // the user may have used.
             foreach (var nodeId in nodes.Keys)
             {
-                var node = nodes[nodeId] as Dictionary<string, object>;
-                var nodeProperties = node["properties"] as Dictionary<string, object>;
+                var node = nodes[nodeId]; // as Dictionary<string, object>;
+                var nodeProperties = node.Properties; // ["properties"] as Dictionary<string, object>;
 
                 if (inDegrees.ContainsKey(nodeId))
                 {
@@ -374,15 +378,169 @@ namespace GraphExplorer.Models
                 }
             }
 
-            var result = new Dictionary<string, object>
+            var result = new Graph
             {
-                ["nodes"] = nodes.Values,
-                ["edges"] = edges.Values,
-                ["values"] = values
+                Nodes = nodes.Values,
+                Edges = edges.Values,
+                Values = values
             };
 
             return result;
         }
+
+
+        /// <summary>
+        /// Generate the information about the nodes, edges and values in the incoming 
+        /// list of records.
+        /// </summary>
+        /// <param name="records">The graph to generate the JSON for</param>
+        /// <returns>A dictionary with entries for nodes, edges and values.</returns>
+        //public static IDictionary<string, object> GenerateJSONParts(List<IRecord> records)
+        //{
+        //    var nodes = new Dictionary<long, object>();
+        //    var edges = new Dictionary<long, object>();
+        //    var values = new List<object>();
+
+        //    var inDegrees = new Dictionary<long, long>();  // Map from nodeId onto in degree
+        //    var outDegrees = new Dictionary<long, long>(); // Map from nodeId onto out degree
+
+        //    void GenerateRelationship(IRelationship relationship)
+        //    {
+        //        if (!edges.ContainsKey(relationship.Id))
+        //        {
+        //            var edge = new Dictionary<string, object>
+        //            {
+        //                ["id"] = relationship.Id,
+        //                ["type"] = relationship.Type,
+        //                ["from"] = relationship.StartNodeId,
+        //                ["to"] = relationship.EndNodeId
+        //            };
+
+        //            if (outDegrees.ContainsKey(relationship.StartNodeId))
+        //                outDegrees[relationship.StartNodeId] += 1;
+        //            else
+        //                outDegrees[relationship.StartNodeId] = 1;
+
+        //            if (inDegrees.ContainsKey(relationship.EndNodeId))
+        //                inDegrees[relationship.EndNodeId] += 1;
+        //            else
+        //                inDegrees[relationship.EndNodeId] = 1;
+
+        //            var props = new Dictionary<string, object>();
+        //            foreach (var kvp in relationship.Properties.OrderBy(p => p.Key))
+        //            {
+        //                props[kvp.Key] = kvp.Value;
+        //            }
+        //            edge["properties"] = props;
+
+        //            edges[relationship.Id] = edge;
+        //        }
+        //    }
+
+        //    void GeneratePath(IPath value)
+        //    {
+        //        // Extract the nodes and the path between them
+        //        GenerateNode(value.Start);
+        //        GenerateNode(value.End);
+
+        //        foreach (var relationship in value.Relationships)
+        //        {
+        //            GenerateRelationship(relationship);
+        //        }
+        //    }
+
+        //    void GenerateNode(INode node)
+        //    {
+        //        if (!nodes.ContainsKey(node.Id))
+        //        {
+        //            var n = new Dictionary<string, object>
+        //            {
+        //                ["id"] = node.Id,
+        //                ["labels"] = node.Labels.ToArray()
+        //            };
+
+        //            var props = new Dictionary<string, object>();
+        //            foreach (var kvp in node.Properties.OrderBy(p => p.Key))
+        //            {
+        //                props[kvp.Key] = kvp.Value;
+        //            }
+
+        //            n["properties"] = props;
+        //            nodes[node.Id] = n;
+        //        }
+        //    }
+
+        //    void GenerateList(List<object> l)
+        //    {
+        //        values.Add(l);
+        //    }
+
+        //    void GenerateObject(object o)
+        //    {
+        //        if (o != null)
+        //            values.Add(o);
+        //    }
+
+        //    void Generate(object value)
+        //    {
+        //        if (value is IPath)
+        //            GeneratePath(value as IPath);
+        //        else if (value is INode)
+        //            GenerateNode(value as INode);
+        //        else if (value is IRelationship)
+        //            GenerateRelationship(value as IRelationship);
+        //        else if (value is List<object>)
+        //            GenerateList(value as List<object>);
+        //        else
+        //            GenerateObject(value);
+        //    }
+
+        //    foreach (var record in records)
+        //    {
+        //        var kvps = record.Values;
+
+        //        foreach (var kvp in kvps)
+        //        {
+        //            Generate(kvp.Value);
+        //        }
+        //    }
+
+        //    // Now calculate the indegree and outdegree of the nodes and add them
+        //    // to the properties. Use '$' to dismbiguate from any properties that
+        //    // the user may have used.
+        //    foreach (var nodeId in nodes.Keys)
+        //    {
+        //        var node = nodes[nodeId] as Dictionary<string, object>;
+        //        var nodeProperties = node["properties"] as Dictionary<string, object>;
+
+        //        if (inDegrees.ContainsKey(nodeId))
+        //        {
+        //            nodeProperties["$indegree"] = inDegrees[nodeId];
+        //        }
+        //        else
+        //        {
+        //            nodeProperties["$indegree"] = 0;
+        //        }
+
+        //        if (outDegrees.ContainsKey(nodeId))
+        //        {
+        //            nodeProperties["$outdegree"] = outDegrees[nodeId];
+        //        }
+        //        else
+        //        {
+        //            nodeProperties["$outdegree"] = 0;
+        //        }
+        //    }
+
+        //    var result = new Dictionary<string, object>
+        //    {
+        //        ["nodes"] = nodes.Values,
+        //        ["edges"] = edges.Values,
+        //        ["values"] = values
+        //    };
+
+        //    return result;
+        //}
 
         /// <summary>
         /// Get the names of the nodes in the current database.
@@ -390,7 +548,7 @@ namespace GraphExplorer.Models
         /// <returns>The list of the node names.</returns>
         public static async Task<IEnumerable<string>> GetNodeLabels()
         {
-            var cursor = await ExecuteQueryAsync(@"
+            var cursor = await ExecuteCypherQueryAsync(@"
 CALL db.labels() YIELD label
 RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             var result = await cursor.ToListAsync();
@@ -438,10 +596,11 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
         /// by the current Driver instance.</param>
         /// <param name="parameters">The parameters to use in the query.</param>
         /// <returns></returns>
-        public static async Task<IResultCursor> ExecuteQueryAsync(string cypherSource, IDictionary<string, object> parameters = null)
+        public static async Task<IResultCursor> ExecuteCypherQueryAsync(string cypherSource, IDictionary<string, object> parameters = null)
         {
+            // TODO: This method should not be public. 
             IAsyncSession session;
-            
+
             if (Database != null && !string.IsNullOrEmpty(Database.Name))
                 session = Driver.AsyncSession(o => o.WithDatabase(Database.Name));
             else
@@ -449,6 +608,14 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
 
             var res = await session.RunAsync(cypherSource, parameters);
             return res;
+        }
+
+        public static async Task<Graph> ExecuteQueryAsync(string source, IDictionary<string, object> parameters = null)
+        {
+            var cursor = await ExecuteCypherQueryAsync(source, parameters);
+            var records = await cursor.ToListAsync();
+            var graph = GenerateGraph(records);
+            return graph;
         }
     }
 }

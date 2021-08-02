@@ -442,7 +442,7 @@ namespace GraphExplorer.Models
 
             try
             {
-                IResultCursor cursor = await Neo4jDatabase.ExecuteQueryAsync(cypherSource, parameters);
+                IResultCursor cursor = await Neo4jDatabase.ExecuteCypherQueryAsync(cypherSource, parameters);
                 List<IRecord> res = await cursor.ToListAsync();
 
                 this.ErrorMessage = "Done.";
