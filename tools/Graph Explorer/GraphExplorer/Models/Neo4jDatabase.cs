@@ -229,8 +229,7 @@ namespace GraphExplorer.Models
         public static string GenerateJSON(List<IRecord> records)
         {
             var graph = GenerateGraph(records);
-            var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(graph, Newtonsoft.Json.Formatting.Indented);
-            return serialized;
+            return graph.GenerateJSON();
         }
 
         /// <summary>
@@ -378,169 +377,31 @@ namespace GraphExplorer.Models
                 }
             }
 
-            var result = new Graph
-            {
-                Nodes = nodes.Values,
-                Edges = edges.Values,
-                Values = values
-            };
-
+            var result = new Graph(nodes, edges, values);
             return result;
         }
 
-
         /// <summary>
-        /// Generate the information about the nodes, edges and values in the incoming 
-        /// list of records.
+        /// Generates the graph of the outgoing edges (and the nodes at the other end of
+        /// those edges) for the node specified by its unique id.
         /// </summary>
-        /// <param name="records">The graph to generate the JSON for</param>
-        /// <returns>A dictionary with entries for nodes, edges and values.</returns>
-        //public static IDictionary<string, object> GenerateJSONParts(List<IRecord> records)
-        //{
-        //    var nodes = new Dictionary<long, object>();
-        //    var edges = new Dictionary<long, object>();
-        //    var values = new List<object>();
+        /// <param name="nodeId">The Id of the node for which the outgoing edges is required.</param>
+        /// <returns>The graph with the outgoing edges, their nodes and the incoming node.</returns>
+        public static async Task<Graph> GetOutgoingEdges(long nodeId)
+        {
+            var query = "match (n) -[r]-> (q) where id(n) = $nodeId return *";
+            var result = await ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeId", nodeId } });
 
-        //    var inDegrees = new Dictionary<long, long>();  // Map from nodeId onto in degree
-        //    var outDegrees = new Dictionary<long, long>(); // Map from nodeId onto out degree
+            return GenerateGraph(result);
+        }
 
-        //    void GenerateRelationship(IRelationship relationship)
-        //    {
-        //        if (!edges.ContainsKey(relationship.Id))
-        //        {
-        //            var edge = new Dictionary<string, object>
-        //            {
-        //                ["id"] = relationship.Id,
-        //                ["type"] = relationship.Type,
-        //                ["from"] = relationship.StartNodeId,
-        //                ["to"] = relationship.EndNodeId
-        //            };
+        public static async Task<Graph> GetIncomingEdges(long nodeId)
+        {
+            var query = "match (n) <-[r]- (q) where id(n) = $nodeId return *";
+            var result = await ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeId", nodeId } });
 
-        //            if (outDegrees.ContainsKey(relationship.StartNodeId))
-        //                outDegrees[relationship.StartNodeId] += 1;
-        //            else
-        //                outDegrees[relationship.StartNodeId] = 1;
-
-        //            if (inDegrees.ContainsKey(relationship.EndNodeId))
-        //                inDegrees[relationship.EndNodeId] += 1;
-        //            else
-        //                inDegrees[relationship.EndNodeId] = 1;
-
-        //            var props = new Dictionary<string, object>();
-        //            foreach (var kvp in relationship.Properties.OrderBy(p => p.Key))
-        //            {
-        //                props[kvp.Key] = kvp.Value;
-        //            }
-        //            edge["properties"] = props;
-
-        //            edges[relationship.Id] = edge;
-        //        }
-        //    }
-
-        //    void GeneratePath(IPath value)
-        //    {
-        //        // Extract the nodes and the path between them
-        //        GenerateNode(value.Start);
-        //        GenerateNode(value.End);
-
-        //        foreach (var relationship in value.Relationships)
-        //        {
-        //            GenerateRelationship(relationship);
-        //        }
-        //    }
-
-        //    void GenerateNode(INode node)
-        //    {
-        //        if (!nodes.ContainsKey(node.Id))
-        //        {
-        //            var n = new Dictionary<string, object>
-        //            {
-        //                ["id"] = node.Id,
-        //                ["labels"] = node.Labels.ToArray()
-        //            };
-
-        //            var props = new Dictionary<string, object>();
-        //            foreach (var kvp in node.Properties.OrderBy(p => p.Key))
-        //            {
-        //                props[kvp.Key] = kvp.Value;
-        //            }
-
-        //            n["properties"] = props;
-        //            nodes[node.Id] = n;
-        //        }
-        //    }
-
-        //    void GenerateList(List<object> l)
-        //    {
-        //        values.Add(l);
-        //    }
-
-        //    void GenerateObject(object o)
-        //    {
-        //        if (o != null)
-        //            values.Add(o);
-        //    }
-
-        //    void Generate(object value)
-        //    {
-        //        if (value is IPath)
-        //            GeneratePath(value as IPath);
-        //        else if (value is INode)
-        //            GenerateNode(value as INode);
-        //        else if (value is IRelationship)
-        //            GenerateRelationship(value as IRelationship);
-        //        else if (value is List<object>)
-        //            GenerateList(value as List<object>);
-        //        else
-        //            GenerateObject(value);
-        //    }
-
-        //    foreach (var record in records)
-        //    {
-        //        var kvps = record.Values;
-
-        //        foreach (var kvp in kvps)
-        //        {
-        //            Generate(kvp.Value);
-        //        }
-        //    }
-
-        //    // Now calculate the indegree and outdegree of the nodes and add them
-        //    // to the properties. Use '$' to dismbiguate from any properties that
-        //    // the user may have used.
-        //    foreach (var nodeId in nodes.Keys)
-        //    {
-        //        var node = nodes[nodeId] as Dictionary<string, object>;
-        //        var nodeProperties = node["properties"] as Dictionary<string, object>;
-
-        //        if (inDegrees.ContainsKey(nodeId))
-        //        {
-        //            nodeProperties["$indegree"] = inDegrees[nodeId];
-        //        }
-        //        else
-        //        {
-        //            nodeProperties["$indegree"] = 0;
-        //        }
-
-        //        if (outDegrees.ContainsKey(nodeId))
-        //        {
-        //            nodeProperties["$outdegree"] = outDegrees[nodeId];
-        //        }
-        //        else
-        //        {
-        //            nodeProperties["$outdegree"] = 0;
-        //        }
-        //    }
-
-        //    var result = new Dictionary<string, object>
-        //    {
-        //        ["nodes"] = nodes.Values,
-        //        ["edges"] = edges.Values,
-        //        ["values"] = values
-        //    };
-
-        //    return result;
-        //}
+            return GenerateGraph(result);
+        }
 
         /// <summary>
         /// Get the names of the nodes in the current database.
@@ -548,10 +409,9 @@ namespace GraphExplorer.Models
         /// <returns>The list of the node names.</returns>
         public static async Task<IEnumerable<string>> GetNodeLabels()
         {
-            var cursor = await ExecuteCypherQueryAsync(@"
+            var result = await ExecuteCypherQueryListAsync(@"
 CALL db.labels() YIELD label
 RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
-            var result = await cursor.ToListAsync();
 
             KeyValuePair<string, object> f = result[0].Values.FirstOrDefault();
 
@@ -588,32 +448,25 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return result;
         }
 
-        /// <summary>
-        /// Execute the query given by the cypherSource parameter and return the results. The
-        /// query is done on the database designated by the Database member.
-        /// </summary>
-        /// <param name="cypherSource">The cypher source to execute against the database given
-        /// by the current Driver instance.</param>
-        /// <param name="parameters">The parameters to use in the query.</param>
-        /// <returns></returns>
-        public static async Task<IResultCursor> ExecuteCypherQueryAsync(string cypherSource, IDictionary<string, object> parameters = null)
+
+        public static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
         {
             // TODO: This method should not be public. 
-            IAsyncSession session;
+            IAsyncSession session = Database != null && !string.IsNullOrEmpty(Database.Name)
+                ? Driver.AsyncSession(o => o.WithDatabase(Database.Name))
+                : Driver.AsyncSession();
 
-            if (Database != null && !string.IsNullOrEmpty(Database.Name))
-                session = Driver.AsyncSession(o => o.WithDatabase(Database.Name));
-            else
-                session = Driver.AsyncSession();
+            var transaction = await session.BeginTransactionAsync();
+            var cursor = await transaction.RunAsync(cypherSource, parameters);
+            var result = await cursor.ToListAsync();
 
-            var res = await session.RunAsync(cypherSource, parameters);
-            return res;
+            await transaction.CommitAsync();
+
+            return result;
         }
-
         public static async Task<Graph> ExecuteQueryAsync(string source, IDictionary<string, object> parameters = null)
         {
-            var cursor = await ExecuteCypherQueryAsync(source, parameters);
-            var records = await cursor.ToListAsync();
+            var records = await ExecuteCypherQueryListAsync(source, parameters);
             var graph = GenerateGraph(records);
             return graph;
         }

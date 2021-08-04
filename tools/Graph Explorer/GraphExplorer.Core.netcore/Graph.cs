@@ -42,16 +42,136 @@ namespace GraphExplorer.Core.netcore
     /// </summary>
     public class Graph
     {
-        public IEnumerable<Node> Nodes { get; set; }
-        public IEnumerable<Edge> Edges { get; set; }
-        public IEnumerable<object> Values { get; set; }
+        private IDictionary<long, Node> NodesDictionary { get; set; }
+        private IDictionary<long, Edge> EdgesDictionary { get; set; }
+        private IEnumerable<object> ValuesList { get; set; }
+
+        public IEnumerable<Node> Nodes
+        {
+            get
+            {
+                return this.NodesDictionary.Values;
+            }
+            set
+            {
+                foreach (var n in value)
+                {
+                    this.NodesDictionary[n.Id] = n;
+                }
+            }
+        }
+
+        public IEnumerable<Edge> Edges
+        {
+            get
+            {
+                return this.EdgesDictionary.Values;
+            }
+            set
+            {
+                foreach (var e in value)
+                {
+                    this.EdgesDictionary[e.Id] = e;
+                }
+            }
+        }
+
+        public Graph()
+        {
+            this.NodesDictionary = new Dictionary<long, Node>();
+            this.EdgesDictionary = new Dictionary<long, Edge>();
+            this.ValuesList = new List<object>();
+        }
+
+        public Graph (IDictionary<long, Node> nodeDictionary, IDictionary<long, Edge> edgeDictionary, IEnumerable<object> values)
+        {
+            this.NodesDictionary = nodeDictionary;
+            this.EdgesDictionary = edgeDictionary;
+            this.ValuesList = values;
+        }
+
+        /// <summary>
+        /// Create a new graph like this one. 
+        /// </summary>
+        /// <returns>A new graph with the same nodes, edges and values as this one.</returns>
+        public Graph Clone()
+        {
+            var nodes = new Dictionary<long, Node>();
+            var edges = new Dictionary<long, Edge>();
+            var values = new object[this.ValuesList.Count()];
+
+            foreach (var node in this.Nodes)
+            {
+                nodes[node.Id] = node;
+            }
+
+            foreach (var edge in this.Edges)
+            {
+                edges[edge.Id] = edge;
+            }
+
+            int i = 0;
+            foreach (var v in this.ValuesList)
+            {
+                values[i++] = v;
+            }
+
+            var result = new Graph
+            {
+                NodesDictionary = nodes,
+                EdgesDictionary = edges,
+                ValuesList = values
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Merge this graph with an existing one. The result does not overwrite this
+        /// graph value: A new graph is returned.
+        /// </summary>
+        /// <param name="g">The incoming graph.</param>
+        /// <returns>A graph with the nodes and edges from this graph and the nodes
+        /// and edges from the incoming graph. No duplicates are ever created.</returns>
+        public Graph Merge(Graph g)
+        {
+            // Add all the nodes and edges that are not already in the graph
+            var self = this.Clone();
+
+            // Now add the information from the incoming graph.
+            foreach (var node in g.Nodes)
+            {
+                if (!self.NodesDictionary.ContainsKey(node.Id))
+                {
+                    self.NodesDictionary[node.Id] = node;
+                }
+            }
+
+            foreach (var edge in g.Edges)
+            { 
+                if (!self.EdgesDictionary.ContainsKey(edge.Id))
+                {
+                    self.EdgesDictionary[edge.Id] = edge;
+                }
+            }
+
+            return self;
+        }
+
+        /// <summary>
+        /// Get all the node ids in this graph
+        /// </summary>
+        /// <returns>The set of node ids in this graph.</returns>
+        public HashSet<long> NodeIds()
+        {
+            return this.NodesDictionary.Keys.ToHashSet<long>();
+        }
 
         public string GenerateJSON()
         {
             var serialized = JsonConvert.SerializeObject(this, Formatting.Indented);
             return serialized;
         }
-
 
         /// <summary>
         /// Generate a HTML text representation from the data returned

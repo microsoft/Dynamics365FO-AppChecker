@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.Models
 {
@@ -38,6 +39,26 @@ namespace GraphExplorer.Models
             }
         }
 
+
+        private Graph graph;
+
+        /// <summary>
+        /// This is the rendered graph.
+        /// </summary>
+        public Graph Graph
+        {
+            get => this.graph;
+            set
+            {
+                if (value != this.graph)
+                {
+                    this.graph = value;
+                    this.OnPropertyChanged(nameof(this.Graph));
+                }
+            }
+        }
+
+        // TODO Remove these
         private List<IRecord> queryResults;
         public List<IRecord> QueryResults
         {
@@ -92,6 +113,7 @@ namespace GraphExplorer.Models
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        // TODO move this to the view model. It does not really belong here.
         private string errorMessage = "";
         public string ErrorMessage
         {
@@ -102,8 +124,8 @@ namespace GraphExplorer.Models
                 this.OnPropertyChanged(nameof(this.ErrorMessage));
             }
         }
-
-
+        
+        // TODO move this to the view model. It does not really belong here.
         private string caretPositionString = string.Empty;
         public string CaretPositionString
         {
@@ -121,6 +143,7 @@ namespace GraphExplorer.Models
             }
         }
 
+        // TODO Move this to the view model. It does not really belong here.
         private (int, int) editorPosition;
         public (int, int) EditorPosition
         {
@@ -442,8 +465,7 @@ namespace GraphExplorer.Models
 
             try
             {
-                IResultCursor cursor = await Neo4jDatabase.ExecuteCypherQueryAsync(cypherSource, parameters);
-                List<IRecord> res = await cursor.ToListAsync();
+                List<IRecord> res = await Neo4jDatabase.ExecuteCypherQueryListAsync(cypherSource, parameters);
 
                 this.ErrorMessage = "Done.";
                 return res;

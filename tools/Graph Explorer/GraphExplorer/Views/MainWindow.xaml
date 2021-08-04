@@ -45,7 +45,6 @@ Licensed under the MIT license.
                     <RowDefinition Height ="*"/>
                 </Grid.RowDefinitions>
 
-
                 <!--App content-->
                 <Grid Grid.Row="0" x:Name="AppArea">
                     <DockPanel>
@@ -255,6 +254,11 @@ Licensed under the MIT license.
                                             <Button x:Name="ExecuteQueryButton"  Command="{Binding ExecuteQueryCommand}" ToolTip="Execute query" ToolBar.OverflowMode="Never" >
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon Kind="Play"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="StopRunningQueryButton"  Command="{Binding StopQueryCommand}" ToolTip="Stop running query" ToolBar.OverflowMode="Never" >
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Stop"/>
                                                 </StackPanel>
                                             </Button>
                                             <Separator/>

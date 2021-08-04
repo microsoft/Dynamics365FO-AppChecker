@@ -230,6 +230,10 @@ namespace GraphExplorer.ViewModels
         private readonly ICommand executeQueryCommand;
         public ICommand ExecuteQueryCommand => this.executeQueryCommand;
 
+        private readonly ICommand stopQueryCommand;
+        public ICommand StopQueryCommand => this.stopQueryCommand;
+
+
         public ICommand AboutCommand => new RelayCommand(
             _ =>
             {
@@ -276,6 +280,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowOutgoingEdges => new RelayCommand(
             async p =>
             {
+                // TODO: Use the new functionality in the database.
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
                 var query = "match (n) -[]-> (q) where id(n) = $nodeId return q";
@@ -289,6 +294,11 @@ namespace GraphExplorer.ViewModels
                     nodes.UnionWith(outgoing);
                     this.model.NodesShown = nodes;
                 }
+
+                // TODO. test if the new method works. 
+                var g1 = await Neo4jDatabase.GetOutgoingEdges(this.SelectedNode);
+                // Merge this result into the existing rendered graph.
+
             },
             p =>
             {
@@ -415,7 +425,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowDatabaseParametersCommand
         {
             get => new RelayCommand(
-                async p =>
+                _ =>
                 {
                     this.ShowDatabaseInfoPanel();
                 }
@@ -481,7 +491,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ImportStyleCommand
         {
             get => new RelayCommand(
-                async p =>
+                _ =>
                 {
                     // TODO Put in the material dialog here.
                     // Open a Javascript (.js) file with the file open dialog
@@ -798,10 +808,20 @@ namespace GraphExplorer.ViewModels
                 {
                     // Update the set of nodes shown on the surface.
                     this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
-
-
                 }
             };
+
+            this.stopQueryCommand = new RelayCommand(
+                p => 
+                { 
+                    // Roll back the transaction that executes the current query.
+                },
+                p =>
+                {
+                    // Only active when a query is actually running.
+                    return true;
+                }
+            );
 
             this.executeQueryCommand = new RelayCommand(
                  async p =>
@@ -914,8 +934,7 @@ namespace GraphExplorer.ViewModels
                         "  and id(m) in $nodeIds " +
                         "return n,m,r";
 
-                var results = await Neo4jDatabase.ExecuteCypherQueryAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
-                return await results.ToListAsync();
+                return await Neo4jDatabase.ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
             }
 
             return null;
@@ -951,7 +970,7 @@ namespace GraphExplorer.ViewModels
             {
                 // TODO replace with method on Graph class.
                 string resultJson = Neo4jDatabase.GenerateJSON(results);
-                await RepaintNodesAsync(resultJson);
+                await this.RepaintNodesAsync(resultJson);
             }
         }
 
