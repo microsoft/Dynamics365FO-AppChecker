@@ -59,28 +59,29 @@ namespace GraphExplorer.XppPlugin
 
             if (c != null)
             {
-                var declaringNode = c.First().Values.Values.First() as INode;
-                var base64Source = declaringNode.Properties["base64Source"] as string;
-                var sourceArray = Convert.FromBase64String(base64Source);
-                var source = Encoding.ASCII.GetString(sourceArray);
-                this.SourceEditor.Text = source;
+                // TODO
+                //var declaringNode = c.First().Values.Values.First() as INode;
+                //var base64Source = declaringNode.Properties["base64Source"] as string;
+                //var sourceArray = Convert.FromBase64String(base64Source);
+                //var source = Encoding.ASCII.GetString(sourceArray);
+                //this.SourceEditor.Text = source;
 
-                // TODO: Put this in when the postion is captured.
+                //// TODO: Put this in when the postion is captured.
 
-                var startLine = (long)node.Properties["StartLine"];
-                var endLine = (long)node.Properties["EndLine"];
-                var startCol = (long)node.Properties["StartCol"];
-                var endCol = (long)node.Properties["EndCol"];
+                //var startLine = (long)node.Properties["StartLine"];
+                //var endLine = (long)node.Properties["EndLine"];
+                //var startCol = (long)node.Properties["StartCol"];
+                //var endCol = (long)node.Properties["EndCol"];
 
-                var startOffset = this.SourceEditor.Document.GetOffset((int)startLine, (int)startCol);
-                var endOffset = this.SourceEditor.Document.GetOffset((int)endLine, (int)endCol);
+                //var startOffset = this.SourceEditor.Document.GetOffset((int)startLine, (int)startCol);
+                //var endOffset = this.SourceEditor.Document.GetOffset((int)endLine, (int)endCol);
 
-                this.SourceEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
+                //this.SourceEditor.TextArea.Caret.Position = new ICSharpCode.AvalonEdit.TextViewPosition((int)startLine, (int)startCol);
 
-                var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.SourceEditor.TextArea, startOffset, endOffset);
-                this.SourceEditor.TextArea.Selection = selection;
+                //var selection = ICSharpCode.AvalonEdit.Editing.Selection.Create(this.SourceEditor.TextArea, startOffset, endOffset);
+                //this.SourceEditor.TextArea.Selection = selection;
 
-                this.SourceEditor.TextArea.Caret.BringCaretToView();
+                //this.SourceEditor.TextArea.Caret.BringCaretToView();
             }
         }
 

@@ -8,6 +8,7 @@ using System.Text;
 
 namespace GraphExplorer.Core.netcore
 {
+    #region Nodes and Edges
     public class Edge
     {
         public long Id { get; set; }
@@ -35,6 +36,7 @@ namespace GraphExplorer.Core.netcore
             this.Properties = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
     }
+    #endregion
 
     /// <summary>
     /// This is the representation of a graph. It contains nodes, edges and values.
@@ -180,6 +182,54 @@ namespace GraphExplorer.Core.netcore
                 return node;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get the edge designated by the given id.
+        /// </summary>
+        /// <param name="edgeId">The edge id that designates the edge to get.</param>
+        /// <returns>The designated edge, or null if no edge with the given id exists.</returns>
+        public Edge GetEdge(long edgeId)
+        {
+            // Node node;
+            if (this.EdgesDictionary.TryGetValue(edgeId, out Edge edge))
+            {
+                return edge;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Delete the given node and its incoming and outgoing edges
+        /// </summary>
+        /// <param name="nodeId">The node to delete.</param>
+        public void DeleteNode(long nodeId)
+        {
+            if (this.NodesDictionary.ContainsKey(nodeId))
+            {
+                // Deal with all the edges:
+                var edges = this.EdgesDictionary.Values.Where(e => e.From == nodeId || e.To == nodeId);
+                foreach (var e in edges)
+                {
+                    this.EdgesDictionary.Remove(e.Id);
+                }
+
+                // Now delete the node itself:
+                this.NodesDictionary.Remove(nodeId);
+            }
+        }
+
+        /// <summary>
+        /// Delete the given edge 
+        /// </summary>
+        /// <param name="edgeId">The node to delete.</param>
+        public void DeleteEdge(long edgeId)
+        {
+            if (this.EdgesDictionary.ContainsKey(edgeId))
+            {
+                // Now delete the node itself:
+                this.EdgesDictionary.Remove(edgeId);
+            }
         }
 
         public string GenerateJSON()

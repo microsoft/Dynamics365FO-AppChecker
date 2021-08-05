@@ -115,7 +115,7 @@
                     // Check if it is an edge:
                     var edge = network.getEdgeAt(params.pointer.DOM);
                     if (edge) {
-                        window.chrome.webview.postMessage({ 'contextOverNode': edge });
+                        window.chrome.webview.postMessage({ 'contextOverEdge': edge });
                     }
                 }
             }, false);

@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GraphExplorer.Core.netcore;
+using unvell.ReoGrid.IO.OpenXML.Schema;
 
 namespace GraphExplorer.Models
 {
@@ -24,20 +25,20 @@ namespace GraphExplorer.Models
         /// <summary>
         /// Backing field for the nodes shown in the graph
         /// </summary>
-        private HashSet<long> nodesShown;
+        // private HashSet<long> nodesShown;
 
-        /// <summary>
-        /// The nodes shown on the canvas. An event is raised when the value changes.
-        /// </summary>
-        public HashSet<long> NodesShown
-        {
-            get { return this.nodesShown;  }
-            set 
-            { 
-                this.nodesShown = value;
-                this.OnPropertyChanged(nameof(this.NodesShown));
-            }
-        }
+        ///// <summary>
+        ///// The nodes shown on the canvas. An event is raised when the value changes.
+        ///// </summary>
+        //public HashSet<long> NodesShown
+        //{
+        //    get { return this.nodesShown;  }
+        //    set 
+        //    { 
+        //        this.nodesShown = value;
+        //        this.OnPropertyChanged(nameof(this.NodesShown));
+        //    }
+        //}
 
 
         private Graph graph;
@@ -50,7 +51,7 @@ namespace GraphExplorer.Models
             get => this.graph;
             set
             {
-                if (value != this.graph)
+                // if (value != this.graph)
                 {
                     this.graph = value;
                     this.OnPropertyChanged(nameof(this.Graph));
@@ -315,22 +316,29 @@ namespace GraphExplorer.Models
             var script = this.Source;
             File.WriteAllText(Path.Combine(this.WebRootPath, "Script.html"), script);
 
-            // Copy the supporting files (menu support etc)
-            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.js"), ExtractSource("GraphExplorer.Resources.Contextual.js"));
-            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.theme.css"), ExtractSource("GraphExplorer.Resources.Contextual.theme.css"));
-            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.css"), ExtractSource("GraphExplorer.Resources.Contextual.css"));
-
             // Copy the configuration file into the web root directory.
             var configFileName = Path.Combine(this.WebRootPath, "Config.js");
             File.WriteAllText(configFileName, this.StyleDocumentSource);
 
-            var assembly = Assembly.GetExecutingAssembly();
-
-            // Copy all the embedded resources optionally used for graph adornments
             var resourcesPath = Path.Combine(this.WebRootPath, "Resources");
             Directory.CreateDirectory(resourcesPath);
 
-            var resourcePrefix = "GraphExplorer.Resources.SourcecodeSymbols";
+            // Copy some icons that are needed for menus etc. The names are artifacts in the Resources fork
+            var artifacts = new[] { "eye-off.svg", "eye-off-outline.svg", "ray-end-arrow.svg", 
+                "ray-start-arrow.svg", "ray-start.svg", "ray-start-vertex-end.svg", "ray-end.svg", "ray-vertex.svg",
+                "Contextual.js", "Contextual.theme.css", "Contextual.css" };
+            string resourcePrefix = "GraphExplorer.Resources.";
+
+            foreach (var artifact in artifacts)
+            {
+                var source = ExtractSource(resourcePrefix + artifact);
+                File.WriteAllText(Path.Combine(this.WebRootPath, artifact), source);
+            }
+
+            // Copy all the embedded resources optionally used for graph adornments
+            resourcePrefix = "GraphExplorer.Resources.SourcecodeSymbols";
+
+            var assembly = Assembly.GetExecutingAssembly();
             foreach (var resource in assembly.GetManifestResourceNames())
             {
                 // Skip names outside of your desired subfolder
@@ -415,37 +423,37 @@ namespace GraphExplorer.Models
 
 
      
-        public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
-        {
-            var result = new HashSet<long>();
+        //public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
+        //{
+        //    var result = new HashSet<long>();
 
-            if (records == null || !records.Any())
-                return result;
+        //    if (records == null || !records.Any())
+        //        return result;
 
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                foreach (var record in records)
-                {
-                    foreach (var v in record.Values)
-                    {
-                        if (v.Value is IPath)
-                        {
-                            // There are two nodes connected by an edge:
-                            var path = v.Value as IPath;
-                            // The start and end can be the same, for self referenctial nodes.
-                            result.Add(path.Start.Id);
-                            result.Add(path.End.Id);
-                        }
-                        else if (v.Value is INode)
-                        {
-                            var n = v.Value as INode;
-                            result.Add(n.Id);
-                        }
-                    }
-                }
-            });
-            return result;
-        }
+        //    App.Current.Dispatcher.Invoke(() =>
+        //    {
+        //        foreach (var record in records)
+        //        {
+        //            foreach (var v in record.Values)
+        //            {
+        //                if (v.Value is IPath)
+        //                {
+        //                    // There are two nodes connected by an edge:
+        //                    var path = v.Value as IPath;
+        //                    // The start and end can be the same, for self referenctial nodes.
+        //                    result.Add(path.Start.Id);
+        //                    result.Add(path.End.Id);
+        //                }
+        //                else if (v.Value is INode)
+        //                {
+        //                    var n = v.Value as INode;
+        //                    result.Add(n.Id);
+        //                }
+        //            }
+        //        }
+        //    });
+        //    return result;
+        //}
 
         /// <summary>
         /// Determines if the list of records can be rendered as a graph. This is true if
@@ -467,18 +475,19 @@ namespace GraphExplorer.Models
 
         /// <summary>
         /// Execute the cypher string on the current connection. If the cypher is incorrect
-        /// the error message is updated.
+        /// the error message is updated. This method will update the status line when the
+        /// query has executed.
         /// </summary>
         /// <param name="cypherSource">The cypher source</param>
         /// <param name="parameters">Any parameters used in the source string</param>
         /// <returns>The list of results.</returns>
-        public async Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
+        public async Task<Graph> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
         {
             this.ErrorMessage = "Running query...";
 
             try
             {
-                List<IRecord> res = await Neo4jDatabase.ExecuteCypherQueryListAsync(cypherSource, parameters);
+                var res = await Neo4jDatabase.ExecuteQueryAsync(cypherSource, parameters);
 
                 this.ErrorMessage = "Done.";
                 return res;
@@ -514,17 +523,18 @@ namespace GraphExplorer.Models
             return null;
         }
 
+        // TODO: remove this.
         public async Task AddNodesAsync(string query, IDictionary<string, object> parameters)
         {
-            var queryResult = await this.ExecuteCypherAsync(query, parameters);
-            var result = Model.HarvestNodeIdsFromGraph(queryResult);
+            //var queryResult = await this.ExecuteCypherAsync(query, parameters);
+            //var result = Model.HarvestNodeIdsFromGraph(queryResult);
 
-            if (result != null && result.Any())
-            {
-                var nodes = this.NodesShown;
-                nodes.UnionWith(result);
-                this.NodesShown = nodes;
-            }
+            //if (result != null && result.Any())
+            //{
+            //    var nodes = this.NodesShown;
+            //    nodes.UnionWith(result);
+            //    this.NodesShown = nodes;
+            //}
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Neo4j.Driver;
+﻿using GraphExplorer.Core.netcore;
+using Neo4j.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,9 @@ namespace GraphExplorer.Common
 {
     public interface IModel
     {
-        HashSet<long> NodesShown { get; set; }
+        // HashSet<long> NodesShown { get; set; }
 
-        Task<List<IRecord>> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters = null);
+        Task<Graph> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters = null);
 
         /// <summary>
         /// Add the nodes specified by the query and its parameters to the set of visible nodes.

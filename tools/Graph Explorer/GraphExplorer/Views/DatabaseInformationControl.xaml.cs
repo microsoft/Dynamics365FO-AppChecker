@@ -42,7 +42,7 @@ MATCH () RETURN { name:'nodes', data:count(*) } AS result
 UNION ALL
 MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
 
-            var result = await this.Model.ExecuteCypherAsync(metadataQuery);
+            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(metadataQuery);
             if (result != null)
             {
                 var labels = ((result[0].Values["result"] as Dictionary<string, object>)["data"] as List<object>);
@@ -105,7 +105,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
             relationship = relationship.Replace("]-", "");
 
             var query = string.Format("match ()-[c:{0}]-() return count(c) as Count", relationship);
-            var result = await this.Model.ExecuteCypherAsync(query);
+            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(query);
 
             container.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
         }
@@ -116,7 +116,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
             var label = chip.Content as string;
 
             var query = string.Format("match(c:{0}) return count(c) as Count", label);
-            var result = await this.Model.ExecuteCypherAsync(query);
+            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(query);
 
             chip.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
         }
@@ -140,7 +140,7 @@ MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
         /// <param name="e"></param>
         private async void DatabaseChanged(object sender, SelectionChangedEventArgs e)
         {
-            await RepaintAsync();
+            await this.RepaintAsync();
         }
     }
 }

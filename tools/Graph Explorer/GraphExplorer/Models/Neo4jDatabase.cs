@@ -448,7 +448,6 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return result;
         }
 
-
         public static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
         {
             // TODO: This method should not be public. 

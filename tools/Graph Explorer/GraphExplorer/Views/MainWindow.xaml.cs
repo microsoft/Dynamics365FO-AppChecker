@@ -18,10 +18,11 @@ namespace GraphExplorer
     using MaterialDesignExtensions.Controls;
     using System.Threading;
     using System.Windows.Threading;
+using System.Xml.Linq;
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
     public partial class MainWindow : MaterialWindow
     {
         // public const string DialogHostName = "dialogHost";
@@ -135,7 +136,7 @@ namespace GraphExplorer
                     this.ViewModel.SelectedNode = id;
                     
                     var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
-                    this.ViewModel.UpdatePropertyListView(nodeResult);
+                    // TODO this.ViewModel.UpdatePropertyListView(nodeResult);
 
                 }
                 else if (e.ContainsKey("selectedEdgeId"))
@@ -146,7 +147,7 @@ namespace GraphExplorer
                     var cypher = "MATCH (c) -[r]- (d) where id(r) = $id return r limit 1";
                     this.ViewModel.SelectedEdge = id;
                     var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
-                    this.ViewModel.UpdatePropertyListView(edgeResult);
+                    // todo this.ViewModel.UpdatePropertyListView(edgeResult);
                 }
                 else if (e.ContainsKey("contextOverNode"))
                 {
@@ -154,11 +155,58 @@ namespace GraphExplorer
                 }
                 else if (e.ContainsKey("contextOverEdge"))
                 {
-                    var menu = this.ViewModel.ContextEdgeClicked(e["contextOverNode"].ToObject<long>());
+                    var menu = this.ViewModel.ContextEdgeClicked(e["contextOverEdge"].ToObject<long>());
                 }
                 else if (e.ContainsKey("contextOverSurface"))
                 {
                     this.ViewModel.ContextSurfaceClicked();
+                }
+                else if (e.ContainsKey("showOutgoingEdges"))
+                {
+                    var id = e["showOutgoingEdges"].ToObject<long>();
+                    await this.ViewModel.ShowOutgoingEdgesAsync(id);
+                }
+                else if (e.ContainsKey("showIncomingEdges"))
+                {
+                    var id = e["showIncomingEdges"].ToObject<long>();
+                    await this.ViewModel.ShowIncomingEdgesAsync(id);
+                }
+                else if (e.ContainsKey("showAllEdges"))
+                {
+                    var id = e["showAllEdges"].ToObject<long>();
+                    await this.ViewModel.ShowAllEdgesAsync(id);
+                }
+                else if (e.ContainsKey("showIncomingEdge"))
+                {
+                    var edgeName = e["showIncomingEdge"].ToObject<string>();
+                    var toNode = e["toNode"].ToObject<long>();
+                    await this.ViewModel.ShowIncomingEdgeAsync(edgeName, toNode);
+                }
+                else if (e.ContainsKey("showOutgoingEdge"))
+                {
+                    var edgeName = e["showOutgoingEdge"].ToObject<string>();
+                    var fromNode = e["fromNode"].ToObject<long>();
+                    await this.ViewModel.ShowOutgoingEdgeAsync(edgeName, fromNode);
+                }
+                else if (e.ContainsKey("hideNode"))
+                {
+                    var id = e["hideNode"].ToObject<long>();
+                    this.ViewModel.HideNode(id);
+                }
+                else if (e.ContainsKey("hideNamedNodes"))
+                {
+                    var name = e["hideNamedNodes"].ToObject<string>();
+                    this.ViewModel.HideNamedNodes(name);
+                }
+                else if (e.ContainsKey("hideEdge"))
+                {
+                    var id = e["hideEdge"].ToObject<long>();
+                    this.ViewModel.HideEdge(id);
+                }
+                else if (e.ContainsKey("hideNamedEdges"))
+                {
+                    var id = e["hideNamedEdges"].ToObject<string>();
+                    this.ViewModel.HideNamedEdges(id);
                 }
             };
 

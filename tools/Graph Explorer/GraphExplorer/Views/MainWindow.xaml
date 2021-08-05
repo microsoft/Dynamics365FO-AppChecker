@@ -63,7 +63,8 @@ Licensed under the MIT license.
                                 </MenuItem>
                                 <Separator/>
                                 <MenuItem Header="Import Style..." Command="{Binding ImportStyleCommand}" ToolTip="Import a style JSON document defining the graph rendering.">
-                                    <MenuItem.Icon>
+                                    <MenuItem.Icon
+                                        >
                                         <materialDesign:PackIcon Kind="Shape" />
                                     </MenuItem.Icon>
                                 </MenuItem>

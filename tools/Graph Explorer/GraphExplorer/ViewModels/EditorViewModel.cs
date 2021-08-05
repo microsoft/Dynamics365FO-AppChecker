@@ -28,6 +28,8 @@ using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
 using unvell.ReoGrid.Actions;
 using ICSharpCode.AvalonEdit.Snippets;
+using GraphExplorer.Core.netcore;
+
 
 namespace GraphExplorer.ViewModels
 {
@@ -253,104 +255,104 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowOnlyNodeCommand => new RelayCommand(
             p =>
             {
-                var nodes = new HashSet<long>() { this.SelectedNode };
-                this.model.NodesShown = nodes;
-                this.SelectedNode = 0;
+                //var nodes = new HashSet<long>() { this.SelectedNode };
+                //this.model.NodesShown = nodes;
+                //this.SelectedNode = 0;
             },
             p =>
             {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
         public ICommand HideNodeCommand => new RelayCommand(
             p =>
             {
-                var nodes = this.model.NodesShown;
-                nodes.Remove(this.SelectedNode);
-                this.model.NodesShown = nodes;
+            //    var nodes = this.model.NodesShown;
+            //    nodes.Remove(this.SelectedNode);
+            //    this.model.NodesShown = nodes;
 
-                this.SelectedNode = 0;
+            //    this.SelectedNode = 0;
             },
             p =>
             {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
-        public ICommand ShowOutgoingEdges => new RelayCommand(
-            async p =>
+        public ICommand ShowOutgoingEdgesCommand => new RelayCommand(
+            p =>
             {
                 // TODO: Use the new functionality in the database.
-                // This is additive to the existing graph
-                // Find all the nodes from the current node:
-                var query = "match (n) -[]-> (q) where id(n) = $nodeId return q";
-                var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
+                //// This is additive to the existing graph
+                //// Find all the nodes from the current node:
+                //var query = "match (n) -[]-> (q) where id(n) = $nodeId return q";
+                //var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
-                var outgoing = Model.HarvestNodeIdsFromGraph(result);
+                //var outgoing = Model.HarvestNodeIdsFromGraph(result);
 
-                if (outgoing != null && outgoing.Any())
-                {
-                    var nodes = this.model.NodesShown;
-                    nodes.UnionWith(outgoing);
-                    this.model.NodesShown = nodes;
-                }
+                //if (outgoing != null && outgoing.Any())
+                //{
+                //    var nodes = this.model.NodesShown;
+                //    nodes.UnionWith(outgoing);
+                //    this.model.NodesShown = nodes;
+                //}
 
-                // TODO. test if the new method works. 
-                var g1 = await Neo4jDatabase.GetOutgoingEdges(this.SelectedNode);
-                // Merge this result into the existing rendered graph.
+                //// TODO. test if the new method works. 
+                //var g1 = await Neo4jDatabase.GetOutgoingEdges(this.SelectedNode);
+                //// Merge this result into the existing rendered graph.
 
             },
             p =>
             {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
-        public ICommand ShowIncomingEdges => new RelayCommand(
-            async p =>
+        public ICommand ShowIncomingEdgesCommand => new RelayCommand(
+            p =>
             {
                 // This is additive to the existing graph
                 // Find all the nodes from the current node:
 
-                var query = "match (n) <-[]- (q) where id(n) = $nodeId return q";
-                var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
+                //var query = "match (n) <-[]- (q) where id(n) = $nodeId return q";
+                //var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
-                var incoming = Model.HarvestNodeIdsFromGraph(result);
+                //var incoming = Model.HarvestNodeIdsFromGraph(result);
 
-                if (incoming != null && incoming.Any())
-                {
-                    var nodes = this.model.NodesShown;
-                    nodes.UnionWith(incoming);
-                    this.model.NodesShown = nodes;
-                }
+                //if (incoming != null && incoming.Any())
+                //{
+                //    var nodes = this.model.NodesShown;
+                //    nodes.UnionWith(incoming);
+                //    this.model.NodesShown = nodes;
+                //}
             },
             p =>
             {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
         public ICommand ShowEdges => new RelayCommand(
-            async p =>
+            p =>
             {
                 // This is additive to the existing graph
                 // Find all the edges (both incoming and outgoing) from the current node:
-                var q = "match (f) -[]- (n) where id(n) = $nodeId return f";
-                var result = await this.model.ExecuteCypherAsync(q, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
+                //var q = "match (f) -[]- (n) where id(n) = $nodeId return f";
+                //var result = await this.model.ExecuteCypherAsync(q, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
 
-                var outgoing = Model.HarvestNodeIdsFromGraph(result);
+                //var outgoing = Model.HarvestNodeIdsFromGraph(result);
 
-                if (outgoing != null && outgoing.Any())
-                {
-                    var nodes = this.model.NodesShown;
-                    nodes.UnionWith(outgoing);
-                    this.model.NodesShown = nodes;
-                }
+                //if (outgoing != null && outgoing.Any())
+                //{
+                //    var nodes = this.model.NodesShown;
+                //    nodes.UnionWith(outgoing);
+                //    this.model.NodesShown = nodes;
+                //}
             },
             p =>
             {
-                return (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
+                return true; // (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
             }
         );
 
@@ -687,37 +689,164 @@ namespace GraphExplorer.ViewModels
             // Find the node label. This can be done from the currently
             // rendered graph:
             var node = this.model.Graph.GetNode(nodeId);
+            var g1 = await Neo4jDatabase.GetOutgoingEdges(node.Id);
+            var outgoingEdges = g1.Edges.Select(e => e.Type).Distinct();
+            
+            var g2 = await Neo4jDatabase.GetIncomingEdges(node.Id);
+            var incomingEdges = g2.Edges.Select(e => e.Type).Distinct();
+
+            var snippet = @"
+openMenu ({
+    isSticky: false,
+    width: 200,
+    items: 
+    [
+        {label: 'Show all incoming edges', icon: 'ray-end.svg', onClick: () => { window.chrome.webview.postMessage({ 'showIncomingEdges': " + nodeId + @"}); }},
+        {label: 'Show all outgoing edges', icon: 'ray-start.svg', onClick: () => { window.chrome.webview.postMessage({ 'showOutgoingEdges': " + nodeId + @"}); }},
+        {label: 'Show all edges', icon: 'ray-vertex.svg', onClick: () => { window.chrome.webview.postMessage({ 'showAllEdges': " + nodeId + @"}); }},";
+
+            if (outgoingEdges.Any())
+            {
+                snippet += @"
+        {type: 'seperator'},
+        {type: 'submenu', label: 'outgoing edges', items: [";
+
+                foreach (var name in outgoingEdges)
+                {
+                    snippet += @"
+          {label: '" + name + "', onClick: () => { window.chrome.webview.postMessage({ 'showOutgoingEdge': '" + name + @"', 'fromNode': " + nodeId + "}); }},";
+                }
+
+                snippet += @"
+        ]},";
+            }
+
+            if (incomingEdges.Any())
+            {
+                snippet += @"
+        {type: 'seperator'},
+        {type: 'submenu', label: 'incoming edges', items: [";
+                foreach (var name in incomingEdges)
+                {
+                    snippet += @"
+          {label: '" + name + "', onClick: () => {window.chrome.webview.postMessage({ 'showIncomingEdge': '" + name + @"', 'toNode': " + nodeId + "}); }},";
+                }
+
+                  snippet += @"
+        ]},";
+            }
+
+            snippet += @"
+        {type: 'seperator'},
+        {label: 'Hide', icon: 'eye-off.svg', onClick: () => { window.chrome.webview.postMessage({ 'hideNode': " + nodeId + @"});}},
+        {label: 'Hide all " + node.Labels[0] + @" nodes', onClick: () => { window.chrome.webview.postMessage({ 'hideNamedNodes': '" + node.Labels[0] + @"'}); }},
+    ]
+});";
+            await this.view.Browser.ExecuteScriptAsync(snippet);
+        }
+
+        public async Task ContextEdgeClicked(long edgeId)
+        {
+            var edge = this.model.Graph.GetEdge(edgeId);
+            var edgeName = edge.Type;
             var snippet = @"openMenu ({
                 isSticky: false,
                 width: 200,
                 items: [
-                    {label: 'Show incoming edges' onClick: () => {}},
-                    {label: 'Show outgoing edges' onClick: () => {}},
-                    {type: 'seperator'},
-                    {label: 'Hide' onClick: () => {}},
-                    {label: 'Hide all " + node.Labels[0] + @"' onClick: () => {}},
+                    {label: 'Hide',  icon: 'eye-off.svg', onClick: () => { window.chrome.webview.postMessage({ 'hideEdge': " + edgeId + @"});}},
+                    {label: 'Hide all " + edgeName + @" edges', onClick: () => { window.chrome.webview.postMessage({ 'hideNamedEdges': '" + edgeName + @"'});}},
                 ]
-            });"
-;
-            await this.view.Browser.ExecuteScriptAsync(snippet);
-        }
+            });";
 
-        public string ContextEdgeClicked(long edgeId)
-        {
-            return @"{
-                isSticky: false,
-                width: 200,
-                items: [
-                    {label: 'Hide', onClick: () => {console.log('selected contex menu')}}
-                    {label: 'Hide all', onClick: () => {console.log('selected contex menu')}}
-                ]
-            }";
+            await this.view.Browser.ExecuteScriptAsync(snippet);
         }
 
         public void ContextSurfaceClicked()
         {
         }
 
+        public async Task ShowIncomingEdgesAsync(long id)
+        {
+            Graph g = await Neo4jDatabase.GetIncomingEdges(id);
+            g = g.Merge(this.model.Graph);
+            this.model.Graph = g;
+        }
+
+        public async Task ShowOutgoingEdgesAsync(long id)
+        {
+            Graph g = await Neo4jDatabase.GetOutgoingEdges(id);
+            g = g.Merge(this.model.Graph);
+            this.model.Graph = g;
+        }
+
+        public async Task ShowAllEdgesAsync(long id)
+        {
+            Graph outgoing = await Neo4jDatabase.GetOutgoingEdges(id);
+            Graph incoming = await Neo4jDatabase.GetIncomingEdges(id);
+            Graph g = outgoing.Merge(this.model.Graph);
+            g = g.Merge(incoming);
+
+            this.model.Graph = g;
+        }
+
+        public async Task ShowIncomingEdgeAsync(string name, long toNode)
+        {
+            Graph incoming = await Neo4jDatabase.GetIncomingEdges(toNode);
+            var unwanted = incoming.Edges.Where(e => e.Type != name).Select(e => e.Id);
+            foreach (var e in unwanted)
+            {
+                incoming.DeleteEdge(e);
+            }
+            this.model.Graph = this.model.Graph.Merge(incoming);
+        }
+
+        public async Task ShowOutgoingEdgeAsync(string name, long fromNode)
+        {
+            Graph outgoing = await Neo4jDatabase.GetOutgoingEdges(fromNode);
+            var unwanted = outgoing.Edges.Where(e => e.Type != name).Select(e => e.Id);
+            foreach (var e in unwanted)
+            {
+                outgoing.DeleteEdge(e);
+            }
+            this.model.Graph = this.model.Graph.Merge(outgoing);
+        }
+
+        public void HideNode(long id)
+        {
+            Graph g = this.model.Graph;
+            g.DeleteNode(id);
+            this.model.Graph = g;
+        }
+
+        public void HideNamedNodes(string name)
+        {
+            Graph g = this.model.Graph;
+            var nodeIds = g.Nodes.Where(n => n.Labels.Contains(name)).Select(n => n.Id);
+            foreach (var id in nodeIds)
+            {
+                g.DeleteNode(id);
+            }
+            this.model.Graph = g;
+        }
+
+        public void HideEdge(long id)
+        {
+            Graph g = this.model.Graph;
+            g.DeleteEdge(id);
+            this.model.Graph = g;
+        }
+
+        public void HideNamedEdges(string name)
+        {
+            Graph g = this.model.Graph;
+
+            var edgeIds = g.Edges.Where(e => e.Type == name).Select(e => e.Id);
+            foreach (var id in edgeIds)
+            {
+                g.DeleteEdge(id);
+            }
+            this.model.Graph = g;
+        }
         #endregion
 
         public EditorViewModel(MainWindow v, Models.Model model)
@@ -800,11 +929,11 @@ namespace GraphExplorer.ViewModels
                     this.SetTheme(this.model.IsDarkMode);
 
                     // Update the view
-                    await this.RepaintNodesAsync(this.model.NodesShown);
+                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
                 }
                 else if (e.PropertyName == nameof(this.AllowKeyboardNavigation) || e.PropertyName == nameof(this.ShowNavigationButtons))
                 {
-                    await this.RepaintNodesAsync(this.model.NodesShown);
+                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
                 }
                 else if (e.PropertyName == nameof(Model.StyleDocumentSource))
                 {
@@ -839,16 +968,21 @@ namespace GraphExplorer.ViewModels
 
                     this.view.Browser.Reload();
                 }
-                else if (e.PropertyName == nameof(Model.NodesShown))
+                else if (e.PropertyName == nameof(this.model.Graph))
                 {
-                    // The nodes have been changed, so do a repaint
-                    await this.RepaintNodesAsync(this.model.NodesShown);
+                    // The graph has changed. Render the graph surface.
+                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
                 }
-                else if (e.PropertyName == nameof(Model.QueryResults))
-                {
-                    // Update the set of nodes shown on the surface.
-                    this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
-                }
+                //else if (e.PropertyName == nameof(Model.NodesShown))
+                //{
+                //    // The nodes have been changed, so do a repaint
+                //    await this.RepaintNodesAsync(this.model.NodesShown);
+                //}
+                //else if (e.PropertyName == nameof(Model.QueryResults))
+                //{
+                //    // Update the set of nodes shown on the surface.
+                //    this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
+                //}
             };
 
             this.stopQueryCommand = new RelayCommand(
@@ -872,48 +1006,54 @@ namespace GraphExplorer.ViewModels
                      this.SelectedEdge = 0;
 
                      // First execute the query to get the result graph in memory:
-                     List<IRecord> result = await this.model.ExecuteCypherAsync(source);
-                     if (result != null)
-                     {
-                         var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(result);
+                     // var  result = await this.model.ExecuteCypherAsync(source);
+                     // var graph = await Neo4jDatabase.ExecuteQueryAsync(source);
+                     var graph = await this.model.ExecuteCypherAsync(source);
+                     // TODO: If the switch to show all nodes is set, then do that.
+                     // Set the graph. This will trigger the event that will render the graph 
+                     // on the drawing surface.
+                     this.model.Graph = graph;
+                     //if (result != null)
+                     //{
+                     //    var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(result);
 
-                         // The query executed correctly. 
-                         // If the user wanted to see all the edges from the selected nodes, a new
-                         // query is fired.
-                         if (this.model.ConnectResultNodes && canBeRenderedAsGraph)
-                         {
-                             // Calculate the new result where all the edges are included.
-                             var nodes = Model.HarvestNodeIdsFromGraph(result);
-                             result = await this.GetGraphFromNodes(nodes);
-                         }
+                     //    // The query executed correctly. 
+                     //    // If the user wanted to see all the edges from the selected nodes, a new
+                     //    // query is fired.
+                     //    if (this.model.ConnectResultNodes && canBeRenderedAsGraph)
+                     //    {
+                     //        // Calculate the new result where all the edges are included.
+                     //        var nodes = Model.HarvestNodeIdsFromGraph(result);
+                     //        result = await this.GetGraphFromNodes(nodes);
+                     //    }
 
-                         // Store the results in the model.
-                         this.model.QueryResults = result;
+                     //    // Store the results in the model.
+                     //    this.model.QueryResults = result;
 
-                         // Go from graph mode to text mode if the result cannot be rendered as a graph.
-                         // Do not switch back to graph mode automatically?
+                     //    // Go from graph mode to text mode if the result cannot be rendered as a graph.
+                     //    // Do not switch back to graph mode automatically?
 
-                         if (this.GraphModeSelected && !canBeRenderedAsGraph)
-                         {
-                             this.GraphModeSelected = false;
-                             this.TextModeSelected = true;
-                         }
+                     //    if (this.GraphModeSelected && !canBeRenderedAsGraph)
+                     //    {
+                     //        this.GraphModeSelected = false;
+                     //        this.TextModeSelected = true;
+                     //    }
 
-                         if (this.graphModeSelected)
-                         {
-                             // Render the data in the graph view
-                             // TODO replace with graph.GenerateJSON
-                             string resultJson = Neo4jDatabase.GenerateJSON(result);
+                     //    if (this.graphModeSelected)
+                     //    {
+                     //        // Render the data in the graph view
+                     //        // TODO replace with graph.GenerateJSON
+                     //        string resultJson = Neo4jDatabase.GenerateJSON(result);
 
-                             await this.RepaintNodesAsync(resultJson);
-                         }
-                         else
-                         {
-                             // Draw as html
-                             var html = Neo4jDatabase.GenerateHtml(this.model.QueryResults);
-                             this.view.TextBrowser.NavigateToString(html);
-                         }
-                     }
+                     //        await this.RepaintNodesAsync(resultJson);
+                     //    }
+                     //    else
+                     //    {
+                     //        // Draw as html
+                     //        var html = Neo4jDatabase.GenerateHtml(this.model.QueryResults);
+                     //        this.view.TextBrowser.NavigateToString(html);
+                     //    }
+                     //}
                  },
 
                  // Running is allowed when there is text there to submit as a query and
@@ -936,7 +1076,7 @@ namespace GraphExplorer.ViewModels
             var browser = sender as WebView2;
             // Redraw what was there with the new style.
             await this.SetGraphSizeAsync(browser);
-            await this.RepaintNodesAsync(this.model.NodesShown);
+            await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
             browser.NavigationCompleted -= this.Browser_NavigationCompleted;
         }
 

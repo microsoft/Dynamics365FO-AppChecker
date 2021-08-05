@@ -25,4 +25,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GraphExplorer.Core.netcore\GraphExplorer.Core.netcore.csproj" />
+  </ItemGroup>
+
 </Project>

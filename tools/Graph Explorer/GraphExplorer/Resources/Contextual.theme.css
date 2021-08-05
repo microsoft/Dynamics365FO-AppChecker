@@ -1,5 +1,5 @@
 ﻿:root {
-    --contextualMenuBg: rgb(37, 37, 38);
+    --contextualMenuBg: rgb(128, 128, 128);
     --contextualMenuShadow: 1px 1px 10px #000;
     --contextualMenuRadius: 3px;
     --contextualMenuText: #cccccc;
