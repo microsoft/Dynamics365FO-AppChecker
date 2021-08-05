@@ -13,10 +13,15 @@
         }
     </style>
 
-        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" > </script >
-        <script type="text/javascript" src="Config.js?ts=1234567890" > </script >
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script type="text/javascript" src="Config.js?ts=1234567890"></script>
 
-        <script type='text/javascript' >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="contextual.theme.css">
+    <link rel="stylesheet" type="text/css" href="contextual.css">
+    <script src="contextual.js"></script>
+
+    <script type='text/javascript'>
 
         var network = null;
 
@@ -25,9 +30,21 @@
             document.getElementById('mynetwork').style.height = height + 'px';
         }
 
+        // The menu system needs an event to get triggered correctly. To do this a 
+        // special event is triggered when the menu is opened, and the position and
+        // the menu are saved here.
+        var contextMenu;
+        var contextMenuX, contextMenuY;
+        function openMenu(menu) {
+            console.log('opening menu ' + menu);
+            contextMenu = menu;
+            var target = document.getElementById('mynetwork');
+            target.dispatchEvent(new Event("CreateMenu", {'menu': menu}));
+        }
+
         function draw(nodesAndEdgesInJson, backgroundColor, foregroundColor, showNavigationButtons, allowKeyboardNavigation) {
             // Set the colors of the foreground and background. The colors passed from
-            // the application are in conformance with the visual preferences of the 
+            // the application are in conformance with the visual preferences of the
             // user, but you may assign any static value you want for the colors to
             // overrride these choices.
             document.body.style.background = backgroundColor;
@@ -36,7 +53,7 @@
             // Instantiate our network object.
             var container = document.getElementById('mynetwork');
 
-            // Convert the graph rendering agnostic format to the vis.js format 
+            // Convert the graph rendering agnostic format to the vis.js format
             var graphNodes = [];
             nodesAndEdgesInJson.Nodes.forEach(n => {
                 graphNodes.push(createGraphNode(n));
@@ -83,18 +100,49 @@
 
             network = new vis.Network(container, data, options);
 
-            // Wire in the messaging so that the C# is notified of clicking in 
+            network.on('oncontext', (params) => {
+                params.event.preventDefault();
+                contextMenuX = params.event.clientX;
+                contextMenuY = params.event.clientY;
+
+                // Find out if we are getting context for a node, an edge or the surface
+                var node = network.getNodeAt(params.pointer.DOM);
+                if (node) {
+                    // hovering over a node:
+                    window.chrome.webview.postMessage({ 'contextOverNode': node });
+                }
+                else {
+                    // Check if it is an edge:
+                    var edge = network.getEdgeAt(params.pointer.DOM);
+                    if (edge) {
+                        window.chrome.webview.postMessage({ 'contextOverNode': edge });
+                    }
+                }
+            }, false);
+
+            // Special event handlers to manage the context menu
+            mynetwork.addEventListener("CreateMenu", (params) => {
+                console.log("In CreateMenu");
+
+                params.clientX = contextMenuX;
+                params.clientY = contextMenuY;
+                params.target = mynetwork
+
+                new Contextual(contextMenu)
+            });
+
+            // Wire in the messaging so that the C# is notified of clicking in
             // nodes or edges.
             network.on('selectNode', function (params) {
-                    window.chrome.webview.postMessage({ 'nodeId': params.nodes[0] });
+                window.chrome.webview.postMessage({ 'selectedNodeId': params.nodes[0] });
             });
 
             network.on('selectEdge', function (params) {
-                    window.chrome.webview.postMessage({ 'edgeId': params.edges[0] });
-                });
+                window.chrome.webview.postMessage({ 'selectedEdgeId': params.edges[0] });
+            });
         }
-        </script>
- </head>
+    </script>
+</head>
 
 <body >
     <div id='mynetwork' >

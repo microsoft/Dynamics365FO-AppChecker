@@ -296,6 +296,14 @@ namespace GraphExplorer.Models
             }
         }
 
+        private static string ExtractSource(string assemblyPath)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var stream = assembly.GetManifestResourceStream(assemblyPath);
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
         public Model()
         {
             Properties.Settings.Default.PropertyChanged += this.SettingsChanged;
@@ -306,6 +314,11 @@ namespace GraphExplorer.Models
             // Copy the web page to the web root:
             var script = this.Source;
             File.WriteAllText(Path.Combine(this.WebRootPath, "Script.html"), script);
+
+            // Copy the supporting files (menu support etc)
+            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.js"), ExtractSource("GraphExplorer.Resources.Contextual.js"));
+            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.theme.css"), ExtractSource("GraphExplorer.Resources.Contextual.theme.css"));
+            File.WriteAllText(Path.Combine(this.WebRootPath, "Contextual.css"), ExtractSource("GraphExplorer.Resources.Contextual.css"));
 
             // Copy the configuration file into the web root directory.
             var configFileName = Path.Combine(this.WebRootPath, "Config.js");

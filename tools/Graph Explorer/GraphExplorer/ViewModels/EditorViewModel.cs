@@ -27,6 +27,7 @@ using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
 using unvell.ReoGrid.Actions;
+using ICSharpCode.AvalonEdit.Snippets;
 
 namespace GraphExplorer.ViewModels
 {
@@ -679,6 +680,45 @@ namespace GraphExplorer.ViewModels
                 }
             }
         }
+
+        #region Operations initiated from the grpah surface
+        public async Task ContextNodeClicked(long nodeId)
+        {
+            // Find the node label. This can be done from the currently
+            // rendered graph:
+            var node = this.model.Graph.GetNode(nodeId);
+            var snippet = @"openMenu ({
+                isSticky: false,
+                width: 200,
+                items: [
+                    {label: 'Show incoming edges' onClick: () => {}},
+                    {label: 'Show outgoing edges' onClick: () => {}},
+                    {type: 'seperator'},
+                    {label: 'Hide' onClick: () => {}},
+                    {label: 'Hide all " + node.Labels[0] + @"' onClick: () => {}},
+                ]
+            });"
+;
+            await this.view.Browser.ExecuteScriptAsync(snippet);
+        }
+
+        public string ContextEdgeClicked(long edgeId)
+        {
+            return @"{
+                isSticky: false,
+                width: 200,
+                items: [
+                    {label: 'Hide', onClick: () => {console.log('selected contex menu')}}
+                    {label: 'Hide all', onClick: () => {console.log('selected contex menu')}}
+                ]
+            }";
+        }
+
+        public void ContextSurfaceClicked()
+        {
+        }
+
+        #endregion
 
         public EditorViewModel(MainWindow v, Models.Model model)
         {

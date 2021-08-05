@@ -162,9 +162,24 @@ namespace GraphExplorer.Core.netcore
         /// Get all the node ids in this graph
         /// </summary>
         /// <returns>The set of node ids in this graph.</returns>
-        public HashSet<long> NodeIds()
+        public HashSet<long> GetNodeIds()
         {
             return this.NodesDictionary.Keys.ToHashSet<long>();
+        }
+
+        /// <summary>
+        /// Get the node designated by the given node id.
+        /// </summary>
+        /// <param name="nodeId">The node id that designates the node to get.</param>
+        /// <returns>The designated node, or null if no node with the given id exists.</returns>
+        public Node GetNode(long nodeId)
+        {
+            // Node node;
+            if (this.NodesDictionary.TryGetValue(nodeId, out Node node))
+            {
+                return node;
+            }
+            return null;
         }
 
         public string GenerateJSON()

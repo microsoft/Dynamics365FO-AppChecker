@@ -126,9 +126,10 @@ namespace GraphExplorer
 
                 var e = Newtonsoft.Json.Linq.JObject.Parse(message);
 
-                if (e.ContainsKey("nodeId"))
+                if (e.ContainsKey("selectedNodeId"))
                 {
-                    var id = e["nodeId"].ToObject<long>();
+                    // TODO get rid of this.
+                    var id = e["selectedNodeId"].ToObject<long>();
 
                     var cypher = "MATCH (c) where id(c) = $id return c limit 1";
                     this.ViewModel.SelectedNode = id;
@@ -137,18 +138,27 @@ namespace GraphExplorer
                     this.ViewModel.UpdatePropertyListView(nodeResult);
 
                 }
-                else if (e.ContainsKey("edgeId"))
+                else if (e.ContainsKey("selectedEdgeId"))
                 {
-                    var id = e["edgeId"].ToObject<long>();
+                    // TODO get rid of this.
+                    var id = e["selectedEdgeId"].ToObject<long>();
 
                     var cypher = "MATCH (c) -[r]- (d) where id(r) = $id return r limit 1";
                     this.ViewModel.SelectedEdge = id;
                     var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(edgeResult);
                 }
-                else
+                else if (e.ContainsKey("contextOverNode"))
                 {
-                    // blank space selected
+                    var menu = this.ViewModel.ContextNodeClicked(e["contextOverNode"].ToObject<long>());
+                }
+                else if (e.ContainsKey("contextOverEdge"))
+                {
+                    var menu = this.ViewModel.ContextEdgeClicked(e["contextOverNode"].ToObject<long>());
+                }
+                else if (e.ContainsKey("contextOverSurface"))
+                {
+                    this.ViewModel.ContextSurfaceClicked();
                 }
             };
 

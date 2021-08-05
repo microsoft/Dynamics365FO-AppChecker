@@ -20,6 +20,9 @@
     <None Remove="Images\Euler BW.png" />
     <None Remove="Images\euler.png" />
     <None Remove="Images\Splash Stark BW.png" />
+    <None Remove="Resources\Contextual.css" />
+    <None Remove="Resources\Contextual.js" />
+    <None Remove="Resources\Contextual.theme.css" />
     <None Remove="Resources\Cypher-mode.xshd" />
     <None Remove="Resources\DarkStyle.js" />
     <None Remove="Resources\GenericStyleDocument.js" />
@@ -209,6 +212,9 @@
         <Resource Include="Images\Fat Graph White Background.png" />
         <Resource Include="Images\Simple Graph.png" />
         <SplashScreen Include="Images\Splash Stark BW.png" />
+        <EmbeddedResource Include="Resources\Contextual.css" />
+        <EmbeddedResource Include="Resources\Contextual.js" />
+        <EmbeddedResource Include="Resources\Contextual.theme.css" />
         <EmbeddedResource Include="Resources\DarkStyle.js" />
         <EmbeddedResource Include="Resources\GenericStyleDocument.js" />
         <EmbeddedResource Include="Resources\Cypher-mode.xshd" />
