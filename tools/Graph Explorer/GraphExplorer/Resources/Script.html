@@ -36,7 +36,6 @@
         var contextMenu;
         var contextMenuX, contextMenuY;
         function openMenu(menu) {
-            console.log('opening menu ' + menu);
             contextMenu = menu;
             var target = document.getElementById('mynetwork');
             target.dispatchEvent(new Event("CreateMenu", {'menu': menu}));

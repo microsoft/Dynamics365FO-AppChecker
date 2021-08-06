@@ -78,6 +78,8 @@ namespace GraphExplorer.Core.netcore
             }
         }
 
+        public IEnumerable<object> Values => this.ValuesList;
+
         public Graph()
         {
             this.NodesDictionary = new Dictionary<long, Node>();
@@ -244,9 +246,8 @@ namespace GraphExplorer.Core.netcore
         /// </summary>
         /// <param name="records">The records fetched from neo4j</param>
         /// <returns>The HTML representation of the records in human readable form.</returns>
-        public static string GenerateHtml(int fontsize=12)
+        public string GenerateHtml(int fontsize=12)
         {
-            return "";
 //            #region old
 //            static void GeneratePath(StringBuilder b, int indent, IPath value)
 //            {

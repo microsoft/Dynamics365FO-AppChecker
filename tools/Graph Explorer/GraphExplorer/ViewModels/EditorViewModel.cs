@@ -200,6 +200,7 @@ namespace GraphExplorer.ViewModels
         }
 
         private DatabaseDescriptor database = null;
+
         /// <summary>
         /// This is the currently selected database
         /// </summary>
@@ -230,12 +231,8 @@ namespace GraphExplorer.ViewModels
             }
         }
 
-        private readonly ICommand executeQueryCommand;
-        public ICommand ExecuteQueryCommand => this.executeQueryCommand;
-
-        private readonly ICommand stopQueryCommand;
-        public ICommand StopQueryCommand => this.stopQueryCommand;
-
+        public ICommand ExecuteQueryCommand { get; }
+        public ICommand StopQueryCommand { get; }
 
         public ICommand AboutCommand => new RelayCommand(
             _ =>
@@ -252,117 +249,11 @@ namespace GraphExplorer.ViewModels
             }
         );
 
-        public ICommand ShowOnlyNodeCommand => new RelayCommand(
-            p =>
-            {
-                //var nodes = new HashSet<long>() { this.SelectedNode };
-                //this.model.NodesShown = nodes;
-                //this.SelectedNode = 0;
-            },
-            p =>
-            {
-                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
-            }
-        );
-
-        public ICommand HideNodeCommand => new RelayCommand(
-            p =>
-            {
-            //    var nodes = this.model.NodesShown;
-            //    nodes.Remove(this.SelectedNode);
-            //    this.model.NodesShown = nodes;
-
-            //    this.SelectedNode = 0;
-            },
-            p =>
-            {
-                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
-            }
-        );
-
-        public ICommand ShowOutgoingEdgesCommand => new RelayCommand(
-            p =>
-            {
-                // TODO: Use the new functionality in the database.
-                //// This is additive to the existing graph
-                //// Find all the nodes from the current node:
-                //var query = "match (n) -[]-> (q) where id(n) = $nodeId return q";
-                //var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
-
-                //var outgoing = Model.HarvestNodeIdsFromGraph(result);
-
-                //if (outgoing != null && outgoing.Any())
-                //{
-                //    var nodes = this.model.NodesShown;
-                //    nodes.UnionWith(outgoing);
-                //    this.model.NodesShown = nodes;
-                //}
-
-                //// TODO. test if the new method works. 
-                //var g1 = await Neo4jDatabase.GetOutgoingEdges(this.SelectedNode);
-                //// Merge this result into the existing rendered graph.
-
-            },
-            p =>
-            {
-                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
-            }
-        );
-
-        public ICommand ShowIncomingEdgesCommand => new RelayCommand(
-            p =>
-            {
-                // This is additive to the existing graph
-                // Find all the nodes from the current node:
-
-                //var query = "match (n) <-[]- (q) where id(n) = $nodeId return q";
-                //var result = await this.model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
-
-                //var incoming = Model.HarvestNodeIdsFromGraph(result);
-
-                //if (incoming != null && incoming.Any())
-                //{
-                //    var nodes = this.model.NodesShown;
-                //    nodes.UnionWith(incoming);
-                //    this.model.NodesShown = nodes;
-                //}
-            },
-            p =>
-            {
-                return true; //  (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
-            }
-        );
-
-        public ICommand ShowEdges => new RelayCommand(
-            p =>
-            {
-                // This is additive to the existing graph
-                // Find all the edges (both incoming and outgoing) from the current node:
-                //var q = "match (f) -[]- (n) where id(n) = $nodeId return f";
-                //var result = await this.model.ExecuteCypherAsync(q, new Dictionary<string, object>() { { "nodeId", this.SelectedNode } });
-
-                //var outgoing = Model.HarvestNodeIdsFromGraph(result);
-
-                //if (outgoing != null && outgoing.Any())
-                //{
-                //    var nodes = this.model.NodesShown;
-                //    nodes.UnionWith(outgoing);
-                //    this.model.NodesShown = nodes;
-                //}
-            },
-            p =>
-            {
-                return true; // (this.SelectedNode != 0) && this.model.NodesShown.Contains(this.SelectedNode);
-            }
-        );
-
-
-        private readonly ICommand printGraphCommand;
-        public ICommand PrintGraphCommand => this.printGraphCommand;
+        public ICommand PrintGraphCommand { get; }
 
         public string ErrorMessage
         {
-            get { return this.model.ErrorMessage; }
+            get => this.model.ErrorMessage;
             set
             {
                 this.OnPropertyChanged(nameof(this.ErrorMessage));
@@ -372,11 +263,11 @@ namespace GraphExplorer.ViewModels
         public ICommand IncreaseQueryFontSize
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     this.model.QueryFontSize += 2;
                 },
-                p =>
+                _ =>
                 {
                     return this.model.QueryFontSize < 48;
                 }
@@ -386,11 +277,11 @@ namespace GraphExplorer.ViewModels
         public ICommand DecreaseQueryFontSize
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     this.model.QueryFontSize -= 2;
                 },
-                p =>
+                _ =>
                 {
                     return this.model.QueryFontSize > 8;
                 }
@@ -400,7 +291,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowCypherRefcard
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     var psi = new ProcessStartInfo
                     {
@@ -413,7 +304,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowSettingsCommand
         {
             get => new RelayCommand(
-                p =>
+                _ =>
                 {
                     this.configEditor = new ConfigEditWindow(this.model, this)
                     {
@@ -443,7 +334,7 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowDataLaboratoryCommand
         {
             get => new RelayCommand(
-                async p =>
+                async _ =>
                 {
                     // TODO when the window is active, the icon on the left hand bar should change to the 
                     // version that designates hiding the window.
@@ -738,6 +629,7 @@ openMenu ({
 
             snippet += @"
         {type: 'seperator'},
+        {label: 'Show only', onClick: () => { window.chrome.webview.postMessage({ 'showOnly': " + nodeId + @"});}},
         {label: 'Hide', icon: 'eye-off.svg', onClick: () => { window.chrome.webview.postMessage({ 'hideNode': " + nodeId + @"});}},
         {label: 'Hide all " + node.Labels[0] + @" nodes', onClick: () => { window.chrome.webview.postMessage({ 'hideNamedNodes': '" + node.Labels[0] + @"'}); }},
     ]
@@ -816,6 +708,12 @@ openMenu ({
             Graph g = this.model.Graph;
             g.DeleteNode(id);
             this.model.Graph = g;
+        }
+
+        public async Task ShowOnlyNodeAsync(long id)
+        {
+            var graph = await Neo4jDatabase.GetNodeAsync(id);
+            this.model.Graph = graph;
         }
 
         public void HideNamedNodes(string name)
@@ -929,11 +827,17 @@ openMenu ({
                     this.SetTheme(this.model.IsDarkMode);
 
                     // Update the view
-                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    if (this.model.Graph != null)
+                    {
+                        await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    }
                 }
                 else if (e.PropertyName == nameof(this.AllowKeyboardNavigation) || e.PropertyName == nameof(this.ShowNavigationButtons))
                 {
-                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    if (this.model.Graph != null)
+                    {
+                        await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    }
                 }
                 else if (e.PropertyName == nameof(Model.StyleDocumentSource))
                 {
@@ -973,19 +877,9 @@ openMenu ({
                     // The graph has changed. Render the graph surface.
                     await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
                 }
-                //else if (e.PropertyName == nameof(Model.NodesShown))
-                //{
-                //    // The nodes have been changed, so do a repaint
-                //    await this.RepaintNodesAsync(this.model.NodesShown);
-                //}
-                //else if (e.PropertyName == nameof(Model.QueryResults))
-                //{
-                //    // Update the set of nodes shown on the surface.
-                //    this.model.NodesShown = Model.HarvestNodeIdsFromGraph(this.model.QueryResults);
-                //}
             };
 
-            this.stopQueryCommand = new RelayCommand(
+            this.StopQueryCommand = new RelayCommand(
                 p => 
                 { 
                     // Roll back the transaction that executes the current query.
@@ -997,7 +891,7 @@ openMenu ({
                 }
             );
 
-            this.executeQueryCommand = new RelayCommand(
+            this.ExecuteQueryCommand = new RelayCommand(
                  async p =>
                  {
                      string source = this.GetSource();
@@ -1015,7 +909,7 @@ openMenu ({
                      this.model.Graph = graph;
                      //if (result != null)
                      //{
-                     //    var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(result);
+                     var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(graph);
 
                      //    // The query executed correctly. 
                      //    // If the user wanted to see all the edges from the selected nodes, a new
@@ -1033,26 +927,24 @@ openMenu ({
                      //    // Go from graph mode to text mode if the result cannot be rendered as a graph.
                      //    // Do not switch back to graph mode automatically?
 
-                     //    if (this.GraphModeSelected && !canBeRenderedAsGraph)
-                     //    {
-                     //        this.GraphModeSelected = false;
-                     //        this.TextModeSelected = true;
-                     //    }
+                     if (this.GraphModeSelected && !canBeRenderedAsGraph)
+                     {
+                         this.GraphModeSelected = false;
+                         this.TextModeSelected = true;
+                     }
 
-                     //    if (this.graphModeSelected)
-                     //    {
-                     //        // Render the data in the graph view
-                     //        // TODO replace with graph.GenerateJSON
-                     //        string resultJson = Neo4jDatabase.GenerateJSON(result);
-
-                     //        await this.RepaintNodesAsync(resultJson);
-                     //    }
-                     //    else
-                     //    {
-                     //        // Draw as html
-                     //        var html = Neo4jDatabase.GenerateHtml(this.model.QueryResults);
-                     //        this.view.TextBrowser.NavigateToString(html);
-                     //    }
+                     if (this.graphModeSelected)
+                     {
+                         // Render the data in the graph view
+                         string resultJson = graph.GenerateJSON();
+                         await this.RepaintNodesAsync(resultJson);
+                     }
+                     else
+                     {
+                         // Draw as html
+                         var html = graph.GenerateHtml();
+                         this.view.TextBrowser.NavigateToString(html);
+                     }
                      //}
                  },
 
@@ -1063,7 +955,7 @@ openMenu ({
                      return v.CypherEditor.Document.Text.Any();
                  });
 
-            this.printGraphCommand = new RelayCommand(
+            this.PrintGraphCommand = new RelayCommand(
                 async p =>
                 {
                     await this.view.Browser.ExecuteScriptAsync("this.print();");

@@ -59,18 +59,7 @@ namespace GraphExplorer.Models
             }
         }
 
-        // TODO Remove these
-        private List<IRecord> queryResults;
-        public List<IRecord> QueryResults
-        {
-            get { return this.queryResults; }
-            set
-            {
-                this.queryResults = value;
-                this.OnPropertyChanged(nameof(this.QueryResults));
-            }
-        }
-        
+       
 
         /// <summary>
         /// This event is triggered when a property changes.
@@ -461,16 +450,9 @@ namespace GraphExplorer.Models
         /// </summary>
         /// <param name="res">The list containing the records.</param>
         /// <returns>True if the records can be interpreted as as graph, and false otherwise.</returns>
-        public static bool CanBeRenderedAsGraph(IList<IRecord> res)
+        public static bool CanBeRenderedAsGraph(Graph g)
         {
-            bool IsNotAtomic(object o)
-            {
-                return o == null || o is INode || o is IPath || o is IRelationship;
-            }
-
-            return res.All(rec => rec.Values.All(v => IsNotAtomic(v.Value)
-                || ((v.Value is KeyValuePair<string, object> kv) && IsNotAtomic(kv.Value))
-            ));
+            return !g.Values.Any();
         }
 
         /// <summary>

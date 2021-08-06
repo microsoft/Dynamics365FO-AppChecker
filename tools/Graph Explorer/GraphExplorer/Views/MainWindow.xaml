@@ -129,27 +129,6 @@ Licensed under the MIT license.
                                         <materialDesign:PackIcon Kind="Play"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Hide Selected"  Command="{Binding HideNodeCommand}" ToolTip="Remove the selected node from the view" >
-                                    <MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="Hide"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Show only Selected"  Command="{Binding ShowOnlyNodeCommand}" ToolTip="Show only the selected node" />
-                                <MenuItem Header="Show outgoing edges"  Command="{Binding ShowOutgoingEdges}" ToolTip="Show the outgoing edges from the selected node" >
-                                    <MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="RayStart"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Show incoming edges"  Command="{Binding ShowIncomingEdges}" ToolTip="Show the incoming edges to the selected node" >
-                                    <MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="RayEnd"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Show edges"  Command="{Binding ShowEdges}" ToolTip="Show both the incoming and outgoing edges to the selected node" >
-                                    <MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="RayVertex"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
                             </MenuItem>
                             <MenuItem Header="Help">
                                 <MenuItem Header="About" Command="{Binding AboutCommand}">

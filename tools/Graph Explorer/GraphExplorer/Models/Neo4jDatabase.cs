@@ -381,6 +381,14 @@ namespace GraphExplorer.Models
             return result;
         }
 
+        public static async Task<Graph> GetNodeAsync(long nodeId)
+        {
+            var query = "match (n) where id(n) = $nodeId return n";
+            var result = await ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeId", nodeId } });
+
+            return GenerateGraph(result);
+        }
+
         /// <summary>
         /// Generates the graph of the outgoing edges (and the nodes at the other end of
         /// those edges) for the node specified by its unique id.
@@ -463,6 +471,8 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
 
             return result;
         }
+
+
         public static async Task<Graph> ExecuteQueryAsync(string source, IDictionary<string, object> parameters = null)
         {
             var records = await ExecuteCypherQueryListAsync(source, parameters);

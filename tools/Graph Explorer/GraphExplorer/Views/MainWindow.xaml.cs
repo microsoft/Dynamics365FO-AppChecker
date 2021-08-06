@@ -188,6 +188,11 @@ using System.Xml.Linq;
                     var fromNode = e["fromNode"].ToObject<long>();
                     await this.ViewModel.ShowOutgoingEdgeAsync(edgeName, fromNode);
                 }
+                else if (e.ContainsKey("showOnly"))
+                {
+                    var id = e["showOnly"].ToObject<long>();
+                    await this.ViewModel.ShowOnlyNodeAsync(id);
+                }
                 else if (e.ContainsKey("hideNode"))
                 {
                     var id = e["hideNode"].ToObject<long>();
