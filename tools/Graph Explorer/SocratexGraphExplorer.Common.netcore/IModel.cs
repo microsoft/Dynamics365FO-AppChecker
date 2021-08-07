@@ -11,7 +11,7 @@ namespace GraphExplorer.Common
     {
         // HashSet<long> NodesShown { get; set; }
 
-        Task<Graph> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters = null);
+        Task<(Graph,string)> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters = null);
 
         /// <summary>
         /// Add the nodes specified by the query and its parameters to the set of visible nodes.

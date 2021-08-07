@@ -59,8 +59,6 @@ namespace GraphExplorer.Models
             }
         }
 
-       
-
         /// <summary>
         /// This event is triggered when a property changes.
         /// </summary>
@@ -463,13 +461,13 @@ namespace GraphExplorer.Models
         /// <param name="cypherSource">The cypher source</param>
         /// <param name="parameters">Any parameters used in the source string</param>
         /// <returns>The list of results.</returns>
-        public async Task<Graph> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
+        public async Task<(Graph, string)> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
         {
             this.ErrorMessage = "Running query...";
 
             try
             {
-                var res = await Neo4jDatabase.ExecuteQueryGraphAsync(cypherSource, parameters);
+                var res = await Neo4jDatabase.ExecuteQueryGraphAndHtmlAsync(cypherSource, parameters);
 
                 this.ErrorMessage = "Done.";
                 return res;
@@ -502,7 +500,7 @@ namespace GraphExplorer.Models
                     this.ErrorMessage = e.Message;
                 }
             }
-            return null;
+            return (null,"");
         }
 
         // TODO: remove this.

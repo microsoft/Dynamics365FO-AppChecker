@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.XppPlugin
 {
@@ -55,9 +56,10 @@ namespace GraphExplorer.XppPlugin
             var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
             var query = "match (p) where p.Artifact=$artifact return p limit 1";
-            var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
+            // TODO: This is wrong. Use Neo4jDatabase.ExecuteQueryGraphAsync and work with the graph
+            (Graph g, string html) = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
 
-            if (c != null)
+            //if (c != null)
             {
                 // TODO
                 //var declaringNode = c.First().Values.Values.First() as INode;

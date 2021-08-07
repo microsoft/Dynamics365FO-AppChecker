@@ -875,7 +875,10 @@ openMenu ({
                 else if (e.PropertyName == nameof(this.model.Graph))
                 {
                     // The graph has changed. Render the graph surface.
-                    await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    if (this.model.Graph != null)
+                    {
+                        await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    }
                 }
             };
 
@@ -900,9 +903,15 @@ openMenu ({
                      this.SelectedEdge = 0;
 
                      // Get both the graph and the HTML representation at once:
-                     (Graph graph, string html) = await Neo4jDatabase.ExecuteQueryGraphAndHtmlAsync(source);
+                     (Graph graph, string html) = await this.model.ExecuteCypherAsync(source);
 
-                     // IF the user wants to see the implicit edges, we trigger a new query:
+                     if (graph == null)
+                     {
+                         // An error was found in the query.
+                         return;
+                     }
+
+                     // If the user wants to see the implicit edges, we trigger a new query:
                      if (this.model.ConnectResultNodes)
                      {
                          graph = await Neo4jDatabase.GetImplicitEdgesAsync(graph);
