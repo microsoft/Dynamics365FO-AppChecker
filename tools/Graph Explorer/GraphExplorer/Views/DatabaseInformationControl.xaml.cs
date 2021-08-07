@@ -1,6 +1,7 @@
 ﻿using GraphExplorer.Models;
 using GraphExplorer.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,21 +32,28 @@ namespace GraphExplorer.Views
             this.Nodes.Children.Clear();
             this.Relationships.Children.Clear();
 
+            // Get the names of the first 1000 labels, the first 1000 relationships
+            // and the count of nodes and relationships.
             var metadataQuery = @"
-CALL db.labels() YIELD label
-RETURN {name:'labels', data:COLLECT(label)[..1000]} AS result
-UNION ALL
-CALL db.relationshipTypes() YIELD relationshipType
-RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} AS result
-UNION ALL
-MATCH () RETURN { name:'nodes', data:count(*) } AS result
-UNION ALL
-MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
+                CALL db.labels() YIELD label
+                RETURN {name:'labels', data:COLLECT(label)[..1000]} AS result
+                UNION ALL
+                CALL db.relationshipTypes() YIELD relationshipType
+                RETURN {name:'relationshipTypes', data:COLLECT(relationshipType)[..1000]} AS result
+                UNION ALL
+                MATCH () RETURN { name:'nodes', data:count(*) } AS result
+                UNION ALL
+                MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
+
+            // Use this instead for all these cases:
+            // var g = await Neo4jDatabase.ExecuteQueryGraphAsync(metadataQuery);
 
             var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(metadataQuery);
             if (result != null)
             {
                 var labels = ((result[0].Values["result"] as Dictionary<string, object>)["data"] as List<object>);
+                // labels = (g.Values.ToArray()[0] as Dictionary<string, object>)["data"] as List<object>;
+
                 long labelsCount = (long)(result[2].Values["result"] as IDictionary<string, object>)["data"];
 
                 this.LabelsPrompt.Text = string.Format("Node Labels ({0})", labelsCount);

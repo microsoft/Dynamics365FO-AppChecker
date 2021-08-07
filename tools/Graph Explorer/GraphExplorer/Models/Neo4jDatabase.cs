@@ -380,7 +380,7 @@ namespace GraphExplorer.Models
             var result = new Graph(nodes, edges, values);
             return result;
         }
-
+        
         public static async Task<Graph> GetNodeAsync(long nodeId)
         {
             var query = "match (n) where id(n) = $nodeId return n";
@@ -458,7 +458,8 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
 
         public static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
         {
-            // TODO: This method should not be public. 
+            // TODO this should not be public, since it pollutes the code with the Neo4j specific type.
+            // All usage should be replaced with the graph based APIs.
             IAsyncSession session = Database != null && !string.IsNullOrEmpty(Database.Name)
                 ? Driver.AsyncSession(o => o.WithDatabase(Database.Name))
                 : Driver.AsyncSession();
@@ -472,12 +473,29 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return result;
         }
 
+        public static async Task<Graph> GetImplicitEdgesAsync(Graph g)
+        {
+            var query = @"
+                match (n) where id(n) in $nodeIds optional match (n) -[r]- (m) 
+                where id(n) in $nodeIds and id(m) in $nodeIds 
+                return n,m,r";
 
-        public static async Task<Graph> ExecuteQueryAsync(string source, IDictionary<string, object> parameters = null)
+            return await ExecuteQueryGraphAsync(query, new Dictionary<string, object>() { { "nodeIds", g.Nodes.Select(n => n.Id).ToArray() } });
+        }
+
+        public static async Task<Graph> ExecuteQueryGraphAsync(string source, IDictionary<string, object> parameters = null)
         {
             var records = await ExecuteCypherQueryListAsync(source, parameters);
             var graph = GenerateGraph(records);
             return graph;
+        }
+
+        public static async Task<(Graph,string)> ExecuteQueryGraphAndHtmlAsync(string source, IDictionary<string, object> parameters = null)
+        {
+            var records = await ExecuteCypherQueryListAsync(source, parameters);
+            var graph = GenerateGraph(records);
+            var html = GenerateHtml(records);
+            return (graph, html);
         }
     }
 }

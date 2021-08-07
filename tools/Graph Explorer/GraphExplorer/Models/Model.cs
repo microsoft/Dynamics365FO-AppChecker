@@ -469,7 +469,7 @@ namespace GraphExplorer.Models
 
             try
             {
-                var res = await Neo4jDatabase.ExecuteQueryAsync(cypherSource, parameters);
+                var res = await Neo4jDatabase.ExecuteQueryGraphAsync(cypherSource, parameters);
 
                 this.ErrorMessage = "Done.";
                 return res;

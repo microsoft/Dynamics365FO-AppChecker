@@ -899,16 +899,20 @@ openMenu ({
                      this.SelectedNode = 0;
                      this.SelectedEdge = 0;
 
-                     // First execute the query to get the result graph in memory:
-                     // var  result = await this.model.ExecuteCypherAsync(source);
-                     // var graph = await Neo4jDatabase.ExecuteQueryAsync(source);
-                     var graph = await this.model.ExecuteCypherAsync(source);
-                     // TODO: If the switch to show all nodes is set, then do that.
+                     // Get both the graph and the HTML representation at once:
+                     (Graph graph, string html) = await Neo4jDatabase.ExecuteQueryGraphAndHtmlAsync(source);
+
+                     // IF the user wants to see the implicit edges, we trigger a new query:
+                     if (this.model.ConnectResultNodes)
+                     {
+                         graph = await Neo4jDatabase.GetImplicitEdgesAsync(graph);
+                     }
+
                      // Set the graph. This will trigger the event that will render the graph 
                      // on the drawing surface.
                      this.model.Graph = graph;
-                     //if (result != null)
-                     //{
+                     this.view.TextBrowser.NavigateToString(html);
+
                      var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(graph);
 
                      //    // The query executed correctly. 
@@ -932,19 +936,25 @@ openMenu ({
                          this.GraphModeSelected = false;
                          this.TextModeSelected = true;
                      }
+                     else if (!this.GraphModeSelected && canBeRenderedAsGraph)
+                     {
+                         this.GraphModeSelected = true;
+                         this.TextModeSelected = false;
+                     }
 
-                     if (this.graphModeSelected)
-                     {
-                         // Render the data in the graph view
-                         string resultJson = graph.GenerateJSON();
-                         await this.RepaintNodesAsync(resultJson);
-                     }
-                     else
-                     {
-                         // Draw as html
-                         var html = graph.GenerateHtml();
-                         this.view.TextBrowser.NavigateToString(html);
-                     }
+                     //if (this.graphModeSelected)
+                     //{
+                     //    // Render the data in the graph view.
+                     //    string resultJson = graph.GenerateJSON();
+                     //    await this.RepaintNodesAsync(resultJson);
+                     //}
+                     //else
+                     //{
+                     //    // TODO this is wrong. We cannot reliably create the HTML from the graph
+                     //    // and we do not want to issue another call to the DB
+                     //    // Draw as html
+                     //    this.view.TextBrowser.NavigateToString(html);
+                     //}
                      //}
                  },
 
@@ -989,28 +999,28 @@ openMenu ({
             return editor.Document.Text;
         }
 
-        /// <summary>
-        /// Get the graph that contains the nodes provided, and also all the edges
-        /// between the nodes.
-        /// </summary>
-        /// <param name="nodes">The set of nodes in the graph</param>
-        /// <returns>The set of records to render, including all the edges connecting the 
-        /// nodes provided.</returns>
-        private async Task<List<IRecord>> GetGraphFromNodes(HashSet<long> nodes)
-        {
-            if (nodes != null)
-            {
-                var query = "match (n) where id(n) in $nodeIds "
-                      + "optional match (n) -[r]- (m) "
-                      + "where id(n) in $nodeIds " +
-                        "  and id(m) in $nodeIds " +
-                        "return n,m,r";
+        ///// <summary>
+        ///// Get the graph that contains the nodes provided, and also all the edges
+        ///// between the nodes.
+        ///// </summary>
+        ///// <param name="nodes">The set of nodes in the graph</param>
+        ///// <returns>The set of records to render, including all the edges connecting the 
+        ///// nodes provided.</returns>
+        //private async Task<List<IRecord>> GetGraphFromNodes(HashSet<long> nodes)
+        //{
+        //    if (nodes != null)
+        //    {
+        //        var query = "match (n) where id(n) in $nodeIds "
+        //              + "optional match (n) -[r]- (m) "
+        //              + "where id(n) in $nodeIds " +
+        //                "  and id(m) in $nodeIds " +
+        //                "return n,m,r";
 
-                return await Neo4jDatabase.ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
-            }
+        //        return await Neo4jDatabase.ExecuteCypherQueryListAsync(query, new Dictionary<string, object>() { { "nodeIds", nodes.ToArray() } });
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         private static string JavascriptColorString(Color color)
         {
@@ -1034,17 +1044,17 @@ openMenu ({
             await view.Browser.ExecuteScriptAsync(drawInvocation);
         }
 
-        public async Task RepaintNodesAsync(HashSet<long> nodes)
-        {
-            // TODO this does not look correct. It seems to always get the nodes connected by edges that are not included in the query
-            var results = await this.GetGraphFromNodes(nodes);
-            if (results != null)
-            {
-                // TODO replace with method on Graph class.
-                string resultJson = Neo4jDatabase.GenerateJSON(results);
-                await this.RepaintNodesAsync(resultJson);
-            }
-        }
+        //public async Task RepaintNodesAsync(HashSet<long> nodes)
+        //{
+        //    // TODO this does not look correct. It seems to always get the nodes connected by edges that are not included in the query
+        //    var results = await this.GetGraphFromNodes(nodes);
+        //    if (results != null)
+        //    {
+        //        // TODO replace with method on Graph class.
+        //        string resultJson = Neo4jDatabase.GenerateJSON(results);
+        //        await this.RepaintNodesAsync(resultJson);
+        //    }
+        //}
 
         private void UpdateNodeInfoPage(INode node)
         {

@@ -39,7 +39,7 @@ namespace GraphExplorer.Views
         private async Task InitializeAsync()
         {
             // Todo: Remve this. Listen to the Graph event from the view model.
-            var graph = await Neo4jDatabase.ExecuteQueryAsync("match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 30");
+            var graph = await Neo4jDatabase.ExecuteQueryGraphAsync("match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 30");
             //var records = await cursor.ToListAsync();
             //var dict = Neo4jDatabase.GenerateJSONParts(records);
 
