@@ -16,24 +16,21 @@ using GraphExplorer.SourceEditor;
 namespace GraphExplorer
 {
     using MaterialDesignExtensions.Controls;
-    using System.Threading;
-    using System.Windows.Threading;
-using System.Xml.Linq;
+    using WPFLocalizeExtension.Engine;
+    using WPFLocalizeExtension.Providers;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : MaterialWindow
     {
-        // public const string DialogHostName = "dialogHost";
-
-        public string DialogHostName
-        {
-            get
-            {
-                return "dialogHost";
-            }
-        }
+        //public string DialogHostName
+        //{
+        //    get
+        //    {
+        //        return "dialogHost";
+        //    }
+        //}
 
         public ViewModels.EditorViewModel ViewModel { private set; get; }
         private readonly Model model;
@@ -42,9 +39,7 @@ using System.Xml.Linq;
         {
             this.InitializeComponent();
 
-            //this.InitializeAsync().ContinueWith((f) => {
-            //});
-
+            // Setup callback so cursor position is reflected
             this.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
             {
                 var caret = sender as ICSharpCode.AvalonEdit.Editing.Caret;
@@ -67,11 +62,31 @@ using System.Xml.Linq;
 
             this.model = new Models.Model();
             this.ViewModel = new ViewModels.EditorViewModel(this, model);
+            this.DataContext = this.ViewModel;
 
             this.InputBindings.Add(new KeyBinding(this.ViewModel.ExecuteQueryCommand, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
             this.InputBindings.Add(new KeyBinding(this.ViewModel.ExecuteQueryCommand, new KeyGesture(Key.E, ModifierKeys.Control, "Ctrl-E")));
 
-            this.DataContext = this.ViewModel;
+            // See https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension/ for details on localization.
+            LocalizeDictionary.Instance.Culture = new System.Globalization.CultureInfo("en");
+
+            // Break when a key is not found:
+            LocalizeDictionary.Instance.OutputMissingKeys = true;
+
+            // This is triggered if the failing translation is used from markup.
+            LocalizeDictionary.Instance.MissingKeyEvent += (object sender, MissingKeyEventArgs e) =>
+            {
+                throw new NotImplementedException(e.Key);
+            };
+
+            // This is triggered if the failing translation is used from code behind.
+            LocalizeDictionary.Instance.DefaultProvider.ProviderError += (object sender, ProviderErrorEventArgs args) =>
+            {
+                throw new NotImplementedException(args.Key);
+            };
+
+            // This is how to use the localization engine from code:
+            var translated = WPFLocalizeExtension.Extensions.LocExtension.GetLocalizedValue<string>("EditMenu");
 
             string password;
             if (!this.model.IsDebugMode)

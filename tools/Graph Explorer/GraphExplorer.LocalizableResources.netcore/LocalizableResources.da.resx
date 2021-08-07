@@ -117,4 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EditMenu" xml:space="preserve">
+    <value>Rediger</value>
+    <comment>The text on the menu bar for the Edit menu</comment>
+  </data>
+  <data name="ExitMenuItem" xml:space="preserve">
+    <value>Afslut</value>
+    <comment>The Exit menu item</comment>
+  </data>
+  <data name="FileMenu" xml:space="preserve">
+    <value>_Fil</value>
+  </data>
+  <data name="PrintMenu" xml:space="preserve">
+    <value>Udskriv</value>
+  </data>
 </root>

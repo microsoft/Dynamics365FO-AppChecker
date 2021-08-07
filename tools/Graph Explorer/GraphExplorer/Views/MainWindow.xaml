@@ -10,7 +10,14 @@ Licensed under the MIT license.
      	xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"        
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"        
+        xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"  
+        
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        lex:LocalizeDictionary.DesignCulture="en"
+        lex:LocalizeDictionary.IncludeInvariantCulture="False"                    
+        lex:ResxLocalizationProvider.DefaultAssembly="GraphExplorer.LocalizableResources.netcore"
+        lex:ResxLocalizationProvider.DefaultDictionary="LocalizableResources"
+                    
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         BorderBackgroundBrush="{DynamicResource MaterialDesignPaper}"
         BorderForegroundBrush="{DynamicResource MaterialDesignBody}"                    
@@ -50,7 +57,7 @@ Licensed under the MIT license.
                     <DockPanel>
 
                         <Menu IsMainMenu="True" DockPanel.Dock="Top">
-                            <MenuItem x:Name="FileMenu" Header="_File" >
+                            <MenuItem x:Name="FileMenu" Header="{lex:LocText FileMenu}" >
                                 <MenuItem Header="Open Cypher Query..."  InputGestureText="Ctrl+O" Command="{Binding OpenQueryCommand}">
                                     <MenuItem.Icon>
                                         <materialDesign:PackIcon Kind="OpenInApp"/>
@@ -63,8 +70,7 @@ Licensed under the MIT license.
                                 </MenuItem>
                                 <Separator/>
                                 <MenuItem Header="Import Style..." Command="{Binding ImportStyleCommand}" ToolTip="Import a style JSON document defining the graph rendering.">
-                                    <MenuItem.Icon
-                                        >
+                                    <MenuItem.Icon>
                                         <materialDesign:PackIcon Kind="Shape" />
                                     </MenuItem.Icon>
                                 </MenuItem>
@@ -73,19 +79,19 @@ Licensed under the MIT license.
                                         <materialDesign:PackIcon Kind="ShapeOutline" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Print" Command="{Binding PrintGraphCommand}" >
+                                <MenuItem Header="{lex:LocText PrintMenu}" Command="{Binding PrintGraphCommand}" >
                                     <MenuItem.Icon>
                                         <materialDesign:PackIcon Kind="Printer"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator></Separator>
-                                <MenuItem Header="_Exit" Command="{Binding ApplicationExitCommand}" >
+                                <MenuItem Header="{lex:LocText ExitMenuItem}" Command="{Binding ApplicationExitCommand}" >
                                     <MenuItem.Icon>
                                         <materialDesign:PackIcon Kind="ExitToApp" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </MenuItem>
-                            <MenuItem Header="Edit">
+                            <MenuItem Header="{lex:LocText EditMenu}">
                                 <MenuItem Command="Cut" >
                                     <MenuItem.Icon>
                                         <materialDesign:PackIcon Kind="ContentCut" />

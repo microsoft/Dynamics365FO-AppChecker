@@ -248,6 +248,7 @@ namespace GraphExplorer.Core.netcore
         /// <returns>The HTML representation of the records in human readable form.</returns>
         public string GenerateHtml(int fontsize=12)
         {
+            return "";
 //            #region old
 //            static void GeneratePath(StringBuilder b, int indent, IPath value)
 //            {

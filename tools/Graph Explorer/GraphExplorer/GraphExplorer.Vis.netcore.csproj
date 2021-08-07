@@ -208,6 +208,7 @@
         <PackageReference Include="Neo4j.Driver" Version="4.3.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.0.0" />
+        <PackageReference Include="WPFLocalizeExtension" Version="3.8.0" />
     </ItemGroup>
     <ItemGroup>
         <Resource Include="Images\CloudRun_16x.png" />
@@ -396,6 +397,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\GraphExplorer.Core.netcore\GraphExplorer.Core.netcore.csproj" />
+      <ProjectReference Include="..\GraphExplorer.LocalizableResources.netcore\GraphExplorer.LocalizableResources.netcore.csproj" />
       <ProjectReference Include="..\Plugins\XppProgrammingPlugins.netcore.csproj" />
       <ProjectReference Include="..\SocratexGraphExplorer.Common.netcore\GraphExplorer.Common.netcore.csproj" />
       <ProjectReference Include="..\SocratexGraphExplorer.DefaultRenderers.netcore\GraphExplorer.DefaultRenderers.netcore.csproj" />
