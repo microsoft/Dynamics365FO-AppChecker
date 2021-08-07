@@ -177,12 +177,11 @@ Licensed under the MIT license.
                                 <RowDefinition Height="200"/>
                             </Grid.RowDefinitions>
 
-
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="7*"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto" x:Name="ContextInfoColumn"/>
                                 </Grid.ColumnDefinitions>
 
                                 <GroupBox Grid.Column="0" Header="Graph" >
@@ -222,8 +221,34 @@ Licensed under the MIT license.
 
                                 <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
 
+                                <Expander x:Name="ContextualInformationExpander" Grid.Column="2" ExpandDirection="Left"  Collapsed="ContextualInformation_Collapsed" Expanded="ContextualInformation_Expanded">
+                                    <Expander.Header>
+                                        <TextBlock Text="Context"
+                                            RenderTransformOrigin=".5,.5">
+                                            <TextBlock.LayoutTransform>
+                                                <RotateTransform Angle="90" />
+                                            </TextBlock.LayoutTransform>
+                                        </TextBlock>
+                                    </Expander.Header>
+                                    <!--<Border Background="Yellow">
+                                        <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
+                                        </GroupBox>
+                                    </Border>-->
+
+                                        <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
+                                        </GroupBox>
+                                    <!--<Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <GroupBox Grid.Column="0" x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
+                                        </GroupBox>
+                                    </Grid>-->
+                                </Expander>
+                                <!--
                                 <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
                                 </GroupBox>
+                                -->
                             </Grid>
                             <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 

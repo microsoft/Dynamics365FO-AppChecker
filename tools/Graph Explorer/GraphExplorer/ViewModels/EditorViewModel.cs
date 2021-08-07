@@ -1067,40 +1067,42 @@ openMenu ({
 
         private void UpdateNodeInfoPage(INode node)
         {
-            if (!this.NodeRenderers.TryGetValue(node.Labels[0], out INodeRenderer renderer))
-            {
-                // Use the default one, by convention called ()
-                renderer = this.NodeRenderers["()"];
-            }
+            //if (!this.NodeRenderers.TryGetValue(node.Labels[0], out INodeRenderer renderer))
+            //{
+            //    // Use the default one, by convention called ()
+            //    renderer = this.NodeRenderers["()"];
+            //}
 
-            if (this.view.ContextualInformation.Content != renderer)
-            {
-                this.view.ContextualInformation.Content = renderer;
-            }
+            //if (this.view.ContextualInformation.Content != renderer)
+            //{
+            //    this.view.ContextualInformation.Content = renderer;
+            //}
 
-            renderer.SelectNodeAsync(node);
+            //renderer.SelectNodeAsync(node);
         }
 
         private void UpdateEdgeInfoPage(IRelationship edge)
         {
-            if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
-            {
-                // Use the default one, by convention called ()
-                renderer = this.EdgeRenderers["()"];
-            }
+            //if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
+            //{
+            //    // Use the default one, by convention called ()
+            //    renderer = this.EdgeRenderers["()"];
+            //}
 
-            if (this.view.ContextualInformation.Content != renderer)
-            {
-                this.view.ContextualInformation.Content = renderer;
-            }
+            //if (this.view.ContextualInformation.Content != renderer)
+            //{
+            //    this.view.ContextualInformation.Content = renderer;
+            //}
 
-            renderer.SelectEdgeAsync(edge);
+            //renderer.SelectEdgeAsync(edge);
         }
 
         private void ShowDatabaseInfoPanel()
         {
             UserControl child = new DatabaseInformationControl(this, this.model);
+            this.view.ContextualInformation.Header = "Database";
             this.view.ContextualInformation.Content = child;
+            this.view.ContextualInformationExpander.IsExpanded = true;
         }
 
         private void UpdateProperties(object nodeOrEdge)

@@ -297,5 +297,15 @@ namespace GraphExplorer
         {
             e.CanExecute = true;
         }
+
+        private void ContextualInformation_Expanded(object sender, RoutedEventArgs e)
+        {
+            this.ContextInfoColumn.Width = new GridLength(400, GridUnitType.Pixel);
+        }
+
+        private void ContextualInformation_Collapsed(object sender, RoutedEventArgs e)
+        {
+            this.ContextInfoColumn.Width = new GridLength(30, GridUnitType.Auto);
+        }
     }
 }
