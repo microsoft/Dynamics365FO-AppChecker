@@ -334,13 +334,13 @@ namespace GraphExplorer.ViewModels
         public ICommand ShowDataLaboratoryCommand
         {
             get => new RelayCommand(
-                async _ =>
+                _ =>
                 {
                     // TODO when the window is active, the icon on the left hand bar should change to the 
                     // version that designates hiding the window.
                     if (this.Laboratory == null)
                     {
-                        this.Laboratory = await DataLaboratory.CreateDataLaboratory(this);
+                        this.Laboratory = DataLaboratory.CreateDataLaboratory(this);
                     }
                     this.Laboratory.Show();
                 }
@@ -505,6 +505,16 @@ namespace GraphExplorer.ViewModels
             }
         }
 
+        private Graph graph;
+        public Graph Graph
+        {
+            get => this.graph;
+            set
+            {
+                this.graph = value;
+                this.OnPropertyChanged(nameof(this.Graph));
+            }
+        }
 
         public bool IsDarkMode
         {
@@ -879,6 +889,7 @@ openMenu ({
                     {
                         await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
                     }
+                    this.Graph = this.model.Graph;
                 }
             };
 

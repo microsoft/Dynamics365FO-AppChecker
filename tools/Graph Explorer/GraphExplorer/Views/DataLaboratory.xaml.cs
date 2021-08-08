@@ -18,6 +18,7 @@ using Neo4j.Driver;
 using System.Linq;
 using unvell.ReoGrid.IO.OpenXML.Schema;
 using GraphExplorer.ViewModels;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.Views
 {
@@ -28,70 +29,53 @@ namespace GraphExplorer.Views
     {
         private EditorViewModel ViewModel {get; set; }
 
-        public async static Task<DataLaboratory> CreateDataLaboratory(EditorViewModel viewModel)
+        Graph graph;
+        private Graph Graph
+        {
+            get => this.graph;
+            set
+            {
+                this.graph = value;
+                this.Populate(this.graph);
+            }
+        }
+
+        public static DataLaboratory CreateDataLaboratory(EditorViewModel viewModel)
         {
             var res = new DataLaboratory(viewModel);
             res.DataContext = viewModel;
-            await res.InitializeAsync();
+
+            res.Initialize();
             return res;
         }
 
-        private async Task InitializeAsync()
+        private void PopulateNode(IEnumerable<Node> nodes, string label)
         {
-            // Todo: Remve this. Listen to the Graph event from the view model.
-            var graph = await Neo4jDatabase.ExecuteQueryGraphAsync("match p = (m: Method) -[r:CALLS]-> (m1: Method) where r.Count > 3 return p limit 30");
-            //var records = await cursor.ToListAsync();
-            //var dict = Neo4jDatabase.GenerateJSONParts(records);
+            IDictionary<string, int> propertyColumns = new Dictionary<string, int>() { { "Id", 0 }, { "Label", 1 } };
 
-            // Get rid of the predefined worksheet. We will add our own below:
-            this.Nodes.Worksheets.RemoveAt(0);
-            this.Edges.Worksheets.RemoveAt(0);
+            // Create the worksheet
+            unvell.ReoGrid.Worksheet worksheet = this.Nodes.Worksheets.Create(label);
+            worksheet.ColumnHeaders[0].Text = "Id";
+            worksheet.ColumnHeaders[1].Text = "Label";
+            worksheet.FreezeToCell(0, 2, FreezeArea.Left);
 
-            IDictionary<string, int> propertyColumns = null;
+            // The Id field is not editable
+            worksheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column == 0;
+
+            // Add to the collection of worksheets.
+            this.Nodes.Worksheets.Add(worksheet);
 
             int row = 0;
-            var nodes = graph.Nodes;
             int maxcol = 2;
 
-            unvell.ReoGrid.Worksheet worksheet = null;
+            // Populate each row in the worksheet with the contributions from the
+            // predefined fields and the properties.
             foreach (var node in nodes)
             {
-                var id = node.Id;
-                var labels = node.Labels;
-
-                // Assume only one for now
-                var label = "";
-                if (labels.Length > 0)
-                {
-                    label = labels[0];
-                }
-
-                worksheet = this.Nodes.Worksheets.Where(w => w.Name == label).FirstOrDefault();
-                if (worksheet == null)
-                {
-                    // Create the worksheet
-                    worksheet = this.Nodes.Worksheets.Create(label);
-                    this.Nodes.Worksheets.Add(worksheet);
-
-                    worksheet.FreezeToCell(0, 2, FreezeArea.Left);
-                    row = 0;
-
-                    propertyColumns = new Dictionary<string, int>();
-                    maxcol = 2;
-
-                    worksheet.ColumnHeaders[0].Text = "Id";
-                    worksheet.ColumnHeaders[1].Text = "Label";
-
-                    // The Id field is not editable
-                    worksheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column == 0;
-                }
-
-                worksheet.SetCellData(new CellPosition(row, 0), id);
+                worksheet.SetCellData(new CellPosition(row, 0), node.Id);
                 worksheet.SetCellData(new CellPosition(row, 1), label);
 
-                var properties = node.Properties;
-
-                foreach (var property in properties)
+                foreach (var property in node.Properties)
                 {
                     var propertyName = property.Key;
                     var propertyValue = property.Value;
@@ -100,14 +84,13 @@ namespace GraphExplorer.Views
                     if (!propertyColumns.TryGetValue(propertyName, out int col))
                     {
                         // We have not seen this property before. Allocate a new column number
-                        propertyColumns.Add(propertyName, maxcol);
                         col = maxcol;
+                        propertyColumns.Add(propertyName, maxcol);
+                        worksheet.ColumnHeaders[col].Text = propertyName;
+
                         maxcol += 1;
                     }
                     worksheet.SetCellData(new CellPosition(row, col), propertyValue);
-
-                    worksheet.ColumnHeaders[col].Text = propertyName;
-                    col += 1;
                 }
 
                 row += 1;
@@ -118,46 +101,47 @@ namespace GraphExplorer.Views
                 worksheet.RowCount = row + 1;
                 worksheet.ColumnCount = maxcol;
             }
+        }
 
-            var edges = graph.Edges;
+        private void PopulateNodes(Graph g)
+        {
+            foreach(var nodeLabel in g.Nodes.Select(n => n.Labels[0]).Distinct())
+            {
+                this.PopulateNode(g.Nodes.Where(n => n.Labels[0] == nodeLabel), nodeLabel);
+            }
+        }
+
+        private void PopulateEdge(IEnumerable<Edge> edges, string type)
+        {
+            IDictionary<string, int> propertyColumns = new Dictionary<string, int>() { { "Id", 0 }, { "Type", 1 }, { "From", 2 }, { "To", 3 } };
+
+            // Create the worksheet
+            unvell.ReoGrid.Worksheet worksheet = this.Edges.Worksheets.Create(type);
+            worksheet.ColumnHeaders[0].Text = "Id";
+            worksheet.ColumnHeaders[1].Text = "Type";
+            worksheet.ColumnHeaders[2].Text = "From";
+            worksheet.ColumnHeaders[3].Text = "To";
+            worksheet.FreezeToCell(0, 2, FreezeArea.Left);
+            
+            // The Id field is not editable
+            worksheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column == 0;
+
+            // Add to the collection of worksheets.
+            this.Edges.Worksheets.Add(worksheet);
+
+            int row = 0;
+            int maxcol = 4;
+
+            // Populate each row in the worksheet with the contributions from the
+            // predefined fields and the properties.
             foreach (var edge in edges)
             {
-                var id = edge.Id;
-                var from = edge.From;
-                var to = edge.To;
-                var type = edge.Type;
-                var properties = edge.Properties;
+                worksheet.SetCellData(new CellPosition(row, 0), edge.Id);
+                worksheet.SetCellData(new CellPosition(row, 1), edge.Type);
+                worksheet.SetCellData(new CellPosition(row, 2), edge.From);
+                worksheet.SetCellData(new CellPosition(row, 3), edge.To);
 
-                worksheet = this.Edges.Worksheets.Where(w => w.Name == type).FirstOrDefault();
-                if (worksheet == null)
-                {
-                    // Create the worksheet
-                    worksheet = this.Edges.Worksheets.Create(type);
-                    this.Edges.Worksheets.Add(worksheet);
-
-                    worksheet.FreezeToCell(0, 4, FreezeArea.Left);
-                    row = 0;
-
-                    propertyColumns = new Dictionary<string, int>();
-                    maxcol = 4;
-
-                    worksheet.ColumnHeaders[0].Text = "Id";
-                    worksheet.ColumnHeaders[1].Text = "Type";
-                    worksheet.ColumnHeaders[2].Text = "From";
-                    worksheet.ColumnHeaders[3].Text = "To";
-
-                    // The Id field is not editable
-                    worksheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column < 4;
-                }
-
-                worksheet.SetCellData(new CellPosition(row, 0), id);
-                worksheet.SetCellData(new CellPosition(row, 1), type);
-                worksheet.SetCellData(new CellPosition(row, 2), from);
-                worksheet.SetCellData(new CellPosition(row, 3), to);
-
-                properties = edge.Properties;
-
-                foreach (var property in properties)
+                foreach (var property in edge.Properties)
                 {
                     var propertyName = property.Key;
                     var propertyValue = property.Value;
@@ -166,24 +150,62 @@ namespace GraphExplorer.Views
                     if (!propertyColumns.TryGetValue(propertyName, out int col))
                     {
                         // We have not seen this property before. Allocate a new column number
-                        propertyColumns.Add(propertyName, maxcol);
                         col = maxcol;
+                        propertyColumns.Add(propertyName, maxcol);
+                        worksheet.ColumnHeaders[col].Text = propertyName;
+
                         maxcol += 1;
                     }
                     worksheet.SetCellData(new CellPosition(row, col), propertyValue);
-
-                    worksheet.ColumnHeaders[col].Text = propertyName;
-                    col += 1;
                 }
 
                 row += 1;
             }
+
+            //worksheet.SetCellData(new CellPosition(row, 0), 1);
+            //worksheet.SetCellData(new CellPosition(row, 1), 2);
+            //worksheet.SetCellData(new CellPosition(row, 2), 3);
+            //worksheet.SetCellData(new CellPosition(row, 3), 4);
+
 
             if (worksheet != null)
             {
                 worksheet.RowCount = row + 1;
                 worksheet.ColumnCount = maxcol;
             }
+        }
+
+        private void PopulateEdges(Graph g)
+        {
+            foreach (var edgeType in g.Edges.Select(n => n.Type).Distinct())
+            {
+                this.PopulateEdge(g.Edges.Where(e => e.Type == edgeType), edgeType);
+            }
+        }
+
+        void Populate(Graph g)
+        {
+            // Get rid of any existing worksheets:
+            this.Nodes.Worksheets.Clear(); 
+            this.Edges.Worksheets.Clear();
+
+            try
+            {
+                this.PopulateNodes(g);
+                this.PopulateEdges(g);
+            }
+            catch(Exception e)
+            {
+
+            }
+
+        }
+
+        private void Initialize()
+        {
+            // Get rid of the predefined worksheet. We will add our own below:
+            //this.Nodes.Worksheets.RemoveAt(0);
+            //this.Edges.Worksheets.RemoveAt(0);
         }
 
         private DataLaboratory(EditorViewModel viewModel)
@@ -206,26 +228,35 @@ namespace GraphExplorer.Views
             this.Nodes.ControlStyle = rgcs;
             this.Edges.ControlStyle = rgcs;
 
-            // For all the worksheets: Record a handler for onclicked in a cell. Also,
-            // the first column (i.e. the id column) is not editable.
-            //foreach (var sheet in this.Nodes.Worksheets)
-            //{
-            //    sheet.AfterCellEdit += this.Sheet_AfterCellEdit;
-            //    // Disable editing of the ID column
+            this.ViewModel.PropertyChanged += (object _, System.ComponentModel.PropertyChangedEventArgs e) =>
+            {
+                if (e.PropertyName == "Graph")
+                {
+                    var g = this.ViewModel.Graph;
+                    this.Graph = g;
+                }
+            };
+
+            //// For all the worksheets: Record a handler for onclicked in a cell. Also,
+            //// the first column (i.e. the id column) is not editable.
+            ////foreach (var sheet in this.Nodes.Worksheets)
+            ////{
+            ////    sheet.AfterCellEdit += this.Sheet_AfterCellEdit;
+            ////    // Disable editing of the ID column
 
 
-            //    // Add filtering. This only sets it for id
-            //    sheet.CreateColumnFilter(0,0, 0);
-            //}
+            ////    // Add filtering. This only sets it for id
+            ////    sheet.CreateColumnFilter(0,0, 0);
+            ////}
 
-            //foreach (var sheet in this.Edges.Worksheets)
-            //{
-            //    sheet.AfterCellEdit += this.Sheet_AfterCellEdit;
-            //    // Disable editing of the ID column
-            //    sheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column <= 2; // Fistt three are not editable
-            //    sheet.ColumnHeaders[0].Text = "Id";
-            //    sheet.CreateColumnFilter(0, 0, 0);
-            //}
+            ////foreach (var sheet in this.Edges.Worksheets)
+            ////{
+            ////    sheet.AfterCellEdit += this.Sheet_AfterCellEdit;
+            ////    // Disable editing of the ID column
+            ////    sheet.BeforeCellEdit += (s, e) => e.IsCancelled = e.Cell.Column <= 2; // Fistt three are not editable
+            ////    sheet.ColumnHeaders[0].Text = "Id";
+            ////    sheet.CreateColumnFilter(0, 0, 0);
+            ////}
         }
 
         private void Sheet_AfterCellEdit(object sender, unvell.ReoGrid.Events.CellAfterEditEventArgs e)
