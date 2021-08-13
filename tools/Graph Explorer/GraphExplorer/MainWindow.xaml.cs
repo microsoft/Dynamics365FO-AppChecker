@@ -121,7 +121,7 @@ namespace SocratexGraphExplorer
                 {
                     var id = e["nodeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) where id(c) = {id} return c limit 1";
+                    var cypher = "MATCH (c) where id(c) = $id return c limit 1";
                     this.ViewModel.SelectedNode = id;
                     var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(nodeResult);
@@ -131,7 +131,7 @@ namespace SocratexGraphExplorer
                 {
                     var id = e["edgeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) -[r]- (d) where id(r) = {id} return r limit 1";
+                    var cypher = "MATCH (c) -[r]- (d) where id(r) = $id return r limit 1";
                     this.ViewModel.SelectedEdge = id;
                     var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
                     this.ViewModel.UpdatePropertyListView(edgeResult);

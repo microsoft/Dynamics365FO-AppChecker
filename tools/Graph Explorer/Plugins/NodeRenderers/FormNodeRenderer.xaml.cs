@@ -76,21 +76,21 @@ namespace SocratexGraphExplorer.XppPlugin
         private void ShowMethods(object sender, RoutedEventArgs e)
         {
             model.AddNodesAsync(
-                "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m",
+                "match (c:Form) -[:DECLARES]-> (m:Method) where id(c) = $nodeId return m",
                 new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private void ShowControls(object sender, RoutedEventArgs e)
         {
             model.AddNodesAsync(
-                "match (c:Form) -[:CONTROL]-> (fc:FormControl) where id(c) = {nodeId} return fc",
+                "match (c:Form) -[:CONTROL]-> (fc:FormControl) where id(c) = $nodeId return fc",
                 new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private void ShowDatasources(object sender, RoutedEventArgs e)
         {
             model.AddNodesAsync(
-                "match (c:Form) -[:DATASOURCE]-> (fds:FormDataSource) where id(c) = {nodeId} return fds",
+                "match (c:Form) -[:DATASOURCE]-> (fds:FormDataSource) where id(c) = $nodeId return fds",
                 new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }

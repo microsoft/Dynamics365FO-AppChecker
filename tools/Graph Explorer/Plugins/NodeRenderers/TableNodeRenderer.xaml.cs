@@ -75,12 +75,12 @@ namespace SocratexGraphExplorer.XppPlugin
 
         private async void ShowMethods(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Table) -[:DECLARES]-> (m:Method) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Table) -[:DECLARES]-> (m:Method) where id(c) = $nodeId return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
 
         private async void ShowFields(object sender, RoutedEventArgs e)
         {
-            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = {nodeId} return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
+            await this.model.AddNodesAsync("match (c:Class) -[:DECLARES]-> (m:ClassMember) where id(c) = $nodeId return m", new Dictionary<string, object>() { { "nodeId", node.Id } });
         }
     }
 }
