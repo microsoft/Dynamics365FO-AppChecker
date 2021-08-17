@@ -1,5 +1,5 @@
  neo4j-admin import ^
-    --ignore-missing-nodes=true ^
+    --skip-bad-relationships ^
     --nodes=..\import\ClassNodes.csv ^
     --nodes=..\import\ClassDelegateNodes.csv ^
     --nodes=..\import\ClassFieldNodes.csv ^
