@@ -46,6 +46,7 @@ namespace GraphExplorer.Views
             res.DataContext = viewModel;
 
             res.Initialize();
+            res.Populate(viewModel.Graph);
             return res;
         }
 
@@ -103,12 +104,15 @@ namespace GraphExplorer.Views
             }
         }
 
-        private void PopulateNodes(Graph g)
+        private int PopulateNodes(Graph g)
         {
-            foreach(var nodeLabel in g.Nodes.Select(n => n.Labels[0]).Distinct())
+            var result = 0;
+            foreach (var nodeLabel in g.Nodes.Select(n => n.Labels[0]).Distinct())
             {
                 this.PopulateNode(g.Nodes.Where(n => n.Labels[0] == nodeLabel), nodeLabel);
+                result += 1;
             }
+            return result;
         }
 
         private void PopulateEdge(IEnumerable<Edge> edges, string type)
@@ -162,12 +166,6 @@ namespace GraphExplorer.Views
                 row += 1;
             }
 
-            //worksheet.SetCellData(new CellPosition(row, 0), 1);
-            //worksheet.SetCellData(new CellPosition(row, 1), 2);
-            //worksheet.SetCellData(new CellPosition(row, 2), 3);
-            //worksheet.SetCellData(new CellPosition(row, 3), 4);
-
-
             if (worksheet != null)
             {
                 worksheet.RowCount = row + 1;
@@ -175,30 +173,48 @@ namespace GraphExplorer.Views
             }
         }
 
-        private void PopulateEdges(Graph g)
+        private int PopulateEdges(Graph g)
         {
+            var result = 0;
             foreach (var edgeType in g.Edges.Select(n => n.Type).Distinct())
             {
                 this.PopulateEdge(g.Edges.Where(e => e.Type == edgeType), edgeType);
+                result += 1;
             }
+            return result;
         }
 
         void Populate(Graph g)
         {
             // Get rid of any existing worksheets:
-            this.Nodes.Worksheets.Clear(); 
+            this.Nodes.Worksheets.Clear();
             this.Edges.Worksheets.Clear();
 
-            try
-            {
-                this.PopulateNodes(g);
-                this.PopulateEdges(g);
-            }
-            catch(Exception e)
-            {
+            var nodeWorksheets = this.PopulateNodes(g);
+            var edgeWorksheets = this.PopulateEdges(g);
 
+            if (nodeWorksheets == 0)
+            {
+                // leave an unmarked worksheet with an ID column and no data
+                var worksheet = this.Nodes.Worksheets.Create("");
+                worksheet.ColumnHeaders[0].Text = "Id";
+                worksheet.RowCount = 1;
+                worksheet.ColumnCount = 1;
+                this.Nodes.Worksheets.Add(worksheet);
             }
 
+            if (edgeWorksheets == 0)
+            {
+                // leave an unmarked worksheet with an ID column and no data
+                var worksheet = this.Edges.Worksheets.Create("");
+                worksheet.ColumnHeaders[0].Text = "Id";
+                worksheet.ColumnHeaders[1].Text = "Type";
+                worksheet.ColumnHeaders[2].Text = "From";
+                worksheet.ColumnHeaders[3].Text = "To";
+                worksheet.RowCount = 1;
+                worksheet.ColumnCount = 1;
+                this.Edges.Worksheets.Add(worksheet);
+            }
         }
 
         private void Initialize()
@@ -208,25 +224,34 @@ namespace GraphExplorer.Views
             //this.Edges.Worksheets.RemoveAt(0);
         }
 
+        public void UpdateStyle()
+        {
+            var backgroundColorBrush = this.FindResource("MaterialDesignPaper") as SolidColorBrush;
+            var foregroundColorBrush = this.FindResource("MaterialDesignBody") as SolidColorBrush;
+
+            ControlAppearanceStyle rgcs = ControlAppearanceStyle.CreateDefaultControlStyle();
+            // create control style instance with theme colors
+            rgcs = new ControlAppearanceStyle(backgroundColorBrush.Color, foregroundColorBrush.Color, false);
+
+            //rgcs[ControlAppearanceColors.GridBackground] = backgroundColorBrush.Color;
+            //rgcs[ControlAppearanceColors.GridText] = foregroundColorBrush.Color;
+            //rgcs[ControlAppearanceColors.ColHeadText] = foregroundColorBrush.Color;
+            //rgcs[ControlAppearanceColors.RowHeadText] = foregroundColorBrush.Color;
+            //rgcs[ControlAppearanceColors.SheetTabBackground] = backgroundColorBrush.Color;
+            //rgcs[ControlAppearanceColors.SheetTabText] = foregroundColorBrush.Color;
+
+            // apply appearance style
+            this.Nodes.ControlStyle = rgcs;
+            this.Edges.ControlStyle = rgcs;
+        }
+
         private DataLaboratory(EditorViewModel viewModel)
         {
             this.ViewModel = viewModel;
 
             this.InitializeComponent();
 
-            var backgroundColorBrush = this.FindResource("MaterialDesignPaper") as SolidColorBrush;
-            var foregroundColorBrush = this.FindResource("MaterialDesignBody") as SolidColorBrush;
-
-            ControlAppearanceStyle rgcs = ControlAppearanceStyle.CreateDefaultControlStyle();
-            // create control style instance with theme colors
-            // rgcs = new ControlAppearanceStyle(backgroundColorBrush.Color, foregroundColorBrush.Color, false);
-
-            rgcs[ControlAppearanceColors.GridBackground] = backgroundColorBrush.Color;
-            rgcs[ControlAppearanceColors.GridText] = foregroundColorBrush.Color;
-
-            // apply appearance style
-            this.Nodes.ControlStyle = rgcs;
-            this.Edges.ControlStyle = rgcs;
+            this.UpdateStyle();
 
             this.ViewModel.PropertyChanged += (object _, System.ComponentModel.PropertyChangedEventArgs e) =>
             {

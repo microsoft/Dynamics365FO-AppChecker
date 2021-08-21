@@ -41,7 +41,7 @@ namespace GraphExplorer.Models
         //}
 
 
-        private Graph graph;
+        private Graph graph = new Graph();
 
         /// <summary>
         /// This is the rendered graph.

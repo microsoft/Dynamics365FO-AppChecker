@@ -328,9 +328,6 @@ namespace GraphExplorer.ViewModels
 
         #region "Data laboratory"
 
-        public object DatalaboratoryNodes => this.Laboratory.Nodes;
-        public object DatalaboratoryEdges  => this.Laboratory.Edges;
-
         public ICommand ShowDataLaboratoryCommand
         {
             get => new RelayCommand(
@@ -505,7 +502,7 @@ namespace GraphExplorer.ViewModels
             }
         }
 
-        private Graph graph;
+        private Graph graph = new Graph();
         public Graph Graph
         {
             get => this.graph;
@@ -840,6 +837,11 @@ openMenu ({
                     if (this.model.Graph != null)
                     {
                         await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
+                    }
+
+                    if (this.Laboratory != null)
+                    {
+                        this.Laboratory.UpdateStyle();
                     }
                 }
                 else if (e.PropertyName == nameof(this.AllowKeyboardNavigation) || e.PropertyName == nameof(this.ShowNavigationButtons))
