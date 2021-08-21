@@ -75,7 +75,7 @@ namespace XppReasoningWpf
             }
         }
         /// <summary>
-        /// The connection to the BaseX server;
+        /// The connection to the BaseX server.
         /// </summary>
         public BaseXInterface.BaseXServer Server { get; private set; }
 
