@@ -26,7 +26,6 @@ using System.Windows.Media;
 using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
-using unvell.ReoGrid.Actions;
 using ICSharpCode.AvalonEdit.Snippets;
 using GraphExplorer.Core.netcore;
 
@@ -41,8 +40,6 @@ namespace GraphExplorer.ViewModels
     public class EditorViewModel : INotifyPropertyChanged
     {
         private readonly MainWindow view;
-        public DataLaboratory Laboratory { get; set; }
-
         private readonly Models.Model model;
         private long selectedNode = 0;
         private long selectedEdge = 0;
@@ -325,59 +322,6 @@ namespace GraphExplorer.ViewModels
                 }
             );
         }
-
-        #region "Data laboratory"
-
-        public ICommand ShowDataLaboratoryCommand
-        {
-            get => new RelayCommand(
-                _ =>
-                {
-                    // TODO when the window is active, the icon on the left hand bar should change to the 
-                    // version that designates hiding the window.
-                    if (this.Laboratory == null)
-                    {
-                        this.Laboratory = DataLaboratory.CreateDataLaboratory(this);
-                    }
-                    this.Laboratory.Show();
-                }
-            );
-        }
-
-        public ICommand HideCommand => new RelayCommand(
-            p =>
-            {
-                var control = p as unvell.ReoGrid.ReoGridControl;
-                control.DoAction(new HideColumnsAction(
-                    control.CurrentWorksheet.SelectionRange.Col, control.CurrentWorksheet.SelectionRange.Cols));
-            }
-        );
-
-        public ICommand UnhideCommand => new RelayCommand(
-            p =>
-            {
-                var control = p as unvell.ReoGrid.ReoGridControl;
-                control.DoAction(new UnhideColumnsAction(
-                    control.CurrentWorksheet.SelectionRange.Col, control.CurrentWorksheet.SelectionRange.Cols));
-            }
-        );
-
-        public ICommand AdjustWidthCommand => new RelayCommand(
-            p =>
-            {
-                var control = p as unvell.ReoGrid.ReoGridControl;
-                _ = control.CurrentWorksheet.AutoFitColumnWidth(control.CurrentWorksheet.SelectionRange.Col, true);
-            }
-        );
-        public ICommand CopyColumnCommand => new RelayCommand(
-            p =>
-            {
-                var control = p as unvell.ReoGrid.ReoGridControl;
-                control.CurrentWorksheet.Copy();
-            }
-        );
-
-        #endregion
 
         public ICommand ImportStyleCommand
         {
@@ -831,17 +775,13 @@ openMenu ({
                 }
                 else if (e.PropertyName == nameof(Model.IsDarkMode))
                 {
+                    // Update any windows with the new theme
                     this.SetTheme(this.model.IsDarkMode);
 
                     // Update the view
                     if (this.model.Graph != null)
                     {
                         await this.RepaintNodesAsync(this.model.Graph.GenerateJSON());
-                    }
-
-                    if (this.Laboratory != null)
-                    {
-                        this.Laboratory.UpdateStyle();
                     }
                 }
                 else if (e.PropertyName == nameof(this.AllowKeyboardNavigation) || e.PropertyName == nameof(this.ShowNavigationButtons))

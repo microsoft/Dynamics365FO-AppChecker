@@ -207,7 +207,6 @@
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.955-prerelease" />
         <PackageReference Include="Neo4j.Driver" Version="4.3.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.0.0" />
         <PackageReference Include="WPFLocalizeExtension" Version="3.8.0" />
     </ItemGroup>
     <ItemGroup>

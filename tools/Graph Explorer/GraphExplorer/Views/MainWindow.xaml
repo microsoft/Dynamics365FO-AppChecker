@@ -204,10 +204,6 @@ Licensed under the MIT license.
                                                 <Button Command="{Binding ShowDatabaseParametersCommand}" ToolTip="Show database parameters">
                                                     <materialDesign:PackIcon Kind="Database" />
                                                 </Button>
-                                                <Button Command="{Binding ShowDataLaboratoryCommand}" ToolTip="Show Data Laboratory">
-                                                    <materialDesign:PackIcon Kind="TableLarge" />
-                                                    <!-- Use TableLargeRemove when active -->
-                                                </Button>
                                                 <Button Command="{Binding ShowSettingsCommand}" ToolTip="Show Settings">
                                                     <materialDesign:PackIcon Kind="CogOutline"/>
                                                 </Button>
@@ -230,20 +226,10 @@ Licensed under the MIT license.
                                             </TextBlock.LayoutTransform>
                                         </TextBlock>
                                     </Expander.Header>
-                                    <!--<Border Background="Yellow">
-                                        <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
-                                        </GroupBox>
-                                    </Border>-->
 
-                                        <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
-                                        </GroupBox>
-                                    <!--<Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <GroupBox Grid.Column="0" x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
-                                        </GroupBox>
-                                    </Grid>-->
+                                    <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
+                                    </GroupBox>
+
                                 </Expander>
                                 <!--
                                 <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
