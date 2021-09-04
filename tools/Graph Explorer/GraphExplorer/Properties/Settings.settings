@@ -1,12 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SocratexGraphExplorer.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GraphExplorer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Username" Type="System.String" Scope="User">
       <Value Profile="(Default)">neo4j</Value>
     </Setting>
     <Setting Name="QueryFontSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">12</Value>
+      <Value Profile="(Default)">14</Value>
     </Setting>
     <Setting Name="QueryFont" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
@@ -57,36 +57,36 @@ function graphSurfaceDefaultForegroundColor() {
 }
 
 function createGraphNode(node) {
-    if (node.labels[0] == 'Class') {
+    if (node.Labels[0] == 'Class') {
         var image = "Resources/Class_16x.svg";
-        return { id: node.id, value: node.properties.WMC, label: node.properties.Name, title: node.properties.$indegree, color: "red", shape: 'image', 'image': image }
+        return { id: node.Id, value: node.Properties.WMC, label: node.Properties.Name, title: node.Properties.$indegree, color: "red", shape: 'image', 'image': image }
     }
-    else if (node.labels[0] == 'Interface') {
+    else if (node.Labels[0] == 'Interface') {
         var image = "Resources/Interface_16x.svg";
-        return { id: node.id, label: node.properties.Name, title: node.properties.Name, shape: 'image', 'image': image }
+        return { id: node.Id, label: node.Properties.Name, title: node.Properties.Name, shape: 'image', 'image': image }
     }
-    else if (node.labels[0] == 'Method') {
+    else if (node.Labels[0] == 'Method') {
         // Find the correct image to use, depending on the method visibility
         var image = "Method_16x.svg";
-        if (node.properties.Visibility == 'private')
+        if (node.Properties.Visibility == 'private')
             image = "MethodPrivate_16x.svg";
-        else if (node.properties.Visibility == 'protected')
+        else if (node.Properties.Visibility == 'protected')
             image = "MethodProtect_16x.svg";
-        else if (node.properties.Visibility == 'internal')
+        else if (node.Properties.Visibility == 'internal')
             image = "MethodFriend_16x.svg";
-        else if (node.properties.Visibility == 'final')
+        else if (node.Properties.Visibility == 'final')
             image = "MethodSealed_16x.svg";
-        return { id: node.id, value: node.properties.LOC, label: node.properties.Name, title: 'Method '+ node.properties.Name, shape: 'image', image: 'Resources/' + image, color: "green" }
+        return { id: node.Id, value: node.Properties.LOC, label: node.Properties.Name, title: 'Method '+ node.Properties.Name, shape: 'image', image: 'Resources/' + image, color: "green" }
     }
-    return { id: node.id, label: node.properties.Name, title: node.properties.Name };
+    return { id: node.Id, label: node.Properties.Name, title: node.Properties.Name };
 }
 
 function createGraphEdge(edge) {
-    if (edge.type == 'CALLS') {
-        return { id: edge.id, from: edge.from, to: edge.to, value: edge.properties.Count, label: edge.type, title: 'Calls: ' + edge.properties.Count, color: {color: 'darkgrey'}};
+    if (edge.Type == 'CALLS') {
+        return { id: edge.Id, from: edge.From, to: edge.To, value: edge.Properties.Count, label: edge.Type, title: 'Calls: ' + edge.Properties.Count, color: {color: 'darkgrey'}};
     }
     else {
-        return { id: edge.id, from: edge.from, to: edge.to, label: edge.type };
+        return { id: edge.Id, from: edge.From, to: edge.To, label: edge.Type };
     }
 }
 </Value>

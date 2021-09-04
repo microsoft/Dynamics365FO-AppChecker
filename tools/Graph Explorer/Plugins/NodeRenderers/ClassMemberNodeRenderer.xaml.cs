@@ -18,7 +18,7 @@ namespace GraphExplorer.XppPlugin
     public partial class ClassMemberNodeRenderer : UserControl, INodeRenderer
     {
         private readonly IModel model;
-        private INode node;
+        private Node node;
 
         private SourceEditor SourceEditor { set; get; }
 
@@ -36,7 +36,7 @@ namespace GraphExplorer.XppPlugin
             this.SourceEditorBox.Content = this.SourceEditor;
         }
 
-        public async void SelectNodeAsync(INode node)
+        public async void SelectNodeAsync(Node node)
         {
             this.node = node;
 

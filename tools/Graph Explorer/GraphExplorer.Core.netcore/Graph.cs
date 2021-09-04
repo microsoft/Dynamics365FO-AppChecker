@@ -63,6 +63,20 @@ namespace GraphExplorer.Core.netcore
             }
         }
 
+        public Node Node(long id)
+        {
+            if (this.NodesDictionary.TryGetValue(id, out Node value))
+                return value;
+            return null;
+        }
+
+        public Edge Edge(long id)
+        {
+            if (this.EdgesDictionary.TryGetValue(id, out Edge value))
+                return value;
+            return null;
+        }
+
         public IEnumerable<Edge> Edges
         {
             get

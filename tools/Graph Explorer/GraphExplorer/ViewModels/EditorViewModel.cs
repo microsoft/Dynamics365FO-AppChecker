@@ -32,7 +32,7 @@ using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.ViewModels
 {
-    delegate void NodeSelectedDelegate(INode node);
+    delegate void NodeSelectedDelegate(Node node);
     delegate void EdgeSelectedDelegate(IRelationship edge);
 
     public enum RenderingMode { Graph, Text };
@@ -839,6 +839,7 @@ openMenu ({
                 p => 
                 { 
                     // Roll back the transaction that executes the current query.
+                    // TODO
                 },
                 p =>
                 {
@@ -872,26 +873,12 @@ openMenu ({
 
                      // Set the graph. This will trigger the event that will render the graph 
                      // on the drawing surface.
+                     // TODO: Remove this. Only use the representation that makes sense
+                     // and do not fill in the other.
                      this.model.Graph = graph;
                      this.view.TextBrowser.NavigateToString(html);
 
                      var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(graph);
-
-                     //    // The query executed correctly. 
-                     //    // If the user wanted to see all the edges from the selected nodes, a new
-                     //    // query is fired.
-                     //    if (this.model.ConnectResultNodes && canBeRenderedAsGraph)
-                     //    {
-                     //        // Calculate the new result where all the edges are included.
-                     //        var nodes = Model.HarvestNodeIdsFromGraph(result);
-                     //        result = await this.GetGraphFromNodes(nodes);
-                     //    }
-
-                     //    // Store the results in the model.
-                     //    this.model.QueryResults = result;
-
-                     //    // Go from graph mode to text mode if the result cannot be rendered as a graph.
-                     //    // Do not switch back to graph mode automatically?
 
                      if (this.GraphModeSelected && !canBeRenderedAsGraph)
                      {
@@ -903,21 +890,6 @@ openMenu ({
                          this.GraphModeSelected = true;
                          this.TextModeSelected = false;
                      }
-
-                     //if (this.graphModeSelected)
-                     //{
-                     //    // Render the data in the graph view.
-                     //    string resultJson = graph.GenerateJSON();
-                     //    await this.RepaintNodesAsync(resultJson);
-                     //}
-                     //else
-                     //{
-                     //    // TODO this is wrong. We cannot reliably create the HTML from the graph
-                     //    // and we do not want to issue another call to the DB
-                     //    // Draw as html
-                     //    this.view.TextBrowser.NavigateToString(html);
-                     //}
-                     //}
                  },
 
                  // Running is allowed when there is text there to submit as a query and
@@ -1018,20 +990,21 @@ openMenu ({
         //    }
         //}
 
-        private void UpdateNodeInfoPage(INode node)
+        private void UpdateNodeInfoPage(Node node)
         {
-            //if (!this.NodeRenderers.TryGetValue(node.Labels[0], out INodeRenderer renderer))
-            //{
-            //    // Use the default one, by convention called ()
-            //    renderer = this.NodeRenderers["()"];
-            //}
+            INodeRenderer renderer;
+            if (!this.NodeRenderers.TryGetValue(node.Labels[0], out renderer))
+            {
+                // Use the default one, by convention called ()
+                renderer = this.NodeRenderers["()"];
+            }
 
-            //if (this.view.ContextualInformation.Content != renderer)
-            //{
-            //    this.view.ContextualInformation.Content = renderer;
-            //}
+            if (this.view.ContextualInformation.Content != renderer)
+            {
+                this.view.ContextualInformation.Content = renderer;
+            }
 
-            //renderer.SelectNodeAsync(node);
+            renderer.SelectNodeAsync(node);
         }
 
         private void UpdateEdgeInfoPage(IRelationship edge)
@@ -1060,7 +1033,7 @@ openMenu ({
 
         private void UpdateProperties(object nodeOrEdge)
         {
-            if (nodeOrEdge is INode n)
+            if (nodeOrEdge is Node n)
             {
                 this.NodeSelected?.Invoke(n);
             }
@@ -1078,18 +1051,12 @@ openMenu ({
         /// Populate the list of ListView items containing node or edge properties.
         /// </summary>
         /// <param name="records"></param>
-        public void UpdatePropertyListView(List<IRecord> records)
+        public void UpdatePropertyListView(Node node)
         {
-            if (!records.Any())
-                return;
-
             App.Current.Dispatcher.Invoke(() =>
             {
-                var v = records[0];
-                KeyValuePair<string, object> f = v.Values.FirstOrDefault();
-
                 // Call the delegate so every one interested can react
-                this.UpdateProperties(f.Value);
+                this.UpdateProperties(node);
             });
         }
 

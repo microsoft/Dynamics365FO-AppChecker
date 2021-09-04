@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.DefaultsPlugin
 {
@@ -15,7 +16,7 @@ namespace GraphExplorer.DefaultsPlugin
     {
         public ObservableCollection<PropertyItem> Properties { get; private set; }
         private IModel Model { get; set; }
-        private INode node { get; set; }
+        private Node node { get; set; }
 
         public DefaultNodeRenderer(IModel model)
         {
@@ -38,7 +39,7 @@ namespace GraphExplorer.DefaultsPlugin
             Clipboard.SetText(control.Text);
         }
 
-        public void SelectNodeAsync(INode node)
+        public void SelectNodeAsync(Node node)
         {
             this.node = node;
 

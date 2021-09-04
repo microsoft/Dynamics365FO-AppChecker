@@ -147,11 +147,11 @@ namespace GraphExplorer
                     // TODO get rid of this.
                     var id = e["selectedNodeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) where id(c) = $id return c limit 1";
                     this.ViewModel.SelectedNode = id;
-                    
-                    var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
-                    // TODO this.ViewModel.UpdatePropertyListView(nodeResult);
+
+                    var node = this.ViewModel.Graph.Node(id);
+                    //var nodeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
+                    this.ViewModel.UpdatePropertyListView(node);
 
                 }
                 else if (e.ContainsKey("selectedEdgeId"))
@@ -262,14 +262,9 @@ namespace GraphExplorer
         Welcome to the Neo4j Graph Explorer
     </body>
 </html>");
-            this.ViewModel.GraphModeSelected = true;
+            this.ViewModel.GraphModeSelected = false;
+            this.ViewModel.TextModeSelected = true;
         }
-
-        //protected override async void OnActivated(EventArgs e)
-        //{
-        //    base.OnActivated(e);
-        //    await this.ViewModel.OnActivatedAsync();
-        //}
 
         protected override void OnClosed(EventArgs e)
         {

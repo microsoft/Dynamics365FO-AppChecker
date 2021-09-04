@@ -2,7 +2,7 @@
 Copyright (c) Microsoft Corporation.
 Licensed under the MIT license.
 -->
-    <Application x:Class="GraphExplorer.App"
+<Application x:Class="GraphExplorer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      	     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"                         
@@ -13,7 +13,7 @@ Licensed under the MIT license.
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignExtensions;component/Themes/MaterialDesignLightTheme.xaml" />
-                
+
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
                 <!-- Define a palette with primary and accent colors -->

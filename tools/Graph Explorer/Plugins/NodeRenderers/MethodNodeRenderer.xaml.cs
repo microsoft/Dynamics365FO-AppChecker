@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.XppPlugin
 {
@@ -17,7 +18,7 @@ namespace GraphExplorer.XppPlugin
     public partial class MethodNodeRenderer : UserControl, INodeRenderer
     {
         private readonly IModel model;
-        private INode node;
+        private Node node;
 
         private SourceEditor MethodEditor { set; get; }
         private readonly ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
@@ -38,40 +39,41 @@ namespace GraphExplorer.XppPlugin
             this.SourceEditorBox.Content = this.MethodEditor;
         }
 
-        public async void SelectNodeAsync(INode node)
+        public async void SelectNodeAsync(Node node)
         {
             this.node = node;
 
-            //var incomingCallsQuery = model.ExecuteCypherAsync(
-            //     "match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
-            //     new Dictionary<string, object>() { { "nodeId", node.Id } });
+            var incomingCallsQuery = model.ExecuteCypherAsync(
+                 "match(m1:Method) -[r: CALLS]->(m:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
+                 new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            //var outGoingCallsQuery = model.ExecuteCypherAsync(
-            //    "match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
-            //    new Dictionary<string, object>() { { "nodeId", node.Id } });
+            var outGoingCallsQuery = model.ExecuteCypherAsync(
+                "match(m:Method) -[r:CALLS]->(m1:Method) where id(m) = $nodeId return count(r) as methods, sum(r.Count) as count",
+                new Dictionary<string, object>() { { "nodeId", node.Id } });
 
-            //this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
-            //this.properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Package", Value = node.Properties["Package"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Artifact", Value = node.Properties["Artifact"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Lines of Code", Value = node.Properties["LOC"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Complexity", Value = node.Properties["CMP"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Visibility", Value = node.Properties["Visibility"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Final", Value = node.Properties["IsFinal"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Abstract", Value = node.Properties["IsAbstract"].ToString() });
-            //this.properties.Add(new PropertyItem() { Key = "Static", Value = node.Properties["IsStatic"].ToString() });
+            this.Header.Text = string.Format("{0} {1}", node.Labels[0], node.Properties["Name"] as string);
+            this.properties.Add(new PropertyItem() { Key = "Id", Value = node.Id.ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Package", Value = node.Properties["Package"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Artifact", Value = node.Properties["Artifact"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Lines of Code", Value = node.Properties["LOC"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Complexity", Value = node.Properties["CMP"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Visibility", Value = node.Properties["Visibility"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Final", Value = node.Properties["IsFinal"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Abstract", Value = node.Properties["IsAbstract"].ToString() });
+            this.properties.Add(new PropertyItem() { Key = "Static", Value = node.Properties["IsStatic"].ToString() });
 
-            //var artifact = node.Properties["Artifact"].ToString();
+            var artifact = node.Properties["Artifact"].ToString();
 
-            //var parts = artifact.Split('/');
-            //var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
+            var parts = artifact.Split('/');
+            var toplevelArtifact = "/" + parts[1] + "/" + parts[2] + "/" + parts[3];
 
-            //var query = "match (p) where p.Artifact=$artifact return p limit 1";
-            //var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
+            // This should be done by accessing the graph, that should be passed to this method.
+            var query = "match (p) where p.Artifact=$artifact return p limit 1";
+            var c = await model.ExecuteCypherAsync(query, new Dictionary<string, object>() { { "artifact", toplevelArtifact } });
 
             //if (c != null)
             //{
-            //    var declaringNode = c.First().Values.Values.First() as INode;
+            //    var declaringNode = c.Item1.Nodes.First().Values.First() as Node;
             //    var base64Source = declaringNode.Properties["base64Source"] as string;
             //    var sourceArray = Convert.FromBase64String(base64Source);
             //    var source = Encoding.ASCII.GetString(sourceArray);

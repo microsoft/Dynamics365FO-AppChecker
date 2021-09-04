@@ -27,6 +27,44 @@
 
     <Window.Resources>
         <local:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+        <Style x:Key="ChevronHorizontalToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ExpandPathRotateTransform" Storyboard.TargetProperty="Angle">
+                                                <EasingDoubleKeyFrame KeyTime="{StaticResource ExpandKeyTime}" Value="180"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ExpandPathRotateTransform" Storyboard.TargetProperty="Angle">
+                                                <EasingDoubleKeyFrame KeyTime="{StaticResource CollapseKeyTime}" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <materialDesign:PackIcon x:Name="ExpandPath" Kind="ChevronLeft"
+                                      Opacity="0.38" Height="24" Width="24"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      RenderTransformOrigin="0.5 0.5">
+                                <materialDesign:PackIcon.RenderTransform>
+                                    <RotateTransform x:Name="ExpandPathRotateTransform"/>
+                                </materialDesign:PackIcon.RenderTransform>
+                            </materialDesign:PackIcon>
+
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -43,6 +81,7 @@
                     </Style>
                 </GroupBox.Resources>
                 <StackPanel Orientation="Vertical">
+                    <ToggleButton Style="{StaticResource ChevronHorizontalToggleButton}" Foreground="{DynamicResource MaterialDesignBody}"/>
                     <Expander ExpandDirection="Left" >
                         <Expander.Header>
                             <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}"
@@ -67,14 +106,14 @@
                                     <ColumnDefinition Width="50*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <RadioButton x:Name="NodesButton" Grid.Column="0" GroupName="Mode" Style="{StaticResource MaterialDesignTabRadioButton}" >
+                                <RadioButton  x:Name="NodesButton" Grid.Column="0" GroupName="Mode"   Style="{StaticResource MaterialDesignTabRadioButton}" >
                                     <RadioButton.Content>
                                         <TextBlock Text="Nodes" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" />
                                     </RadioButton.Content>
                                 </RadioButton>
                                 <RadioButton x:Name="RelationshupsButton" Grid.Column="1" GroupName="Mode" Style="{StaticResource MaterialDesignTabRadioButton}">
                                     <RadioButton.Content>
-                                        <TextBlock Text="Relationships" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}"/>
+                                        <TextBlock Text="Relationships" Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}" />
                                     </RadioButton.Content>
                                 </RadioButton>
                                 <RadioButton x:Name="OptionsButton"  Grid.Column="2" GroupName="Mode" Style="{StaticResource MaterialDesignTabRadioButton}">
@@ -87,6 +126,7 @@
                             <local:NodeConfigurationControl Grid.Row="1" />
                         </Grid>
                     </Expander>
+                    
                     <!--
                     <ComboBox Width="100" ItemsSource="{Binding ColorNames}">
                         <ComboBox.ItemTemplate>

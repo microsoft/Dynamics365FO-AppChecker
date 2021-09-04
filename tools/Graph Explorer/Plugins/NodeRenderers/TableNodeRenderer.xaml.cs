@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.XppPlugin
 {
@@ -19,7 +19,7 @@ namespace GraphExplorer.XppPlugin
     public partial class TableNodeRenderer : UserControl, INodeRenderer
     {
         private readonly IModel model;
-        private INode node;
+        private Node node;
 
         private SourceEditor ClassEditor { set; get; }
 
@@ -52,7 +52,7 @@ namespace GraphExplorer.XppPlugin
             this.SourceEditorBox.Content = this.ClassEditor;
         }
 
-        public void SelectNodeAsync(INode node)
+        public void SelectNodeAsync(Node node)
         {
             this.node = node;
 

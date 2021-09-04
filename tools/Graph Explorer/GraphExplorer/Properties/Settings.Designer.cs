@@ -37,7 +37,7 @@ namespace GraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
         public int QueryFontSize {
             get {
                 return ((int)(this["QueryFontSize"]));
@@ -207,28 +207,28 @@ namespace GraphExplorer.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("function graphSurfaceDefaultBackgroundColor() {\r\n    return \'white\';\r\n}\r\n\r\nfuncti" +
             "on graphSurfaceDefaultForegroundColor() {\r\n    return \'darkgray\';\r\n}\r\n\r\nfunction" +
-            " createGraphNode(node) {\r\n    if (node.labels[0] == \'Class\') {\r\n        var imag" +
-            "e = \"Resources/Class_16x.svg\";\r\n        return { id: node.id, value: node.proper" +
-            "ties.WMC, label: node.properties.Name, title: node.properties.$indegree, color: " +
-            "\"red\", shape: \'image\', \'image\': image }\r\n    }\r\n    else if (node.labels[0] == \'" +
+            " createGraphNode(node) {\r\n    if (node.Labels[0] == \'Class\') {\r\n        var imag" +
+            "e = \"Resources/Class_16x.svg\";\r\n        return { id: node.Id, value: node.Proper" +
+            "ties.WMC, label: node.Properties.Name, title: node.Properties.$indegree, color: " +
+            "\"red\", shape: \'image\', \'image\': image }\r\n    }\r\n    else if (node.Labels[0] == \'" +
             "Interface\') {\r\n        var image = \"Resources/Interface_16x.svg\";\r\n        retur" +
-            "n { id: node.id, label: node.properties.Name, title: node.properties.Name, shape" +
-            ": \'image\', \'image\': image }\r\n    }\r\n    else if (node.labels[0] == \'Method\') {\r\n" +
+            "n { id: node.Id, label: node.Properties.Name, title: node.Properties.Name, shape" +
+            ": \'image\', \'image\': image }\r\n    }\r\n    else if (node.Labels[0] == \'Method\') {\r\n" +
             "        // Find the correct image to use, depending on the method visibility\r\n  " +
-            "      var image = \"Method_16x.svg\";\r\n        if (node.properties.Visibility == \'" +
-            "private\')\r\n            image = \"MethodPrivate_16x.svg\";\r\n        else if (node.p" +
+            "      var image = \"Method_16x.svg\";\r\n        if (node.Properties.Visibility == \'" +
+            "private\')\r\n            image = \"MethodPrivate_16x.svg\";\r\n        else if (node.P" +
             "roperties.Visibility == \'protected\')\r\n            image = \"MethodProtect_16x.svg" +
-            "\";\r\n        else if (node.properties.Visibility == \'internal\')\r\n            imag" +
-            "e = \"MethodFriend_16x.svg\";\r\n        else if (node.properties.Visibility == \'fin" +
-            "al\')\r\n            image = \"MethodSealed_16x.svg\";\r\n        return { id: node.id," +
-            " value: node.properties.LOC, label: node.properties.Name, title: \'Method \'+ node" +
-            ".properties.Name, shape: \'image\', image: \'Resources/\' + image, color: \"green\" }\r" +
-            "\n    }\r\n    return { id: node.id, label: node.properties.Name, title: node.prope" +
-            "rties.Name };\r\n}\r\n\r\nfunction createGraphEdge(edge) {\r\n    if (edge.type == \'CALL" +
-            "S\') {\r\n        return { id: edge.id, from: edge.from, to: edge.to, value: edge.p" +
-            "roperties.Count, label: edge.type, title: \'Calls: \' + edge.properties.Count, col" +
-            "or: {color: \'darkgrey\'}};\r\n    }\r\n    else {\r\n        return { id: edge.id, from" +
-            ": edge.from, to: edge.to, label: edge.type };\r\n    }\r\n}\r\n")]
+            "\";\r\n        else if (node.Properties.Visibility == \'internal\')\r\n            imag" +
+            "e = \"MethodFriend_16x.svg\";\r\n        else if (node.Properties.Visibility == \'fin" +
+            "al\')\r\n            image = \"MethodSealed_16x.svg\";\r\n        return { id: node.Id," +
+            " value: node.Properties.LOC, label: node.Properties.Name, title: \'Method \'+ node" +
+            ".Properties.Name, shape: \'image\', image: \'Resources/\' + image, color: \"green\" }\r" +
+            "\n    }\r\n    return { id: node.Id, label: node.Properties.Name, title: node.Prope" +
+            "rties.Name };\r\n}\r\n\r\nfunction createGraphEdge(edge) {\r\n    if (edge.Type == \'CALL" +
+            "S\') {\r\n        return { id: edge.Id, from: edge.From, to: edge.To, value: edge.P" +
+            "roperties.Count, label: edge.Type, title: \'Calls: \' + edge.Properties.Count, col" +
+            "or: {color: \'darkgrey\'}};\r\n    }\r\n    else {\r\n        return { id: edge.Id, from" +
+            ": edge.From, to: edge.To, label: edge.Type };\r\n    }\r\n}\r\n")]
         public string Configuration {
             get {
                 return ((string)(this["Configuration"]));

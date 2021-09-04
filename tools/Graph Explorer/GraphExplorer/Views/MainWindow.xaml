@@ -170,7 +170,7 @@ Licensed under the MIT license.
                         <Grid>
                             <Grid.RowDefinitions>
                                 <!-- Graph and information -->
-                                <RowDefinition Height="70*"/>
+                                <RowDefinition Height="*"/>
                                 <!-- Splitter -->
                                 <RowDefinition Height="Auto"/>
                                 <!-- Queries pane -->
@@ -179,7 +179,7 @@ Licensed under the MIT license.
 
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="7*"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto" x:Name="ContextInfoColumn"/>
                                 </Grid.ColumnDefinitions>

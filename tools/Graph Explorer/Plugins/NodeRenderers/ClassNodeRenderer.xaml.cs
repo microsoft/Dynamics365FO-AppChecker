@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.XppPlugin
 {
@@ -17,7 +18,7 @@ namespace GraphExplorer.XppPlugin
     public partial class ClassNodeRenderer : UserControl, INodeRenderer
     {
         private readonly IModel model;
-        private INode node;
+        private Node node;
         private SourceEditor ClassEditor { set; get; }
 
         private readonly ObservableCollection<PropertyItem> properties = new ObservableCollection<PropertyItem>();
@@ -49,7 +50,7 @@ namespace GraphExplorer.XppPlugin
             this.SourceEditorBox.Content = this.ClassEditor;
         }
 
-        public async void SelectNodeAsync(INode node)
+        public async void SelectNodeAsync(Node node)
         {
             this.node = node;
 

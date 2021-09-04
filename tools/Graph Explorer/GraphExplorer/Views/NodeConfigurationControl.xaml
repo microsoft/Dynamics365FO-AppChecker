@@ -3,10 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodels="clr-namespace:GraphExplorer.ViewModels"              
+             xmlns:materialextensions="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"   
+             xmlns:mde="https://spiegelp.github.io/MaterialDesignExtensions/winfx/xaml"
              xmlns:local="clr-namespace:GraphExplorer.Views"
              mc:Ignorable="d" 
+             
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+              
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"
+             
              d:DesignHeight="450" d:DesignWidth="250">
     <Grid>
+        <Grid.Resources></Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -14,11 +27,14 @@
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ListView x:Name="Configurations" Grid.Row="1" ItemsSource="{Binding Configurations}" SelectedItem="{Binding SelectedItem}">
+            <TabControl Visibility="Visible" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Right" mde:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
+                <TabItem Header="Inspector"  />
+                <TabItem Header="Database" />
+            </TabControl>
+            <!--<ListView x:Name="Configurations" Grid.Row="1" ItemsSource="{Binding Configurations}" SelectedItem="{Binding SelectedItem}">
                 <ListView.Resources>
                     <DataTemplate x:Key="ColumnHeaders">
                         <Border BorderThickness="4" Background="Green" HorizontalAlignment="Left">
@@ -40,9 +56,9 @@
                                         <Path Stroke="{Binding Path=Color}" StrokeThickness="2"  Fill="{Binding Path=Color}" 
                                             Data="M19,15.59L17.59,17L14,13.41L10.41,17L9,15.59L12.59,12L9,8.41L10.41,7L14,10.59L17.59,7L19,8.41L15.41,12L19,15.59M22,3A2,2 0 0,1 24,5V19A2,2 0 0,1 22,21H7C6.31,21 5.77,20.64 5.41,20.11L0,12L5.41,3.88C5.77,3.35 6.31,3 7,3H22M22,5H7L2.28,12L7,19H22V5Z">
                                         </Path>
-                                        <!--<Path Stroke="{Binding Path=Color}" StrokeThickness="2"  Fill="{Binding Path=Color}"
+                                        <Path Stroke="{Binding Path=Color}" StrokeThickness="2"  Fill="{Binding Path=Color}"
                                             Data="M48,25C48,37.70254924610825 37.70254924610825,48 25,48 12.29745075389175,48 2,37.70254924610825 2,25 2,12.29745075389175 12.29745075389175,2 25,2 37.70254924610825,2 48,12.29745075389175 48,25z">
-                                        </Path>-->
+                                        </Path>
                                     </Canvas>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -59,7 +75,7 @@
                         </GridViewColumn>
                     </GridView>
                  </ListView.View>
-            </ListView>
+            </ListView> -->
         </Grid>
     </Grid>
 </UserControl>
