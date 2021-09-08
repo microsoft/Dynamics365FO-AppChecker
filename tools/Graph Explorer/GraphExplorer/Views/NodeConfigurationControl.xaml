@@ -30,10 +30,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TabControl Visibility="Visible" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Right" mde:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
-                <TabItem Header="Inspector"  />
-                <TabItem Header="Database" />
-            </TabControl>
             <!--<ListView x:Name="Configurations" Grid.Row="1" ItemsSource="{Binding Configurations}" SelectedItem="{Binding SelectedItem}">
                 <ListView.Resources>
                     <DataTemplate x:Key="ColumnHeaders">

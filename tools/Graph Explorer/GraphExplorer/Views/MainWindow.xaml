@@ -179,9 +179,11 @@ Licensed under the MIT license.
 
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto" x:Name="ContextInfoColumn"/>
+                                    <ColumnDefinition Width="*"/> <!-- Graph -->
+                                    <ColumnDefinition Width="Auto"/> <!-- Splitter -->
+                                    <ColumnDefinition Width="0" x:Name="ContextInfoColumn"/> <!-- Tool pane -->
+                                    <ColumnDefinition Width="Auto"/> <!-- Dock panel with toggle button-->
+                                    <!-- Splitter -->
                                 </Grid.ColumnDefinitions>
 
                                 <GroupBox Grid.Column="0" Header="Graph" >
@@ -215,27 +217,25 @@ Licensed under the MIT license.
                                     </Grid>
                                 </GroupBox>
 
-                                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Width="5" Background="Silver"/>
+                                <GridSplitter x:Name="GraphRightSeparator" Grid.Column="1" HorizontalAlignment="Center" Width="0" Background="Silver" DragCompleted="GraphRightSeparator_DragCompleted"/>
 
-                                <Expander x:Name="ContextualInformationExpander" Grid.Column="2" ExpandDirection="Left"  Collapsed="ContextualInformation_Collapsed" Expanded="ContextualInformation_Expanded">
-                                    <Expander.Header>
-                                        <TextBlock Text="Context"
-                                            RenderTransformOrigin=".5,.5">
-                                            <TextBlock.LayoutTransform>
-                                                <RotateTransform Angle="90" />
-                                            </TextBlock.LayoutTransform>
-                                        </TextBlock>
-                                    </Expander.Header>
-
-                                    <GroupBox x:Name="ContextualInformation" Header="Information" Margin="0,0,2,0">
+                                <DockPanel Grid.Column="2" LastChildFill="True" >
+                                    <GroupBox  x:Name="ContextualInformation"  Header="Information" Margin="0,0,2,0" >
                                     </GroupBox>
-
-                                </Expander>
-                                <!--
-                                <GroupBox x:Name="ContextualInformation" Grid.Column="2" Header="Information" Margin="0,0,2,0">
-                                </GroupBox>
-                                -->
+                                </DockPanel>
+                                    
+                                <!-- Dockpanel containing the expander toggle and the tab page with tools titles. -->
+                                <DockPanel Grid.Column="3" Background="{StaticResource MaterialDesignPaper}" >
+                                    <ToggleButton x:Name="FoldToolPane" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="8" Style="{StaticResource ChevronHorizontalToggleButton}" Foreground="{DynamicResource MaterialDesignBody}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked">
+                                                                         
+                                    </ToggleButton>
+                                    <TabControl DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Right" mde:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
+                                        <TabItem Header="Inspector" FontSize="7"  />
+                                        <TabItem Header="Database" FontSize="7"  />
+                                    </TabControl>
+                                </DockPanel>
                             </Grid>
+                            
                             <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="Silver"/>
 
                             <GroupBox Header="Queries"  Grid.Row="2" Margin="1,0,1,0">

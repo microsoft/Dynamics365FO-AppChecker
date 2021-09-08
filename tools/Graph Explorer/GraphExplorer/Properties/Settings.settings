@@ -5,9 +5,6 @@
     <Setting Name="Username" Type="System.String" Scope="User">
       <Value Profile="(Default)">neo4j</Value>
     </Setting>
-    <Setting Name="QueryFontSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">14</Value>
-    </Setting>
     <Setting Name="QueryFont" Type="System.String" Scope="User">
       <Value Profile="(Default)">Consolas</Value>
     </Setting>
@@ -90,6 +87,12 @@ function createGraphEdge(edge) {
     }
 }
 </Value>
+    </Setting>
+    <Setting Name="QueryFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="ToolWindowWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">400</Value>
     </Setting>
   </Settings>
 </SettingsFile>

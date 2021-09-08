@@ -16,6 +16,7 @@ using GraphExplorer.SourceEditor;
 namespace GraphExplorer
 {
     using MaterialDesignExtensions.Controls;
+    using System.Windows.Controls.Primitives;
     using WPFLocalizeExtension.Engine;
     using WPFLocalizeExtension.Providers;
 
@@ -24,14 +25,6 @@ namespace GraphExplorer
     /// </summary>
     public partial class MainWindow : MaterialWindow
     {
-        //public string DialogHostName
-        //{
-        //    get
-        //    {
-        //        return "dialogHost";
-        //    }
-        //}
-
         public ViewModels.EditorViewModel ViewModel { private set; get; }
         private readonly Model model;
 
@@ -288,19 +281,41 @@ namespace GraphExplorer
             browser.NavigationCompleted -= this.Browser_NavigationCompleted;
         }
 
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        /// <summary>
+        /// Called when the toggle button in the tool window pane is checked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            e.CanExecute = true;
+            var w = this.ViewModel.ToolWindowWidth;
+            this.GraphRightSeparator.Width = 5;
+            this.ContextInfoColumn.Width = new GridLength(w, GridUnitType.Pixel);
+            e.Handled = true;
         }
 
-        private void ContextualInformation_Expanded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Called when the toggle button in the tool window pane is unchecked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            this.ContextInfoColumn.Width = new GridLength(400, GridUnitType.Pixel);
+            this.GraphRightSeparator.Width = 0;
+            this.ContextInfoColumn.Width = new GridLength(0, GridUnitType.Pixel);
+            e.Handled = true;
         }
 
-        private void ContextualInformation_Collapsed(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// This method is called when the grid splitter is done being resized. It saves
+        /// the current size of the pane such that the next time it is expanded it gets
+        /// the same size.
+        /// </summary>
+        /// <param name="sender">The gridsplitter instance</param>
+        /// <param name="e">The event args</param>
+        private void GraphRightSeparator_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            this.ContextInfoColumn.Width = new GridLength(30, GridUnitType.Auto);
+            this.ViewModel.ToolWindowWidth = this.ContextualInformation.ActualWidth;
         }
     }
 }

@@ -94,6 +94,12 @@ namespace GraphExplorer.ViewModels
             }
         }
 
+        public double ToolWindowWidth
+        {
+            get { return Properties.Settings.Default.ToolWindowWidth; }
+            set { Properties.Settings.Default.ToolWindowWidth = value; }
+        }
+
         /// <summary>
         /// The event is triggered when a node is selected on the browser surface
         /// </summary>
@@ -1009,18 +1015,18 @@ openMenu ({
 
         private void UpdateEdgeInfoPage(IRelationship edge)
         {
-            //if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
-            //{
-            //    // Use the default one, by convention called ()
-            //    renderer = this.EdgeRenderers["()"];
-            //}
+            if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
+            {
+                // Use the default one, by convention called ()
+                renderer = this.EdgeRenderers["()"];
+            }
 
-            //if (this.view.ContextualInformation.Content != renderer)
-            //{
-            //    this.view.ContextualInformation.Content = renderer;
-            //}
+            if (this.view.ContextualInformation.Content != renderer)
+            {
+                this.view.ContextualInformation.Content = renderer;
+            }
 
-            //renderer.SelectEdgeAsync(edge);
+            renderer.SelectEdgeAsync(edge);
         }
 
         private void ShowDatabaseInfoPanel()
@@ -1028,7 +1034,7 @@ openMenu ({
             UserControl child = new DatabaseInformationControl(this, this.model);
             this.view.ContextualInformation.Header = "Database";
             this.view.ContextualInformation.Content = child;
-            this.view.ContextualInformationExpander.IsExpanded = true;
+//            this.view.ContextualInformationExpander.IsExpanded = true;
         }
 
         private void UpdateProperties(object nodeOrEdge)

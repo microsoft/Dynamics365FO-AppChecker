@@ -37,18 +37,6 @@ namespace GraphExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
-        public int QueryFontSize {
-            get {
-                return ((int)(this["QueryFontSize"]));
-            }
-            set {
-                this["QueryFontSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Consolas")]
         public string QueryFont {
             get {
@@ -235,6 +223,30 @@ namespace GraphExplorer.Properties {
             }
             set {
                 this["Configuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int QueryFontSize {
+            get {
+                return ((int)(this["QueryFontSize"]));
+            }
+            set {
+                this["QueryFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        public double ToolWindowWidth {
+            get {
+                return ((double)(this["ToolWindowWidth"]));
+            }
+            set {
+                this["ToolWindowWidth"] = value;
             }
         }
     }
