@@ -456,15 +456,24 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return result;
         }
 
-        public static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
+        public static Task<IAsyncTransaction> StartTransactionAsync()
         {
-            // TODO this should not be public, since it pollutes the code with the Neo4j specific type.
-            // All usage should be replaced with the graph based APIs.
             IAsyncSession session = Database != null && !string.IsNullOrEmpty(Database.Name)
                 ? Driver.AsyncSession(o => o.WithDatabase(Database.Name))
                 : Driver.AsyncSession();
 
-            var transaction = await session.BeginTransactionAsync();
+            return session.BeginTransactionAsync();
+        }
+
+        private static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
+        {
+            var transaction = await StartTransactionAsync();
+
+            return await ExecuteCypherQueryListAsync(transaction, cypherSource, parameters);
+        }
+
+        private static async Task<List<IRecord>> ExecuteCypherQueryListAsync(IAsyncTransaction transaction, string cypherSource, IDictionary<string, object> parameters = null)
+        {
             var cursor = await transaction.RunAsync(cypherSource, parameters);
             var result = await cursor.ToListAsync();
 

@@ -841,6 +841,7 @@ openMenu ({
                 }
             };
 
+            // Command to stop a running query.
             this.StopQueryCommand = new RelayCommand(
                 p => 
                 { 
@@ -854,6 +855,7 @@ openMenu ({
                 }
             );
 
+            // Command to execute the query in the source window.
             this.ExecuteQueryCommand = new RelayCommand(
                  async p =>
                  {
@@ -877,24 +879,25 @@ openMenu ({
                          graph = await Neo4jDatabase.GetImplicitEdgesAsync(graph);
                      }
 
-                     // Set the graph. This will trigger the event that will render the graph 
-                     // on the drawing surface.
-                     // TODO: Remove this. Only use the representation that makes sense
+
+                     // Only use the representation that makes sense
                      // and do not fill in the other.
-                     this.model.Graph = graph;
-                     this.view.TextBrowser.NavigateToString(html);
-
                      var canBeRenderedAsGraph = Model.CanBeRenderedAsGraph(graph);
-
-                     if (this.GraphModeSelected && !canBeRenderedAsGraph)
-                     {
-                         this.GraphModeSelected = false;
-                         this.TextModeSelected = true;
-                     }
-                     else if (!this.GraphModeSelected && canBeRenderedAsGraph)
+                     if (canBeRenderedAsGraph)
                      {
                          this.GraphModeSelected = true;
                          this.TextModeSelected = false;
+                         
+                         // Set the graph. This will trigger the event that will render the graph 
+                         // on the drawing surface.
+                         this.model.Graph = graph;
+                     }
+                     else
+                     {
+                         this.GraphModeSelected = false;
+                         this.TextModeSelected = true;
+
+                         this.view.TextBrowser.NavigateToString(html);
                      }
                  },
 

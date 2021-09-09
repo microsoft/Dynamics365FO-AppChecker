@@ -45,65 +45,59 @@ namespace GraphExplorer.Views
                 UNION ALL
                 MATCH ()-[]->() RETURN { name:'relationships', data: count(*)} AS result";
 
-            // Use this instead for all these cases:
-            // var g = await Neo4jDatabase.ExecuteQueryGraphAsync(metadataQuery);
+            var g = await Neo4jDatabase.ExecuteQueryGraphAsync(metadataQuery);
 
-            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(metadataQuery);
-            if (result != null)
+            var parts = g.Values.ToArray();
+            var labelsPart = parts[0];
+ 
+            var labelValues = (labelsPart as Dictionary<string, object>)["data"] ;
+            IEnumerable<string> labels = (labelValues as List<object>).Select(o => o as string);
+
+            this.LabelsPrompt.Text = string.Format("Node Labels ({0})", labels.Count());
+
+            foreach (var label in labels)
             {
-                var labels = ((result[0].Values["result"] as Dictionary<string, object>)["data"] as List<object>);
-                // labels = (g.Values.ToArray()[0] as Dictionary<string, object>)["data"] as List<object>;
-
-                long labelsCount = (long)(result[2].Values["result"] as IDictionary<string, object>)["data"];
-
-                this.LabelsPrompt.Text = string.Format("Node Labels ({0})", labelsCount);
-
-                foreach (var label in labels)
+                var labelGlyph = new MaterialDesignThemes.Wpf.Chip()
                 {
-                    var labelGlyph = new MaterialDesignThemes.Wpf.Chip()
-                    {
-                        Margin = new Thickness(5, 0, 5, 5),
-                        Content = label as string,
-                        IsDeletable = false,
-                        ToolTip = "Calculating...",
-                    };
+                    Margin = new Thickness(5, 0, 5, 5),
+                    Content = label,
+                    IsDeletable = false,
+                    ToolTip = "Calculating...",
+                };
 
-                    labelGlyph.Click += (_, e) => { this.LabelClicked(label as string); };
+                labelGlyph.Click += (_, e) => { this.LabelClicked(label as string); };
 
-                    labelGlyph.ToolTipOpening += this.LabelTooltipOpening;
-                    this.Nodes.Children.Add(labelGlyph);
-                }
+                labelGlyph.ToolTipOpening += this.LabelTooltipOpening;
+                this.Nodes.Children.Add(labelGlyph);
+            }
 
-                var relationships = ((result[1].Values["result"] as Dictionary<string, object>)["data"] as List<object>);
-                long relationshipCount = (long)(result[3].Values["result"] as IDictionary<string, object>)["data"];
+            var relationshipsPart = parts[1];
 
-                this.RelationshipsPrompt.Text = string.Format("Relationships ({0})", relationshipCount);
+            var relationshipsValues = (relationshipsPart as Dictionary<string, object>)["data"];
+            var relationshipsList = (relationshipsValues as List<object>).Select(o => o as string);
+            long relationshipCount = relationshipsList.Count();
 
-                foreach (var relationship in relationships)
+            this.RelationshipsPrompt.Text = string.Format("Relationships ({0})", relationshipCount);
+
+            foreach (var relationship in relationshipsList)
+            {
+                var edgeGlyph = new Button()
                 {
-                    var edgeGlyph = new Button()
-                    {
-                        Style = this.Resources["Edges"] as Style,
-                        Margin = new Thickness(-4, -0, -4, 0),
-                        Content = "-[" + (relationship as string) + "]-",
-                        ToolTip = "Calculating...",
-                    };
+                    Style = this.Resources["Edges"] as Style,
+                    Margin = new Thickness(-4, -0, -4, 0),
+                    Content = "-[" + (relationship as string) + "]-",
+                    ToolTip = "Calculating...",
+                };
 
-                    edgeGlyph.Click += (_, e) => { this.EdgeClicked(relationship as string); };
+                edgeGlyph.Click += (_, e) => { this.EdgeClicked(relationship as string); };
 
-                    edgeGlyph.Width -= 24;
-                    edgeGlyph.Height -= 8;
+                edgeGlyph.Width -= 24;
+                edgeGlyph.Height -= 8;
 
-                    edgeGlyph.ToolTipOpening += this.EdgeToolTipOpening;
-                    this.Relationships.Children.Add(edgeGlyph);
-                }
+                edgeGlyph.ToolTipOpening += this.EdgeToolTipOpening;
+                this.Relationships.Children.Add(edgeGlyph);
             }
         }
-
-        //private async void UserControl_Loaded(object o, RoutedEventArgs e)
-        //{
-        //    await this.RepaintAsync();
-        //}
 
         private async void EdgeToolTipOpening(object sender, ToolTipEventArgs e)
         {
@@ -113,9 +107,9 @@ namespace GraphExplorer.Views
             relationship = relationship.Replace("]-", "");
 
             var query = string.Format("match ()-[c:{0}]-() return count(c) as Count", relationship);
-            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(query);
+            var g = await Neo4jDatabase.ExecuteQueryGraphAsync(query);
 
-            container.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
+            container.ToolTip = string.Format("Database contains {0} instances", g.Values.First());
         }
 
         private async void LabelTooltipOpening(object sender, ToolTipEventArgs e)
@@ -124,9 +118,9 @@ namespace GraphExplorer.Views
             var label = chip.Content as string;
 
             var query = string.Format("match(c:{0}) return count(c) as Count", label);
-            var result = await Neo4jDatabase.ExecuteCypherQueryListAsync(query);
+            var g = await Neo4jDatabase.ExecuteQueryGraphAsync(query);
 
-            chip.ToolTip = string.Format("Database contains {0} instances", result[0].Values["Count"]);
+            chip.ToolTip = string.Format("Database contains {0} instances", g.Values.First());
         }
 
         private void LabelClicked(string label)
