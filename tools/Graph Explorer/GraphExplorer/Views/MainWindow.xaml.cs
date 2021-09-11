@@ -32,13 +32,6 @@ namespace GraphExplorer
         {
             this.InitializeComponent();
 
-            // Setup callback so cursor position is reflected
-            this.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
-            {
-                var caret = sender as ICSharpCode.AvalonEdit.Editing.Caret;
-                this.model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
-            };
-
             // If a configuration file argument is passed, then read this file and store it in the configuration
             if (args.Length != 0)
             {

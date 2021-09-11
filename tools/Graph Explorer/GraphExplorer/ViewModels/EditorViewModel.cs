@@ -28,7 +28,7 @@ using MaterialDesignExtensions.Converters;
 using MaterialDesignExtensions.Model;
 using ICSharpCode.AvalonEdit.Snippets;
 using GraphExplorer.Core.netcore;
-
+using System.Globalization;
 
 namespace GraphExplorer.ViewModels
 {
@@ -360,7 +360,7 @@ namespace GraphExplorer.ViewModels
                 async p =>
                 {
                     // Temporary: Use this as a launchpoint for the rendering options dialog
-                    var d = new RenderingOptions();
+                    var d = new ConfigurationWindow();
                     d.Show();
 
                     var labels = await Neo4jDatabase.GetNodeLabels();
@@ -712,6 +712,13 @@ openMenu ({
             // Initialize the mapping from names onto renderers.
             this.NodeRenderers = new Dictionary<string, INodeRenderer>();
             this.EdgeRenderers = new Dictionary<string, IEdgeRenderer>();
+            
+            // Setup callback so cursor position is reflected
+            v.CypherEditor.TextArea.Caret.PositionChanged += (object sender, EventArgs a) =>
+            {
+                var caret = sender as ICSharpCode.AvalonEdit.Editing.Caret;
+                this.model.CaretPositionString = string.Format(CultureInfo.CurrentCulture, "Line: {0} Column: {1}", caret.Line, caret.Column);
+            };
 
             // Load the list of renderers through MEF.
             var catalog = new AggregateCatalog();
@@ -878,7 +885,6 @@ openMenu ({
                      {
                          graph = await Neo4jDatabase.GetImplicitEdgesAsync(graph);
                      }
-
 
                      // Only use the representation that makes sense
                      // and do not fill in the other.

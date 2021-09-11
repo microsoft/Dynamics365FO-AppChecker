@@ -1,0 +1,133 @@
+﻿<mde:MaterialWindow x:Class="GraphExplorer.Views.ConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"   
+        xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextHintingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Background="{DynamicResource MaterialDesignPaper}"     
+        BorderBackgroundBrush="{DynamicResource MaterialDesignPaper}"
+        BorderForegroundBrush="{DynamicResource MaterialDesignBody}"
+        xmlns:settings="clr-namespace:GraphExplorer.Properties"         
+        xmlns:local="clr-namespace:GraphExplorer.Views"
+        mc:Ignorable="d"
+        xmlns:viewModel="clr-namespace:GraphExplorer.ViewModels"           
+        xmlns:mdeModel="clr-namespace:MaterialDesignExtensions.Model;assembly=MaterialDesignExtensions"
+        Title="Configuration Settings" Height="450" Width="800">
+
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type viewModel:StepperColorViewModel}">
+                <StackPanel Orientation="Vertical" Background="{DynamicResource MaterialDesignPaper}">
+                    <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="Steppers are handy to break a big task into smaller parts. These are so called steps. It displays the progress of the full task as a numbered sequence of steps." TextWrapping="WrapWithOverflow" />
+                    <mde:StepButtonBar Continue="CONTINUE" Cancel="CANCEL" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:StepperShapeViewModel}">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="The Stepper uses the steps out of its Steps property. This property expects a collection of IStep objects. The Step class already implements this basic interface for a step." TextWrapping="WrapWithOverflow" />
+                    <TextBlock Margin="0,16,0,0" Text="A step consists out of a header and a content. Consider to define one view model class per step content and a DataTemplate for it (just the everyday MVVM magic). The header may contain arbitrary content. If you like the header of this tutorial, just use the StepTitleHeader class." TextWrapping="WrapWithOverflow" />
+                    <TextBlock Margin="0,24,0,8" Text="An example for inserting file dialogs" FontSize="24" />
+                    <CheckBox IsChecked="{Binding Path=ShowFileDialogs, Mode=TwoWay}" Margin="0,0,0,8">Attach file</CheckBox>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=ShowFileDialogs}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=ShowFileDialogs}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border VerticalAlignment="Top" Height="400">
+                            <mde:OpenFileControl />
+                        </Border>
+                        <Button Grid.Column="2" Margin="0,0,8,0" VerticalAlignment="Top" Content="SHOW DIALOG" />
+                    </Grid>
+                    <mde:StepButtonBar Back="BACK" Continue="CONTINUE" Cancel="CANCEL" />
+                </StackPanel>
+            </DataTemplate>
+            
+        </Grid.Resources>
+        
+        <TabControl DockPanel.Dock="Top"  Style="{StaticResource MaterialDesignTabControl}" TabStripPlacement="Top" mde:TabControlAssist.TabHeaderHorizontalAlignment="Stretch">
+            <TabItem Header="Nodes" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Margin="4" Header="Nodes">
+
+                    </GroupBox>
+                    <GridSplitter Grid.Column="1" Margin="0,4,0,4" Width="5" Background="Silver"></GridSplitter>
+                    <GroupBox Grid.Column="2" Margin="4" Header="Configuration">
+                        <mde:Stepper IsLinear="False" ContentAnimationsEnabled="True"  
+                                     DoneIconTemplate="{DynamicResource MaterialDesignStepDoneIconTemplate}">
+                            <mdeModel:Step>
+                                <mdeModel:Step.Header>
+                                    <mde:StepTitleHeaderControl FirstLevelTitle="Shape" />
+                                </mdeModel:Step.Header>
+                                <mdeModel:Step.Content>
+                                    <viewModel:StepperColorViewModel />
+                                </mdeModel:Step.Content>
+                            </mdeModel:Step>
+
+                            <mdeModel:Step>
+                                <mdeModel:Step.Header>
+                                    <mde:StepTitleHeaderControl FirstLevelTitle="Color" />
+                                </mdeModel:Step.Header>
+                                <mdeModel:Step.Content>
+                                    <viewModel:StepperShapeViewModel />
+                                </mdeModel:Step.Content>
+                            </mdeModel:Step>
+
+                        </mde:Stepper>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Edges" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Margin="4" Header="Edges"></GroupBox>
+                    <GridSplitter Grid.Column="1"  Margin="0,4,0,4" Width="5" Background="Silver"></GridSplitter>
+                    <GroupBox Grid.Column="2" Margin="4" Header="Configuration">
+
+                    </GroupBox>
+                </Grid>                
+            </TabItem>
+            <TabItem Header="Options"  >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="7*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Margin="4" Header="Options"></GroupBox>
+                    <GridSplitter Grid.Column="1" Margin="0,4,0,4" Width="5" Background="Silver"></GridSplitter>
+                    <GroupBox Grid.Column="2" Margin="4" Header="Configuration"></GroupBox>
+                </Grid>                
+            </TabItem>
+        </TabControl>
+    </Grid>
+</mde:MaterialWindow>

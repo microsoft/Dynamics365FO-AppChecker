@@ -92,7 +92,7 @@ function createGraphEdge(edge) {
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="ToolWindowWidth" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">400</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
