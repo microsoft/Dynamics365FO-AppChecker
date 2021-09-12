@@ -21,14 +21,21 @@ namespace GraphExplorer.Views
     /// </summary>
     public partial class RenderingOptions : MaterialWindow
     {
-        private RenderingOptionsViewModel ViewModel { get; set; }
+        private IconViewModel ViewModel { get; set; }
 
         public RenderingOptions()
         {
             this.InitializeComponent();
-            this.ViewModel = new ViewModels.RenderingOptionsViewModel(this);
+            this.ViewModel = new ViewModels.IconViewModel();
 
             this.DataContext = this.ViewModel;
+        }
+
+        private void Search_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            if (e.Key == Key.Enter)
+                this.SearchButton.Command.Execute(textBox.Text);
         }
     }
 }

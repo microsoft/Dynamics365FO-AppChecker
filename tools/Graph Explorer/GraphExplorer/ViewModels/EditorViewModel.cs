@@ -360,7 +360,8 @@ namespace GraphExplorer.ViewModels
                 async p =>
                 {
                     // Temporary: Use this as a launchpoint for the rendering options dialog
-                    var d = new ConfigurationWindow();
+                    //var d = new ConfigurationWindow();
+                    var d = new RenderingOptions();
                     d.Show();
 
                     var labels = await Neo4jDatabase.GetNodeLabels();
@@ -515,6 +516,7 @@ namespace GraphExplorer.ViewModels
             ITheme theme = paletteHelper.GetTheme();
             IBaseTheme baseTheme = darkMode ? (IBaseTheme)new MaterialDesignDarkTheme() : (IBaseTheme)new MaterialDesignLightTheme();
             theme.SetBaseTheme(baseTheme);
+  
             paletteHelper.SetTheme(theme);
         }
 

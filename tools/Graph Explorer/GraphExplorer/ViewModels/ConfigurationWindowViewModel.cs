@@ -28,10 +28,8 @@ namespace GraphExplorer.ViewModels
     }
 
 
-    class ConfigurationWindowViewModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
+    class ConfigurationWindowViewModel : ViewModelBase
+    { 
         public ConfigurationWindowViewModel()
         {
         }

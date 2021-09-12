@@ -8,10 +8,9 @@ using System.Text;
 
 namespace GraphExplorer.ViewModels
 {
-    public class NodeConfigurationViewModel : INotifyPropertyChanged
+    public class NodeConfigurationViewModel : ViewModelBase
     {
         public NodeConfigurationControl View { get; private set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<NodeConfiguration> Configurations { get; set; }
 
@@ -27,10 +26,6 @@ namespace GraphExplorer.ViewModels
             {
                 this.selectedItem = value;
             }
-        }
-        private void OnPropertyChanged(string propertyName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Init()

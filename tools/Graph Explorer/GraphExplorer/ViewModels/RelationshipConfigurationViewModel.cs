@@ -5,8 +5,7 @@ using System.Text;
 
 namespace GraphExplorer.ViewModels
 {
-    class RelationshipConfigurationViewModel : INotifyPropertyChanged
+    class RelationshipConfigurationViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

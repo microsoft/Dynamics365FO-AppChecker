@@ -13,17 +13,10 @@ using System.Threading.Tasks;
 
 namespace GraphExplorer.ViewModels
 {
-    internal class RenderingOptionsViewModel : INotifyPropertyChanged
+    internal class RenderingOptionsViewModel : ViewModelBase
     {
         private RenderingOptionsModel model = new RenderingOptionsModel();
         private RenderingOptions View { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public Color SelectedColor { get; set; }
 
@@ -32,7 +25,7 @@ namespace GraphExplorer.ViewModels
             this.View = view;
 
             // Set the nodes tab as selected by default
-            this.View.NodesButton.IsChecked = true;
+            //this.View.NodesButton.IsChecked = true;
 
             // Handler for events in this view model
             this.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>

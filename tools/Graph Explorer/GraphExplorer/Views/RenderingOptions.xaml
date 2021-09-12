@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphExplorer.Views"
-        
         xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
-        
         xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodels="clr-namespace:GraphExplorer.ViewModels" 
+        xmlns:virtualCollection="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"                    
+        xmlns:system="clr-namespace:System;assembly=mscorlib"  
+                    
         TextElement.Foreground="{DynamicResource materialDesign:MaterialDesignBody}"
 
         Background="{DynamicResource MaterialDesignPaper}"
@@ -27,6 +28,8 @@
 
     <Window.Resources>
         <local:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+        <local:StringJoinConverter x:Key="StringJoinConverter" Separator="{x:Static system:Environment.NewLine}"/>
+        <materialDesign:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -36,14 +39,78 @@
        
         <Grid Grid.Row="0">
             <GroupBox Header="Color">
-                <GroupBox.Resources>
-                    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
-                        <Setter Property="Margin" Value="0 8 0 0" />
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                    </Style>
-                </GroupBox.Resources>
-                <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ListBox Grid.Row="0" Margin="0 8 0 0"
+                    ItemsSource="{Binding Kinds}"
+                    SelectedItem="{Binding Group}"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <virtualCollection:VirtualizingWrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
 
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="materialDesignDemo:PackIconKindGroup">
+                            <DockPanel
+                                ToolTip="{Binding Aliases, Converter={StaticResource StringJoinConverter}}"
+                                Width="64"
+                                Height="64"
+                                Background="Transparent">
+                                <TextBlock
+                                    Text="{Binding Kind}"
+                                    DockPanel.Dock="Bottom"
+                                    TextTrimming="CharacterEllipsis"
+                                    HorizontalAlignment="Center"/>
+
+                                <materialDesign:PackIcon
+                                    Kind="{Binding Kind}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Width="32"
+                                    Height="32"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                    <DockPanel Grid.Row="1">
+                        <Button
+                            x:Name="SearchButton"
+                            Style="{DynamicResource MaterialDesignToolButton}"
+                            Command="{Binding SearchCommand}"
+                            CommandParameter="{Binding ElementName=SearchBox, Path=Text}"
+                            Height="24"
+                            Width="24">
+                            <materialDesign:PackIcon
+                                Kind="Magnify"
+                                Opacity=".56"/>
+                        </Button>
+                        <TextBox
+                            Margin="5 0 0 0"
+                            materialDesign:HintAssist.Hint="Search" x:Name="SearchBox"
+                            materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                            BorderThickness="0"
+                            MinWidth="200"/>
+                        <Button >Press Me</Button>
+                    </DockPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</mde:MaterialWindow>
+
+
+
+<!--
+                <StackPanel Orientation="Vertical">
                     <Expander ExpandDirection="Left" >
                         <Expander.Header>
                             <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}"
@@ -89,7 +156,9 @@
                         </Grid>
                     </Expander>
                     
-                    <!--
+                    -->
+
+<!--
                     <ComboBox Width="100" ItemsSource="{Binding ColorNames}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -99,9 +168,6 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                        -->
+
                 </StackPanel>
-            </GroupBox>
-        </Grid>
-    </Grid>
-</mde:MaterialWindow>
+                                        -->
