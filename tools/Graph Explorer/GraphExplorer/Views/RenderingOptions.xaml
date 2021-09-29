@@ -44,42 +44,47 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <ListBox Grid.Row="0" Margin="0 8 0 0"
-                    ItemsSource="{Binding Kinds}"
-                    SelectedItem="{Binding Group}"
-                    VirtualizingPanel.IsVirtualizing="True"
-                    VirtualizingPanel.ScrollUnit="Pixel"
-                    VirtualizingPanel.VirtualizationMode="Recycling">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <virtualCollection:VirtualizingWrapPanel />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
+                        ItemsSource="{Binding Kinds}"
+                        SelectedItem="{Binding Group}"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <virtualCollection:VirtualizingWrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
 
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="materialDesignDemo:PackIconKindGroup">
-                            <DockPanel
-                                ToolTip="{Binding Aliases, Converter={StaticResource StringJoinConverter}}"
-                                Width="64"
-                                Height="64"
-                                Background="Transparent">
-                                <TextBlock
-                                    Text="{Binding Kind}"
-                                    DockPanel.Dock="Bottom"
-                                    TextTrimming="CharacterEllipsis"
-                                    HorizontalAlignment="Center"/>
-
-                                <materialDesign:PackIcon
-                                    Kind="{Binding Kind}"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    Width="32"
-                                    Height="32"/>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="materialDesignDemo:PackIconKindGroup">
+                                <DockPanel
+                                    ToolTip="{Binding Aliases, Converter={StaticResource StringJoinConverter}}"
+                                    Width="64"
+                                    Height="64"
+                                    Background="Transparent">
+                                    <TextBlock
+                                        Text="{Binding Kind}"
+                                        DockPanel.Dock="Bottom"
+                                        TextTrimming="CharacterEllipsis"
+                                        HorizontalAlignment="Center"/>
+                                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                                            Width="24" Height="24"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="{Binding Path}" 
+                                              Stroke="Black" StrokeThickness="1"/>
+                                    </Canvas>
+                                    <!--<materialDesign:PackIcon
+                                        Kind="{Binding Kind}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Width="32"
+                                        Height="32"/>-->
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
                     <DockPanel Grid.Row="1">
                         <Button
@@ -94,12 +99,12 @@
                                 Opacity=".56"/>
                         </Button>
                         <TextBox
-                            Margin="5 0 0 0"
-                            materialDesign:HintAssist.Hint="Search" x:Name="SearchBox"
+                            Margin="4 0 0 0"
+                            materialDesign:HintAssist.Hint="Search" x:Name="SearchBox" KeyDown="Search_OnKeyDown"
                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                             BorderThickness="0"
                             MinWidth="200"/>
-                        <Button >Press Me</Button>
+
                     </DockPanel>
                 </Grid>
             </GroupBox>

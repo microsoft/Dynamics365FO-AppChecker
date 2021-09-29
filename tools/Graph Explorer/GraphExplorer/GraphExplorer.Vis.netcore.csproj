@@ -201,14 +201,14 @@
   </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
-        <PackageReference Include="MaterialDesignColors" Version="2.0.2-ci2657" />
+        <PackageReference Include="MaterialDesignColors" Version="2.0.3-ci8" />
         <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
-        <PackageReference Include="MaterialDesignThemes" Version="4.2.0-ci2657" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.955-prerelease" />
-        <PackageReference Include="Neo4j.Driver" Version="4.3.1" />
+        <PackageReference Include="MaterialDesignThemes" Version="4.2.1-ci8" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.961.33" />
+        <PackageReference Include="Neo4j.Driver" Version="4.3.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="VirtualizingWrapPanel" Version="1.5.4" />
-        <PackageReference Include="WPFLocalizeExtension" Version="3.8.0" />
+        <PackageReference Include="WPFLocalizeExtension" Version="3.9.0" />
     </ItemGroup>
     <ItemGroup>
         <Resource Include="Images\CloudRun_16x.png" />

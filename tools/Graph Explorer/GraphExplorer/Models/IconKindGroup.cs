@@ -8,6 +8,7 @@ namespace GraphExplorer.Models
     {
         public string Kind { get; }
         public string[] Aliases { get; }
+        public string Path { get; set; }
 
         public IconKindGroup(IEnumerable<string> kinds)
         {

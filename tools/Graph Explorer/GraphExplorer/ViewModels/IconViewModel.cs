@@ -17,6 +17,7 @@ namespace GraphExplorer.ViewModels
     {
         private readonly Lazy<IEnumerable<GraphExplorer.Models.IconKindGroup>> _packIconKinds;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly IDictionary<PackIconKind, string> factory = GraphExplorer.Models.PackIconDataFactory.Create();
 
         public IconViewModel()
         {
@@ -30,6 +31,16 @@ namespace GraphExplorer.ViewModels
                     .Select(g => new GraphExplorer.Models.IconKindGroup(g))
                     .OrderBy(x => x.Kind)
                     .ToList());
+
+            // Fill in the Paths to be used when rendering.
+            foreach (var pi in this._packIconKinds.Value)
+            {
+                var kind =(PackIconKind)Enum.Parse(typeof(PackIconKind), pi.Kind);
+                if (factory.ContainsKey(kind))
+                {
+                    pi.Path = factory[kind];
+                }
+            }
 
             var helper = new PaletteHelper();
             if (helper.GetThemeManager() is { } themeManager)
@@ -107,6 +118,8 @@ namespace GraphExplorer.ViewModels
             get => this._packIconKind;
             set => this.SetProperty(ref this._packIconKind, value);
         }
+
+        public string Path { get => this.factory[this.IconKind]; }
 
         private async void Search(object obj)
         {
