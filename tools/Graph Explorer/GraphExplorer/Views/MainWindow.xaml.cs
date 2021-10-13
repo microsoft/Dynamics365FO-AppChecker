@@ -145,10 +145,10 @@ namespace GraphExplorer
                     // TODO get rid of this.
                     var id = e["selectedEdgeId"].ToObject<long>();
 
-                    var cypher = "MATCH (c) -[r]- (d) where id(r) = $id return r limit 1";
                     this.ViewModel.SelectedEdge = id;
-                    var edgeResult = await this.model.ExecuteCypherAsync(cypher, new Dictionary<string, object>() { { "id", id } });
-                    // todo this.ViewModel.UpdatePropertyListView(edgeResult);
+
+                    var edge = this.ViewModel.Graph.Edge(id);
+                    this.ViewModel.UpdatePropertyListView(edge);
                 }
                 else if (e.ContainsKey("contextOverNode"))
                 {

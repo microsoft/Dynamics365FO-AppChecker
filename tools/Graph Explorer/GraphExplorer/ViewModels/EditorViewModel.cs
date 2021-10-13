@@ -33,7 +33,7 @@ using System.Globalization;
 namespace GraphExplorer.ViewModels
 {
     delegate void NodeSelectedDelegate(Node node);
-    delegate void EdgeSelectedDelegate(IRelationship edge);
+    delegate void EdgeSelectedDelegate(Edge edge);
 
     public enum RenderingMode { Graph, Text };
 
@@ -254,12 +254,12 @@ namespace GraphExplorer.ViewModels
 
         public ICommand PrintGraphCommand { get; }
 
-        public string ErrorMessage
+        public string Message
         {
-            get => this.model.ErrorMessage;
+            get => this.model.Message;
             set
             {
-                this.OnPropertyChanged(nameof(this.ErrorMessage));
+                this.OnPropertyChanged(nameof(this.Message));
             }
         }
 
@@ -772,10 +772,10 @@ openMenu ({
                     this.QueryEditorFontSize = this.model.QueryFontSize;
                     this.OnPropertyChanged(nameof(this.QueryEditorFontSize));
                 }
-                else if (e.PropertyName == nameof(Model.ErrorMessage))
+                else if (e.PropertyName == nameof(Model.Message))
                 {
-                    this.ErrorMessage = this.model.ErrorMessage;
-                    this.OnPropertyChanged(nameof(this.ErrorMessage));
+                    this.Message = this.model.Message;
+                    this.OnPropertyChanged(nameof(this.Message));
                 }
                 else if (e.PropertyName == nameof(Model.CaretPositionString))
                 {
@@ -852,15 +852,15 @@ openMenu ({
 
             // Command to stop a running query.
             this.StopQueryCommand = new RelayCommand(
-                p => 
-                { 
+                async p => 
+                {
                     // Roll back the transaction that executes the current query.
-                    // TODO
+                    await Neo4jDatabase.RollbackTransactionAsync(ref this.model.Transaction);
                 },
                 p =>
                 {
                     // Only active when a query is actually running.
-                    return true;
+                    return this.model.Transaction != null;
                 }
             );
 
@@ -1024,7 +1024,7 @@ openMenu ({
             renderer.SelectNodeAsync(node);
         }
 
-        private void UpdateEdgeInfoPage(IRelationship edge)
+        private void UpdateEdgeInfoPage(Edge edge)
         {
             if (!this.EdgeRenderers.TryGetValue(edge.Type, out IEdgeRenderer renderer))
             {
@@ -1058,8 +1058,8 @@ openMenu ({
             {
                 if (this.EdgeSelected != null)
                 {
-                    IRelationship r = nodeOrEdge as IRelationship;
-                    this.EdgeSelected(r);
+                    var edge = nodeOrEdge as Edge;
+                    this.EdgeSelected(edge);
                 }
             }
         }
@@ -1074,6 +1074,15 @@ openMenu ({
             {
                 // Call the delegate so every one interested can react
                 this.UpdateProperties(node);
+            });
+        }
+
+        public void UpdatePropertyListView(Edge edge)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                // Call the delegate so every one interested can react
+                this.UpdateProperties(edge);
             });
         }
 

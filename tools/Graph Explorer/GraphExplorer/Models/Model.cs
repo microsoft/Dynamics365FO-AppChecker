@@ -102,13 +102,13 @@ namespace GraphExplorer.Models
 
         // TODO move this to the view model. It does not really belong here.
         private string errorMessage = "";
-        public string ErrorMessage
+        public string Message
         {
             get { return this.errorMessage; }
             set
             {
                 this.errorMessage = value;
-                this.OnPropertyChanged(nameof(this.ErrorMessage));
+                this.OnPropertyChanged(nameof(this.Message));
             }
         }
         
@@ -452,24 +452,49 @@ namespace GraphExplorer.Models
             return !g.Values.Any();
         }
 
+        // Transaction:
+        public IAsyncTransaction Transaction = null;
+
+        public async Task RollbackTransactionAsync()
+        {
+            if (this.Transaction != null)
+            {
+                await this.Transaction.RollbackAsync();
+            }
+        }
+
         /// <summary>
         /// Execute the cypher string on the current connection. If the cypher is incorrect
         /// the error message is updated. This method will update the status line when the
-        /// query has executed.
+        /// query has executed. This is what is executed when the query button on the UI is hit.
         /// </summary>
         /// <param name="cypherSource">The cypher source</param>
         /// <param name="parameters">Any parameters used in the source string</param>
         /// <returns>The list of results.</returns>
         public async Task<(Graph, string)> ExecuteCypherAsync(string cypherSource, IDictionary<string, object> parameters=null)
         {
-            this.ErrorMessage = "Running query...";
+            this.Message = "Running query...";
+
+            // Rollback any transaction that is currently running and start a new one.
+            // await this.RollbackTransactionAsync();
+            if (this.Transaction == null)
+            {
+                this.Transaction = await Neo4jDatabase.StartTransactionAsync();
+            }
 
             try
             {
-                var res = await Neo4jDatabase.ExecuteQueryGraphAndHtmlAsync(cypherSource, parameters);
 
-                this.ErrorMessage = "Done.";
+                var res = await Neo4jDatabase.ExecuteQueryGraphAndHtmlAsync(this.Transaction, cypherSource, parameters);
+                await Neo4jDatabase.CommitTransactionAsync(ref this.Transaction);
+
+                this.Message = "Done.";
                 return res;
+            }
+            catch (ResultConsumedException _)
+            {
+                // This happens when the query is forcibly aborted.
+                this.Message = "Query aborted";
             }
             catch (Neo4jException e)
             {
@@ -486,17 +511,17 @@ namespace GraphExplorer.Models
                         var columnNo = int.Parse(m.Groups[3].Value);
                         var errorString = m.Groups[1].Value;
 
-                        this.ErrorMessage = errorString;
+                        this.Message = errorString;
                         this.EditorPosition = (lineNo, columnNo);
                     }
                     else
                     {
-                        this.ErrorMessage = e.Message;
+                        this.Message = e.Message;
                     }
                 }
                 else
                 {
-                    this.ErrorMessage = e.Message;
+                    this.Message = e.Message;
                 }
             }
             return (null,"");

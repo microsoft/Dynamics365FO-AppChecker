@@ -157,7 +157,7 @@ Licensed under the MIT license.
                             </StatusBar.ItemsPanel>
 
                             <StatusBarItem Grid.Column="0">
-                                <Label Content="{Binding ErrorMessage}" FontFamily="Courier" />
+                                <Label Content="{Binding Message}" FontFamily="Courier" />
                             </StatusBarItem>
 
                             <StatusBarItem Grid.Column="1">

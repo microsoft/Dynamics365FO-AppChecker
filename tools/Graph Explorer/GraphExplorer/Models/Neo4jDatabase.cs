@@ -465,11 +465,49 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return session.BeginTransactionAsync();
         }
 
+        public static Task CommitTransactionAsync(ref IAsyncTransaction transaction)
+        {
+            if (transaction != null)
+            {
+                try
+                {
+                    return transaction.CommitAsync();
+                }
+                finally
+                {
+                    transaction = null;
+                }
+            }
+            return null;
+        }
+
+        public static Task RollbackTransactionAsync(ref IAsyncTransaction transaction)
+        {
+            if (transaction != null)
+            {
+                try
+                {
+                    return transaction.RollbackAsync();
+                }
+                finally
+                {
+                    transaction = null;
+                }
+            }
+            return null;
+        }
+
         private static async Task<List<IRecord>> ExecuteCypherQueryListAsync(string cypherSource, IDictionary<string, object> parameters = null)
         {
             var transaction = await StartTransactionAsync();
-
-            return await ExecuteCypherQueryListAsync(transaction, cypherSource, parameters);
+            try
+            {
+                return await ExecuteCypherQueryListAsync(transaction, cypherSource, parameters);
+            }
+            finally
+            {
+                await transaction.CommitAsync();
+            }
         }
 
         private static async Task<List<IRecord>> ExecuteCypherQueryListAsync(IAsyncTransaction transaction, string cypherSource, IDictionary<string, object> parameters = null)
@@ -477,7 +515,7 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             var cursor = await transaction.RunAsync(cypherSource, parameters);
             var result = await cursor.ToListAsync();
 
-            await transaction.CommitAsync();
+            // await transaction.CommitAsync();
 
             return result;
         }
@@ -499,12 +537,21 @@ RETURN { name: 'labels', data: COLLECT(label)[..1000]} AS result", null);
             return graph;
         }
 
-        public static async Task<(Graph,string)> ExecuteQueryGraphAndHtmlAsync(string source, IDictionary<string, object> parameters = null)
+        //public static async Task<(Graph,string)> ExecuteQueryGraphAndHtmlAsync(string source, IDictionary<string, object> parameters = null)
+        //{
+        //    var records = await ExecuteCypherQueryListAsync(source, parameters);
+        //    var graph = GenerateGraph(records);
+        //    var html = GenerateHtml(records);
+        //    return (graph, html);
+        //}
+
+        public static async Task<(Graph, string)> ExecuteQueryGraphAndHtmlAsync(IAsyncTransaction transaction, string source, IDictionary<string, object> parameters = null)
         {
-            var records = await ExecuteCypherQueryListAsync(source, parameters);
+            var records = await ExecuteCypherQueryListAsync(transaction, source, parameters);
             var graph = GenerateGraph(records);
             var html = GenerateHtml(records);
             return (graph, html);
         }
+
     }
 }

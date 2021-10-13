@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using GraphExplorer.Core.netcore;
 
 namespace GraphExplorer.DefaultsPlugin
 {
@@ -16,7 +17,7 @@ namespace GraphExplorer.DefaultsPlugin
     {
         public ObservableCollection<PropertyItem> Properties { get; private set; }
         private IModel Model { get; set; }
-        private IRelationship Edge { get; set; }
+        private Edge Edge { get; set; }
 
         public DefaultEdgeRenderer(IModel model)
         {
@@ -39,14 +40,14 @@ namespace GraphExplorer.DefaultsPlugin
             Clipboard.SetText(control.Text);
         }
 
-        public void SelectEdgeAsync(IRelationship edge)
+        public void SelectEdgeAsync(Edge edge)
         {
             this.Edge = edge;
             this.Header.Text = string.Format("Edge {0}", edge.Type);
 
             this.Properties.Add(new PropertyItem() { Key = "Id", Value = edge.Id.ToString() });
-            this.Properties.Add(new PropertyItem() { Key = "Start Node", Value = edge.StartNodeId.ToString() });
-            this.Properties.Add(new PropertyItem() { Key = "End Node", Value = edge.EndNodeId.ToString() });
+            this.Properties.Add(new PropertyItem() { Key = "Start Node", Value = edge.From.ToString() });
+            this.Properties.Add(new PropertyItem() { Key = "End Node", Value = edge.To.ToString() });
 
             foreach (var property in edge.Properties)
             {
