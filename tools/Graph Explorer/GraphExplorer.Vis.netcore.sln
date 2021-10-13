@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.Vis.netcore",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.Common.netcore", "SocratexGraphExplorer.Common.netcore\GraphExplorer.Common.netcore.csproj", "{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XppProgrammingPlugins.netcore", "Plugins\XppProgrammingPlugins.netcore.csproj", "{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.DefaultRenderers.netcore", "SocratexGraphExplorer.DefaultRenderers.netcore\GraphExplorer.DefaultRenderers.netcore.csproj", "{949A99EC-B663-4730-A6B8-02ED602B8DD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9432DF43-CFA5-44BD-9390-B30C62AA65E7}"
@@ -20,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.SourceEditor.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.Core.netcore", "GraphExplorer.Core.netcore\GraphExplorer.Core.netcore.csproj", "{E938FC06-5720-4749-B387-995C968534CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphExplorer.LocalizableResources.netcore", "GraphExplorer.LocalizableResources.netcore\GraphExplorer.LocalizableResources.netcore.csproj", "{5D8643CD-37AD-45F5-ACD4-D4735E90423E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphExplorer.LocalizableResources.netcore", "GraphExplorer.LocalizableResources.netcore\GraphExplorer.LocalizableResources.netcore.csproj", "{5D8643CD-37AD-45F5-ACD4-D4735E90423E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,14 +44,6 @@ Global
 		{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}.Release|x64.ActiveCfg = Release|Any CPU
 		{2EB00343-40B7-4535-BCE8-6FD4FFA692AA}.Release|x64.Build.0 = Release|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Debug|x64.Build.0 = Debug|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Release|x64.ActiveCfg = Release|Any CPU
-		{F07B4931-08F0-4FC9-8B6B-CEEC037784E2}.Release|x64.Build.0 = Release|Any CPU
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{949A99EC-B663-4730-A6B8-02ED602B8DD9}.Debug|x64.ActiveCfg = Debug|Any CPU
