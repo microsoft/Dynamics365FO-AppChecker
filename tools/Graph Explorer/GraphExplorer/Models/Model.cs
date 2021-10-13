@@ -406,40 +406,7 @@ namespace GraphExplorer.Models
                 return false;
             }
         }
-
-
-     
-        //public static HashSet<long> HarvestNodeIdsFromGraph(List<IRecord> records)
-        //{
-        //    var result = new HashSet<long>();
-
-        //    if (records == null || !records.Any())
-        //        return result;
-
-        //    App.Current.Dispatcher.Invoke(() =>
-        //    {
-        //        foreach (var record in records)
-        //        {
-        //            foreach (var v in record.Values)
-        //            {
-        //                if (v.Value is IPath)
-        //                {
-        //                    // There are two nodes connected by an edge:
-        //                    var path = v.Value as IPath;
-        //                    // The start and end can be the same, for self referenctial nodes.
-        //                    result.Add(path.Start.Id);
-        //                    result.Add(path.End.Id);
-        //                }
-        //                else if (v.Value is INode)
-        //                {
-        //                    var n = v.Value as INode;
-        //                    result.Add(n.Id);
-        //                }
-        //            }
-        //        }
-        //    });
-        //    return result;
-        //}
+   
 
         /// <summary>
         /// Determines if the list of records can be rendered as a graph. This is true if

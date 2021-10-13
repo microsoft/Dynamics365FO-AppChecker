@@ -3,7 +3,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-
+#nullable enable
 namespace GraphExplorer.Views
 {
     public class StringJoinConverter : IValueConverter

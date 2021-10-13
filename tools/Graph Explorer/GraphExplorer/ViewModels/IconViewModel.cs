@@ -9,7 +9,8 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using static System.Windows.Forms.LinkLabel;
-//using System.Drawing;
+
+#nullable enable
 
 namespace GraphExplorer.ViewModels
 {
