@@ -23,7 +23,6 @@ let $r := <MethodsOnMaps>
     return <Record>
         <Artifact name='Artifact:ID'>{lower-case("/" || $a/@Package || "/maps/" || $a/@Name || "/methods/" || $m/@Name) }</Artifact>
         <Package name='Package'>{lower-case($a/@Package)}</Package>
-        <Artifact name='Artifact'>{lower-case($a/@Artifact)}</Artifact>
         <Map name='Map'>{lower-case($a/@Name)}</Map>
         <Method name='Name'>{lower-case($m/@Name)}</Method>
         <Kind name="Kind">Method</Kind>

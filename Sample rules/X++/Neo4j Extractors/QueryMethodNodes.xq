@@ -24,7 +24,8 @@ let $r := <MethodsOnQueries>
     return <Record>
         <Artifact name="Artifact:ID">{lower-case("/" || $a/../@Package || "/queries/" || $name || "/methods/" || $m/@Name) }</Artifact>
         <Package name='Package'>{lower-case(data($a/../@Package))}</Package>
-        <Name name='Name'>{lower-case($m/@Name)}</Name>
+        <Query name='Query'>{lower-case($a/@Name)}</Query>
+        <Method name='Name'>{lower-case($m/@Name)}</Method>
         <Kind name="Kind">Method</Kind>
         <IsAbstract name='IsAbstract:Boolean'>{lower-case($m/@IsAbstract)}</IsAbstract>
         <IsStatic name='IsStatic:Boolean'>{lower-case($m/@IsStatic)}</IsStatic>
