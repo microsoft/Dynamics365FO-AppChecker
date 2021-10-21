@@ -175,7 +175,7 @@ Licensed under the MIT license.
                 <MenuItem x:Name="OpenQueuedQueries" Command="{Binding OpenQueuedQueriesWindow}" Header="Show Queued Queries"/>
             </MenuItem>
             <MenuItem Header="Window">
-                <MenuItem Header="Close All Documents" Command="{Binding CloseAllWindowsCommand}" >
+                <MenuItem Header="Close All Source Documents" Command="{Binding CloseAllWindowsCommand}" >
                     <MenuItem.Icon>
                         <Image Source="Images/CloseDocumentGroup_16x.png"/>
                     </MenuItem.Icon>
