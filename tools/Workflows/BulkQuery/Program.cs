@@ -70,6 +70,12 @@
                 foreach (var arg in args)
                 {
                     var p = Path.GetDirectoryName(arg);
+                    if (string.IsNullOrEmpty(p))
+                    {
+                        p = Directory.GetCurrentDirectory();
+                    }
+
+                    Console.WriteLine($"{p} - {Path.GetFileName(arg)}");
                     var l = Directory.EnumerateFiles(p, Path.GetFileName(arg));
                     files.AddRange(l);
                 }

@@ -1,7 +1,9 @@
 (: Copyright (c) Microsoft Corporation.
    Licensed under the MIT license. :)
 
-(: Export Class Fields (Members) in CSV format :)
+(: Export Class Fields (Members) in CSV format. There are some cases where the
+  types may end up containing comma characteds (when using type providers). This
+  is why the Types field contains the function to replace , with _. :)
 
 let $options := map { 'lax': false(), 'header': true(), 'format': 'attributes'  }
 
@@ -19,7 +21,7 @@ let $r := <FieldsOnClasses>
         <Package name='Package'>{lower-case($a/@Package)}</Package>
         <Member name="Name">{lower-case($m/@Name)}</Member>
         <Kind name="Kind">ClassMember</Kind>
-        <Type name='Type'>{lower-case($m/@Type)}</Type>
+        <Type name='Type'>{lower-case(replace($m/@Type, ',', '_'))}</Type>
         <Visibility name='Visibility'>{string($visibility)}</Visibility>
         <IsStatic name='IsStatic:boolean'>{string(lower-case($m/@IsStatic))}</IsStatic>
         <StartLine name='StartLine:int'>{xs:integer($m/@StartLine)}</StartLine>

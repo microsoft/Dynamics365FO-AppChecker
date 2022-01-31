@@ -56,7 +56,7 @@ Licensed under the MIT license.
             Background ="{DynamicResource MaterialDesignPaper}"
             Foreground="{DynamicResource MaterialDesignBody}"
             materialDesign:HintAssist.Hint="Server URL"
-            materialDesign:HintAssist.HelperText="Neo4j database user name">
+            materialDesign:HintAssist.HelperText="The URL of bolt compatible graph database instance">
         </TextBox>
 
         <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Door" VerticalAlignment="Center" HorizontalAlignment="Center"/>

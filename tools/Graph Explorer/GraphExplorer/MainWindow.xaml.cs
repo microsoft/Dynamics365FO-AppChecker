@@ -73,7 +73,7 @@ namespace SocratexGraphExplorer
             // splash.Close(TimeSpan.FromSeconds(0));
 
             string password;
-            // if (!model.IsDebugMode)
+            if (!model.IsDebugMode)
             {
                 // Now show the connection dialog
                 var connectionWindow = new Views.ConnectionWindow(this.model);
@@ -88,10 +88,10 @@ namespace SocratexGraphExplorer
                 }
                 password = connectionWindow.Password;
             }
-            //else
-            //{
-            //    password = "test";
-            //}
+            else
+            {
+                password = "test";
+            }
 
             // Now that the value of the connection parameters have been set,
             // the global connection to the database can be established.
@@ -171,10 +171,11 @@ namespace SocratexGraphExplorer
         </style>
     </head>
     <body class='container'>
-        No information
+        Welcome to the Graph Explorer
     </body>
 </html>");
-            this.ViewModel.GraphModeSelected = true;
+            this.ViewModel.GraphModeSelected = false;
+            this.ViewModel.TextModeSelected = true;
         }
 
         protected override void OnClosed(EventArgs e)
