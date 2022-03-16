@@ -9,9 +9,7 @@
 {
     for $c in /*
     for $m in $c//Method 
-    let $exprs := $m//OrExpression/BooleanLiteralExpression
-                | $m//AndExpression/BooleanLiteralExpression
-    where $exprs
+    for $exprs in $m//(OrExpression | AndExpression)/BooleanLiteralExpression
     order by $m/Name ascending 
     return <Res Artifact='{$c/@Artifact}' Method='{$m/@Name}'
                 StartLine='{$exprs/@StartLine}' StartCol='{$exprs/@StartCol}'
