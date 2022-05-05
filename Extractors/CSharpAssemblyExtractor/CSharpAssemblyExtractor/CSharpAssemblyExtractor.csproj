@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\pvillads\.nuget\packages\icsharpcode.decompiler\8.0.0.7007-preview1\contentFiles\any\netstandard2.0\Humanizer\LICENSE" />
+    <Content Remove="C:\Users\pvillads\.nuget\packages\icsharpcode.decompiler\8.0.0.7007-preview1\contentFiles\any\netstandard2.0\Pattern Matching.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ICSharpCode.Decompiler" Version="8.0.0.7007-preview1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
+  </ItemGroup>
+
+</Project>
