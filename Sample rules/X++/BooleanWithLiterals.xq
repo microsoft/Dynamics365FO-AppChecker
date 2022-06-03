@@ -9,8 +9,8 @@
 {
     for $c in /*
     for $m in $c//Method 
-    let $exprs := $m//OrExpression/BooleanLiteralExpression
-                | $m//AndExpression/BooleanLiteralExpression
+    for $exprs in ($m//OrExpression/BooleanLiteralExpression
+                 , $m//AndExpression/BooleanLiteralExpression)
     where $exprs
     order by $m/Name ascending 
     return <Res Artifact='{$c/@Artifact}' Method='{$m/@Name}'
