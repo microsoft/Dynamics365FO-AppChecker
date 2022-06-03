@@ -222,7 +222,14 @@ namespace XppReasoningWpf
                         var parts = name.Split(':');
                         var kind = parts[0];
 
-                        xquery = string.Format(@"for $c in //CompilationUnit for $cd in $c//{1}[@FullName='{0}']", name, kind) + " return <Source Language='{$c/@Language}'>{$c/@Source}</Source>";
+                        if (kind == "Type") // This comes from information extracted from assembly
+                        {
+                            xquery = string.Format(@"for $c in /Type[@Artifact='{0}']", name) + " return <Source Language='{$c/@Language}'>{$c/@Source}</Source>";
+                        }
+                        else
+                        {
+                            xquery = string.Format(@"for $c in //CompilationUnit for $cd in $c//{1}[@FullName='{0}']", name, kind) + " return <Source Language='{$c/@Language}'>{$c/@Source}</Source>";
+                        }
                     }
                     else
                     {
@@ -258,7 +265,8 @@ namespace XppReasoningWpf
                 || string.Compare(name, "Query", StringComparison.OrdinalIgnoreCase) == 0
                 || string.Compare(name, "Map", StringComparison.OrdinalIgnoreCase) == 0
                 || string.Compare(name, "View", StringComparison.OrdinalIgnoreCase) == 0
-                || string.Compare(name, "Form", StringComparison.OrdinalIgnoreCase) == 0;
+                || string.Compare(name, "Form", StringComparison.OrdinalIgnoreCase) == 0
+                || string.Compare(name, "Type", StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         /// <summary>
@@ -424,6 +432,10 @@ namespace XppReasoningWpf
                                             {
                                                 this.ShowSourceAt(artifact, "X++", sl, sc, el, ec);
                                                 return;
+                                            }
+                                            else if (kind == "type")
+                                            {
+                                                this.ShowSourceAt(artifact, "C#", sl, sc, el, ec);
                                             }
                                         }
                                     }
