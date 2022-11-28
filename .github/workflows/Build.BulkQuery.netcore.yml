@@ -22,7 +22,7 @@ jobs:
         - name: Setup .NET core
           uses: actions/setup-dotnet@v1
           with:
-             dotnet-version: '3.1.100' # SDK Version to use.
+             dotnet-version: '5.0' # SDK Version to use.
 
         - name: Build and publish
           run: dotnet publish -r win-x64  --self-contained true -c Release -p:PublishSingleFile=true  "tools\Workflows\BulkQuery\BulkQuery.netcore.csproj"
@@ -31,5 +31,5 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
              name: BulkQuery.netcore
-             path: "tools\\Workflows\\BulkQuery\\bin\\Release\\netcoreapp3.1\\win-x64\\publish"
+             path: "tools\\Workflows\\BulkQuery\\bin\\Release\\net5.0\\win-x64\\publish"
        
