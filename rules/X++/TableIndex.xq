@@ -4,6 +4,7 @@
 <Diagnostics Category='Mandatory' href='docs.microsoft.com/Socratex/TableIndex' Version='1.0'>
 {
   for $t in /Table
+  where $t//TableType != 'InMemory'
   where exists ($t//ClusteredIndex)
   and $t//ClusteredIndex = ''
   return
