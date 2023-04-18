@@ -10,7 +10,7 @@
 | Graph Explorer .NET Core | ![Build.GraphExplorer.netcore](https://github.com/microsoft/Dynamics365FO-AppChecker/workflows/Build.GraphExplorer.netcore/badge.svg) |
 
 # Application checker
-The Dynamics Application checker is a set of technologies that allow customers to gain insight into their application code (i.e. source and metadata) in ways that have not been possible before. The technology is based on representing both source code and metadata in XML and providing rich search facilities by using the XQuery language to express declarative queries over the source code. The current implementation runs inside a BaseX repository running locally on the developer's box. You can find more information about installing BaseX here: https://docs.microsoft.com/en-us/dynamics365/unified-operations/dev-itpro/dev-tools/install-basex
+The Dynamics Application checker is a set of technologies that allow customers to gain insight into their application code (i.e. source and metadata) in ways that have not been possible before. The technology is based on representing both source code and metadata in XML and providing rich search facilities by using the XQuery language to express declarative queries over the source code. The current implementation runs inside a BaseX repository running locally on the developer's box.
 
 ## Rules
 The rules directory contains the set of rules that are currently available and will be checked when the user uploads their deployable package to LCS. If the submitted application code does not satisfy these requirements, the deployable package will not be accepted. The rules can be inspected and downloaded for any use, but Microsoft is the only agent that can modify and add new rules.
