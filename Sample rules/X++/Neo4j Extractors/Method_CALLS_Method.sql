@@ -21,21 +21,21 @@
 --  3) Use the "Export data…" facility on the database (under tasks) in MSSQL. It does work  (and you can provide a query) but it is cumbersome to set up.
 
 
-select LOWER('/' + sourceModule.Module + source.[Path]) as ":START_ID", 
-       LOWER('/' + targetModule.Module + target.[Path]) as ":END_ID", 
+select LOWER('/' + sourceModule.Module + source.[Path]) as ":START_ID", 
+       LOWER('/' + targetModule.Module + target.[Path]) as ":END_ID", 
 	   'CALLS' as ":TYPE",
-       count(target.Path) as "Count:int"
-from dbo.[References] as refs
-join dbo.[Names] as source on refs.SourceId = source.Id
-join dbo.Modules as sourceModule on source.ModuleId = sourceModule.Id
-join dbo.[Names] as target on refs.TargetId = target.Id
-join dbo.Modules as targetModule on target.ModuleId = targetModule.Id
--- Call. Even references to fields are marked as calls, prompting filtering below.
-where refs.kind = 1 
+       count(target.Path) as "Count:int"
+from dbo.[References] as refs
+join dbo.[Names] as source on refs.SourceId = source.Id
+join dbo.Modules as sourceModule on source.ModuleId = sourceModule.Id
+join dbo.[Names] as target on refs.TargetId = target.Id
+join dbo.Modules as targetModule on target.ModuleId = targetModule.Id
+-- Call. Even references to fields are marked as calls, prompting filtering below.
+where refs.kind = 1 
 and targetModule.Module not like 'kerneltypemodule' -- exclude .NET calls
-and (target.Path like '/Classes/%/Methods/%'
-or target.Path like '/Tables/%/Methods/%'
-or target.Path like '/Queries/%/Methods/%'
-or target.Path like '/Forms/%/Methods/%'
-or target.Path like '/Views/%/Methods/%')
-group by source.Path, sourceModule.Module, target.Path, targetModule.Module
+and (target.Path like '/Classes/%/Methods/%'
+or target.Path like '/Tables/%/Methods/%'
+or target.Path like '/Queries/%/Methods/%'
+or target.Path like '/Forms/%/Methods/%'
+or target.Path like '/Views/%/Methods/%')
+group by source.Path, sourceModule.Module, target.Path, targetModule.Module
