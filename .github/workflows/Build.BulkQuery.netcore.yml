@@ -31,5 +31,5 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
              name: BulkQuery.netcore
-             path: "tools\\Workflows\\BulkQuery\\bin\\Release\\netcoreapp3.1\\win-x64\\publish"
+             path: "tools\\Workflows\\BulkQuery\\bin\\Release\\net5.0\\win-x64\\publish"
        
