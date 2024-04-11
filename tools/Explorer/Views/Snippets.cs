@@ -4,6 +4,7 @@
 using ICSharpCode.AvalonEdit.Snippets;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace XppReasoningWpf
 {

@@ -10,7 +10,7 @@
   <Color foreground="Teal" name="Entity" exampleText="index.aspx?a=1&amp;amp;b=2" />
   <Color foreground="Olive" name="BrokenEntity" exampleText="index.aspx?a=1&amp;b=2" />
 
-  <Color foreground="Silver" name="XqComment" exampleText="(: comment :)" fontStyle="italic"/>
+  <Color foreground="black" name="XqComment" exampleText="(: comment :)" fontStyle="italic"/>
   <Color name="XqExt" exampleText="(# wmh:cache #)" fontStyle="italic"/>
 
   <RuleSet>

@@ -54,7 +54,7 @@ namespace BaseXInterface
             }
 
             Send(username);
-            Send(MD5(MD5(code) + nonce));
+            Send(MD5Encode(MD5Encode(code) + nonce));
             if (stream.ReadByte() != 0)
             {
                 throw new IOException("Access denied.");
@@ -234,10 +234,10 @@ namespace BaseXInterface
             return Read() == 0;
         }
 
-        private string MD5(string input)
+        private string MD5Encode(string input)
         {
-            MD5CryptoServiceProvider MD5 = new MD5CryptoServiceProvider();
-            byte[] hash = MD5.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var provider = MD5.Create();
+            byte[] hash = provider.ComputeHash(Encoding.UTF8.GetBytes(input));
 
             StringBuilder sb = new StringBuilder();
             foreach (byte h in hash)

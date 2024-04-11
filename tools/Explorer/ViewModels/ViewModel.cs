@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 using BaseXInterface;
-using ICSharpCode.SharpDevelop.Editor;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using XppReasoningWpf.OpenAI;
+using static Azure.Core.HttpHeader;
 
 namespace XppReasoningWpf.ViewModels
 {
@@ -35,6 +36,8 @@ namespace XppReasoningWpf.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private PromptEvaluator AIPromptEvaluator = null;
+
         #region Commands
         public ICommand ExitApplicationCommand { get; private set; }
 
@@ -44,6 +47,8 @@ namespace XppReasoningWpf.ViewModels
 
         public ICommand ExecuteQueryCommand { get; private set; }
 
+        public ICommand ExecuteAICommand { get; private set; }
+
         public ICommand CheckQueryCommand { get; private set; }
 
         public ICommand SubmitQueryCommand { get; private set; }
@@ -51,6 +56,8 @@ namespace XppReasoningWpf.ViewModels
         public ICommand WindowsCommand { get; private set; }
 
         public ICommand CloseAllWindowsCommand { get; private set; }
+
+        public ICommand ClearLogCommand{ get; private set; }
 
         public ICommand SaveCommand { get; private set; }
 
@@ -75,6 +82,14 @@ namespace XppReasoningWpf.ViewModels
         public ICommand IncreaseResultsFontSizeCommand { get; private set; }
 
         public ICommand DecreaseResultsFontSizeCommand { get; private set; }
+
+        public ICommand IncreaseAIFontSizeCommand { get; private set; }
+
+        public ICommand DecreaseAIFontSizeCommand { get; private set; }
+
+        public ICommand IncreaseLogFontSizeCommand { get; private set; }
+
+        public ICommand DecreaseLogFontSizeCommand { get; private set; }
 
         public ICommand IncreaseQueryFontSizeCommand { get; private set; }
 
@@ -106,7 +121,18 @@ namespace XppReasoningWpf.ViewModels
             }
         }
 
-         public string QueryResult
+        private string log = string.Empty;
+        public string Log
+        {
+            get => this.log;
+            set
+            {
+                this.log = value;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Log)));
+            }
+        }
+
+        public string QueryResult
         {
             get { return this.model.QueryResult; }
             set
@@ -169,6 +195,18 @@ namespace XppReasoningWpf.ViewModels
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CaretPositionString)));
             }
         }
+
+        public void StartWaiting()
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartWaiting)));
+        }
+
+        public void EndWaiting()
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StartWaiting)));
+        }
+
+
         public Database SelectedDatabase
         {
             get { return model.SelectedDatabase; }
@@ -266,7 +304,23 @@ namespace XppReasoningWpf.ViewModels
             return null;
         }
 
-        async public Task<string> ExecuteQueryAsync(string query, Session session)
+        private static string ExtractBetweenStrings(string source, string start, string end)
+        {
+            int startIndex = source.IndexOf(start) + start.Length;
+            int endIndex = source.IndexOf(end, startIndex);
+            if (startIndex < 0 || endIndex < 0)
+                return string.Empty; // or throw an exception
+            return source.Substring(startIndex, endIndex - startIndex);
+        }
+
+        /// <summary>
+        /// Execute the query in the database session
+        /// </summary>
+        /// <param name="query">The query to execute. This can be either an XQuery string,
+        /// or a natural language string that will be submitted to Open AI to get a query.</param>
+        /// <param name="session">The BaseX database that handles the query.</param>
+        /// <returns>The result of the XQuery database query.</returns>
+        async internal Task<string> ExecuteQueryAsync(string query, Session session, PromptEvaluator evaluator)
         {
             string result = "";
             Stopwatch timer = new Stopwatch();
@@ -275,7 +329,26 @@ namespace XppReasoningWpf.ViewModels
                 var settings = Properties.Settings.Default;
                 timer.Start();
 
-                result = await session.DoQueryAsync(query,
+                var resultingQuery = await evaluator.EvaluatePromptAsync(query);
+
+                // Condition the result from the AI to get the query
+                // and the explanation.
+                var generatedBasexQuery = ExtractBetweenStrings(resultingQuery, "Query->", "<-Query");
+                var explanation = ExtractBetweenStrings(resultingQuery, "E->", "<-E");
+                var basexQuery = string.Empty;
+
+                if (generatedBasexQuery.Any())
+                {
+                    // The system provided a query, so use it.
+                    basexQuery = generatedBasexQuery;
+                }
+                else
+                {
+                    basexQuery = ExtractBetweenStrings(resultingQuery, "ProvidedQuery->", "<-ProvidedQuery");
+                }
+                this.Log = $"Query: {query}\nbasexQuery: {basexQuery}Explanation: {explanation}\n\n";
+
+                result = await session.DoQueryAsync(basexQuery,
                     new Tuple<string, string>("database", model.SelectedDatabase.Name),
                     new Tuple<string, string>("server", model.HostName),
                     new Tuple<string, string>(settings.ExternalVariableName1, settings.ExternalVariableValue1),
@@ -299,6 +372,50 @@ namespace XppReasoningWpf.ViewModels
             }
 
             return result;
+        }
+
+        private bool sourcePaneActive = false;
+        public bool SourcePaneActive
+        {
+            get { return this.sourcePaneActive;  }
+            private set
+            {
+                if (this.sourcePaneActive != value)
+                {
+                    this.sourcePaneActive = value;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SourcePaneActive)));
+                }
+            }
+        }
+
+        // This is the selected source editor
+        private XppSourceEditor selectedEditor = null;
+
+        // The number of tab pages that are opened. This is used to determine
+        // whether or not the AI pane should be shown.
+        private int tabPagesOpen = 0;
+
+        /// <summary>
+        /// This method is called when a tab is created, deleted or changed. It is
+        /// called from the view.
+        /// </summary>
+        /// <param name="sender">The tab control.</param>
+        /// <param name="e">The event specifying what happened.</param>
+        public void DetailsTab_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                var tabItem = e.AddedItems[0] as TabItem;
+                var editor = tabItem.Content as XppSourceEditor;
+                this.selectedEditor = editor;
+            }
+            else
+            {
+                this.selectedEditor = null;
+            }
+
+            this.tabPagesOpen = this.tabPagesOpen + e.AddedItems.Count - e.RemovedItems.Count;
+            this.SourcePaneActive = tabPagesOpen > 0;
         }
 
         public TabItem CreateNewQueryTabItem()
@@ -338,7 +455,7 @@ namespace XppReasoningWpf.ViewModels
         {
             // If the user has already opened a tab by this name, and the text
             // is the same, then that tab is returned. If there is an existing one, but
-            // the content has been changed, a a new one is created and the name is 
+            // the content has been changed, a new one is created and the name is 
             // made unambiguous by adding an index.
 
             foreach (Wpf.Controls.TabItem tab in this.view.queryTabPage.Items)
@@ -360,12 +477,13 @@ namespace XppReasoningWpf.ViewModels
             var editor = new QueryEditor(this);
 #pragma warning restore IDE0017 // Simplify object initialization
             editor.Text = text;
+            editor.WordWrap = true;
             editor.IsModified = false;
 
             var item = new Wpf.Controls.TabItem()
             {
                 Header = name,
-                Tag = path,
+                Tag = new Tuple<string, PromptEvaluator>(path, new PromptEvaluator(PromptEvaluator.FindSystemPrompt)),
                 ToolTip = "Unsaved " + name,
                 Content = editor,
             };
@@ -449,6 +567,54 @@ namespace XppReasoningWpf.ViewModels
                 this.view.ResultsEditor.Text = this.CachedQueryResult[queryEditor];
         }
 
+        private static T? FindParentWindow<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+
+            // Check if this is the root of the tree
+            if (parent == null)
+                return null;
+
+            var parentWindow = parent;
+            if (parentWindow is not null and T)
+            {
+                return (T)parentWindow;
+            }
+            else
+            {
+                //use recursion until it reaches a Window
+                return FindParentWindow<T>(parent);
+            }
+        }
+
+        private static string IncreaseNumberAfterUnderscore(string input)
+        {
+            // Check if the input is null or empty
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException("Input string cannot be null or empty.");
+            }
+
+            // Find the last underscore in the string
+            int underscoreIndex = input.LastIndexOf('_');
+            if (underscoreIndex == -1 || underscoreIndex == input.Length - 1)
+            {
+                return input + "_1";
+            }
+
+            // Extract the substring after the last underscore
+            string numberString = input.Substring(underscoreIndex + 1);
+
+            // Try to parse the substring as an integer
+            if (int.TryParse(numberString, out int result))
+            {
+                return input.Substring(0, underscoreIndex) + "_" + (result + 1).ToString();
+            }
+            else
+            {
+                return input + "_1";
+            }
+        }
         public ViewModel(MainWindow view, Model model)
         {
             this.view = view;
@@ -694,7 +860,26 @@ namespace XppReasoningWpf.ViewModels
                 p1 => Properties.Settings.Default.ResultsFontSize -= 2,
                 p2 => this.view.ResultsEditor != null && this.view.ResultsEditor.FontSize > 8
             );
-        
+
+            this.IncreaseLogFontSizeCommand = new RelayCommand(
+                p1 => Properties.Settings.Default.LogFontSize += 2,
+                p2 => this.view.Log != null && this.view.Log.FontSize < 48
+            );
+
+            this.DecreaseLogFontSizeCommand = new RelayCommand(
+                p1 => Properties.Settings.Default.LogFontSize -= 2,
+                p2 => this.view.Log != null && this.view.Log.FontSize > 8
+            );
+
+            this.IncreaseAIFontSizeCommand = new RelayCommand(
+                p1 => Properties.Settings.Default.AIFontSize += 2,
+                p2 => this.view.AIEditor != null && this.view.AIEditor.FontSize < 48
+            );
+
+            this.DecreaseAIFontSizeCommand = new RelayCommand(
+                p1 => Properties.Settings.Default.AIFontSize -= 2,
+                p2 => this.view.AIEditor != null && this.view.AIEditor.FontSize > 8
+            );
 
             this.IncreaseQueryFontSizeCommand = new RelayCommand(
                 p1 => Properties.Settings.Default.QueryFontSize += 2,
@@ -783,6 +968,63 @@ namespace XppReasoningWpf.ViewModels
                 }
             );
 
+            this.ClearLogCommand = new RelayCommand(
+                p =>
+                {
+                    this.Log = string.Empty;
+                });
+
+            // Dictionary<string, string> derivedTabNames = new Dictionary<string, string>();
+
+            this.ExecuteAICommand = new RelayCommand(
+                async p =>
+                {
+                    if (this.AIPromptEvaluator == null)
+                    {
+                        this.AIPromptEvaluator = new PromptEvaluator(PromptEvaluator.ManipulateSystemPrompt);
+                    }
+
+                    // We know that a source tab is selected, otherwise we would not be
+                    // able to execute the command.
+                    // TODO: If there is a selection, use it. Otherwise use the whole editor content.
+                    var currentTabItem = this.selectedEditor.Parent as TabItem;
+                    var currentTabName = (currentTabItem.Header as TextBlock).Text;
+
+                    var newTabName = IncreaseNumberAfterUnderscore(currentTabName);
+
+                    var sourceCode = this.selectedEditor.Text;
+
+                    string result;
+                    var currentCursor = selectedEditor.Cursor;
+                    try
+                    {
+                        selectedEditor.Cursor = Cursors.Wait;
+                        var prompt = (string)p;
+                        result = await this.AIPromptEvaluator.EvaluatePromptAsync(sourceCode + Environment.NewLine + prompt);
+                    }
+                    finally
+                    {
+                        selectedEditor.Cursor = currentCursor;
+                    }
+
+                    var tabPage = currentTabItem.Parent as TabControl;
+                    var newTab = new Wpf.Controls.TabItem()
+                    {
+                        Tag = newTabName,
+                        Header = new TextBlock() { Text = newTabName },
+                    };
+
+                    var newEditor = new XppSourceEditor();
+                    newEditor.Text = result;
+                    newEditor.WordWrap = true;
+                    newEditor.IsReadOnly = false;
+                    newTab.Content = newEditor;
+                    tabPage.Items.Add(newTab);
+
+                    // Now that we have a result: Open it in a new tab page.
+
+                });
+
             this.ExecuteQueryCommand = new RelayCommand(
                 async p =>
                 {
@@ -815,7 +1057,11 @@ namespace XppReasoningWpf.ViewModels
                                 Width = 16,
                                 Height = 16,
                             };
-                            result = await this.ExecuteQueryAsync(query, session);
+
+                            var tabPageInfo = tabItem.Tag as Tuple<string, PromptEvaluator>;
+                            var evaluator = tabPageInfo.Item2;
+
+                            result = await this.ExecuteQueryAsync(query, session, evaluator);
                         }
                         catch (Exception e)
                         {

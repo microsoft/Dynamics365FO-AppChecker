@@ -1,9 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="XppReasoningWpf.Properties" GeneratedClassName="Settings">
-<!-- 
-  Copyright (c) Microsoft Corporation.
-  Licensed under the MIT license.
--->
   <Profiles />
   <Settings>
     <Setting Name="SourceFontSize" Type="System.Int32" Scope="User">
@@ -104,6 +100,12 @@
     </Setting>
     <Setting Name="TimeBetweenQueryListUpdates" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="LogFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="AIFontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
     </Setting>
   </Settings>
 </SettingsFile>
