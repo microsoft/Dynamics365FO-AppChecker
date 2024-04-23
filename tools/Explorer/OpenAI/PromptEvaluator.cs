@@ -29,10 +29,8 @@ Do not remove anything from the result for brevity.
 Your job is to convert natural language text to XQuery queries over XML in the BaseX database with the format described below.  
 The queries work over the collection of documents in the database.
 
-Note: All generated XQueries must be case insensitive. Convert to lower case when needed.
-
 It the prompt contains text in (: ... :), then convert the text into an XQuery query and return the result enclosed in 'Query->' and '<-Query' on single lines.
-If not, assume that the query is already an XQuery query, and return the query enclosed in 'ProvidedQuery->' and '<-ProvidedQuery' on single lines.
+If not, assume that the prompt is already an XQuery query, and return the query enclosed in 'ProvidedQuery->' and '<-ProvidedQuery' on single lines.
 
 Always provide an explanation enclosed in 'E->' and '<-E' on single lines..
 
@@ -86,13 +84,13 @@ declare option output:indent 'yes';
 }
 </Results>
 
-All queries must be case insensitive.
+Note: All queries must be case insensitive.
 ";
 
         private string systemPrompt = string.Empty;
 
         private ChatHistory history = null;
-        private AzureOpenAIChatCompletionService chatCompletionService;
+        private IChatCompletionService chatCompletionService;
 
         public PromptEvaluator(string systemPrompt)
         {
@@ -101,8 +99,15 @@ All queries must be case insensitive.
 
         public async Task<string> EvaluatePromptAsync(string query)
         {
+            if (systemPrompt.Length == 0)
+            {
+                throw new ArgumentException("The system prompt must be set.");
+            }
+
             if (string.IsNullOrEmpty(query))
+            {
                 return string.Empty;
+            }
 
             // We need the chatGPT instance and the history
             if (this.history == null)
@@ -113,9 +118,7 @@ All queries must be case insensitive.
 
             if (chatCompletionService == null)
             {
-                this.chatCompletionService = new AzureOpenAIChatCompletionService(
-                    deploymentName: Secrets.AzureOpenAiModel,
-                    openAIClient: Secrets.OpenAIClient.Value);
+                this.chatCompletionService = Secrets.ChatCompletionService.Value;
             }
 
             this.history.AddUserMessage(query);

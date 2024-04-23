@@ -346,7 +346,7 @@ namespace XppReasoningWpf.ViewModels
                 {
                     basexQuery = ExtractBetweenStrings(resultingQuery, "ProvidedQuery->", "<-ProvidedQuery");
                 }
-                this.Log = $"Query: {query}\nbasexQuery: {basexQuery}Explanation: {explanation}\n\n";
+                this.Log = $"Query: {query}\n\nbasexQuery: {basexQuery}\n\nExplanation: {explanation}\n\n";
 
                 result = await session.DoQueryAsync(basexQuery,
                     new Tuple<string, string>("database", model.SelectedDatabase.Name),
@@ -999,8 +999,10 @@ namespace XppReasoningWpf.ViewModels
                     try
                     {
                         selectedEditor.Cursor = Cursors.Wait;
-                        var prompt = (string)p;
-                        result = await this.AIPromptEvaluator.EvaluatePromptAsync(sourceCode + Environment.NewLine + prompt);
+                        var userQuery = (string)p;
+                        var prompt = sourceCode + Environment.NewLine + userQuery;
+                        // var prompt = userQuery + Environment.NewLine + sourceCode;
+                        result = await this.AIPromptEvaluator.EvaluatePromptAsync(prompt);
                     }
                     finally
                     {
