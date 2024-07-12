@@ -30,7 +30,8 @@ namespace XppReasoningWpf
                 }
                 else
                 {
-                    return "gpt-4-turbo-2024-04-09";
+                    // return "gpt-4-turbo-2024-04-09";
+                    return "gpt-4o";
                 }
             }
         }
@@ -39,7 +40,7 @@ namespace XppReasoningWpf
         {
             get
             {
-                if (UsesAzureOpenAI)
+                if (false && UsesAzureOpenAI)
                 {
                     return Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
                 }

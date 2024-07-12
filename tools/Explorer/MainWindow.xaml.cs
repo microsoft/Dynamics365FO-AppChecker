@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Win32;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.ComponentModel;
@@ -20,11 +18,8 @@ using System.Threading;
 namespace XppReasoningWpf
 {
     using System.Xml.XPath;
-    using Azure.AI.OpenAI;
     using BaseXInterface;
-    using Microsoft.SemanticKernel.ChatCompletion;
     using Wpf.Controls;
-    using XppReasoningWpf.OpenAI;
 
     // Authoring a shell extension to show xq files is documented here: https://www.codeproject.com/articles/533948/net-shell-extensions-shell-preview-handlers
     // How to assign this as the default handler for .xq files is described here: https://docs.microsoft.com/en-us/visualstudio/extensibility/specifying-file-handlers-for-file-name-extensions?view=vs-2019
@@ -40,7 +35,7 @@ namespace XppReasoningWpf
 
         public MainWindow()
         {
-            SplashScreen splash = new SplashScreen("Images/SplashScreen with socrates.png");
+            SplashScreen splash = new SplashScreen("Images/SplashScreen with Descartes.png");
             splash.Show(false);
             Thread.Sleep(2000);
 
@@ -90,6 +85,27 @@ namespace XppReasoningWpf
 
             // Create the first query page
             this.ViewModel.CreateNewQueryTabItem();
+
+            // TODO: REMOVE
+            var newTab = new TabItem() { Header = new TextBlock() { Text = "Test" } };
+            this.DetailsTab.Items.Add(newTab);
+            var newEditor = new XppSourceEditor();
+            newEditor.Text = @"
+/// <Summary>
+/// This is a test class
+/// </Summary>
+class C
+{
+    /// <Summary>
+    /// This is a test method that does nothing.
+    /// </Summary>
+    public void foo()
+    {
+    }
+}";
+            newEditor.WordWrap = true;
+            newEditor.IsReadOnly = false;
+            newTab.Content = newEditor;
         }
 
         /// <summary>

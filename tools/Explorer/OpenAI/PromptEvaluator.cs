@@ -4,10 +4,11 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Windows.Forms.Design.AxImporter;
+using System.Windows;
 
 namespace XppReasoningWpf.OpenAI
 {
@@ -29,10 +30,11 @@ Do not remove anything from the result for brevity.
 Your job is to convert natural language text to XQuery queries over XML in the BaseX database with the format described below.  
 The queries work over the collection of documents in the database.
 
-It the prompt contains text in (: ... :), then convert the text into an XQuery query and return the result enclosed in 'Query->' and '<-Query' on single lines.
+If the prompt contains text in (: ... :), then convert the text into an XQuery query and return the result enclosed in 'Query->' and '<-Query' on single lines.
 If not, assume that the prompt is already an XQuery query, and return the query enclosed in 'ProvidedQuery->' and '<-ProvidedQuery' on single lines.
+Do not include the ```xquery ... ``` code block delimiters in the result.
 
-Always provide an explanation enclosed in 'E->' and '<-E' on single lines..
+Always provide an explanation enclosed in 'E->' and '<-E' on single lines.
 
 Here are a few examples of how the XML is formatted. All source code in the Source attributes is X++ code.
 
@@ -58,6 +60,7 @@ These are examples of statements:
 'If Statements' If statements contain a condition (the Expression, as described below) and a statement as show here: <IfStatement>Expression Statement</IfStatement>.
 'Compound statements' are sequences of statements, inside <CompoundStatement> ... </CompoundStatement>.
 'Return statements' are represented as <ReturnStatement> ... </ReturnStatement>, optionally including an expression.
+'Empty statements' are represented as <EmptyStatement></EmptyStatement>.
 'While statements' are represented as <WhileStatement> Expression Statement</WhileStatement> where the first child (i.e. the condition) is an expression, and the second child is a statement.
 ---------------
 These are examples of expressions:
@@ -97,8 +100,16 @@ Note: All queries must be case insensitive.
             this.systemPrompt = systemPrompt;
         }
 
-        public async Task<string> EvaluatePromptAsync(string query)
+        public async Task<(string, TimeSpan)> EvaluatePromptAsync(string query)
         {
+            const int MaxQueryLength = 5000;
+            // TODO: Remove:
+            if (query.Length > MaxQueryLength)
+            {
+                query = query.Substring(0, MaxQueryLength);
+            }
+
+
             if (systemPrompt.Length == 0)
             {
                 throw new ArgumentException("The system prompt must be set.");
@@ -106,7 +117,7 @@ Note: All queries must be case insensitive.
 
             if (string.IsNullOrEmpty(query))
             {
-                return string.Empty;
+                return (string.Empty, TimeSpan.Zero);
             }
 
             // We need the chatGPT instance and the history
@@ -122,11 +133,14 @@ Note: All queries must be case insensitive.
             }
 
             this.history.AddUserMessage(query);
+
+            var timer = Stopwatch.StartNew();
             var result = await this.chatCompletionService.GetChatMessageContentAsync(this.history);
+            timer.Stop();
 
             history.Add(result);
 
-            return result.Content;
+            return (result.Content, timer.Elapsed);
         }
     }
 }

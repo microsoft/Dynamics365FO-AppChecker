@@ -24,6 +24,7 @@
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <None Remove="Images\High Contrast Socrates.png" />
+    <None Remove="Images\Splashscreen with Descartes.png" />
     <None Remove="Resources\Go.xshd" />
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
@@ -49,6 +50,7 @@
     <Resource Include="Images\Alecive-Flatwoken-Apps-File-Xml.ico" />
     <Resource Include="Alecive-Flatwoken-Apps-File-Xml.ico" />
     <Resource Include="Images\High Contrast Socrates.png" />
+    <Resource Include="Images\Splashscreen with Descartes.png" />
     <Resource Include="Images\SplashScreen with socrates.jpg" />
     <Resource Include="Images\Newer D365fo logo, inverted.png" />
     <Resource Include="Images\fatter-eye-inverted.png" />

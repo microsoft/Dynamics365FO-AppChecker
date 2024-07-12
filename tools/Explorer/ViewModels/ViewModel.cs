@@ -333,8 +333,8 @@ namespace XppReasoningWpf.ViewModels
 
                 // Condition the result from the AI to get the query
                 // and the explanation.
-                var generatedBasexQuery = ExtractBetweenStrings(resultingQuery, "Query->", "<-Query");
-                var explanation = ExtractBetweenStrings(resultingQuery, "E->", "<-E");
+                var generatedBasexQuery = ExtractBetweenStrings(resultingQuery.Item1, "Query->", "<-Query");
+                var explanation = ExtractBetweenStrings(resultingQuery.Item1, "E->", "<-E");
                 var basexQuery = string.Empty;
 
                 if (generatedBasexQuery.Any())
@@ -344,7 +344,7 @@ namespace XppReasoningWpf.ViewModels
                 }
                 else
                 {
-                    basexQuery = ExtractBetweenStrings(resultingQuery, "ProvidedQuery->", "<-ProvidedQuery");
+                    basexQuery = ExtractBetweenStrings(resultingQuery.Item1, "ProvidedQuery->", "<-ProvidedQuery");
                 }
                 this.Log = $"Query: {query}\n\nbasexQuery: {basexQuery}\n\nExplanation: {explanation}\n\n";
 
@@ -986,27 +986,29 @@ namespace XppReasoningWpf.ViewModels
 
                     // We know that a source tab is selected, otherwise we would not be
                     // able to execute the command.
-                    // TODO: If there is a selection, use it. Otherwise use the whole editor content.
                     var currentTabItem = this.selectedEditor.Parent as TabItem;
                     var currentTabName = (currentTabItem.Header as TextBlock).Text;
 
                     var newTabName = IncreaseNumberAfterUnderscore(currentTabName);
 
+                    // TODO: If there is a selection, use it. Otherwise use the whole editor content.
                     var sourceCode = this.selectedEditor.Text;
 
                     string result;
-                    var currentCursor = selectedEditor.Cursor;
                     try
                     {
-                        selectedEditor.Cursor = Cursors.Wait;
+                        Mouse.OverrideCursor = Cursors.Wait;
+
                         var userQuery = (string)p;
-                        var prompt = sourceCode + Environment.NewLine + userQuery;
-                        // var prompt = userQuery + Environment.NewLine + sourceCode;
-                        result = await this.AIPromptEvaluator.EvaluatePromptAsync(prompt);
+                        // var prompt = sourceCode + Environment.NewLine + userQuery;
+                        var prompt = userQuery + Environment.NewLine + sourceCode;
+                        var r = await this.AIPromptEvaluator.EvaluatePromptAsync(prompt);
+                        result = r.Item1;
+                        this.Status = $"AI query executed in {r.Item2.Milliseconds} ms.";
                     }
                     finally
                     {
-                        selectedEditor.Cursor = currentCursor;
+                        Mouse.OverrideCursor = null;
                     }
 
                     var tabPage = currentTabItem.Parent as TabControl;
@@ -1217,7 +1219,7 @@ namespace XppReasoningWpf.ViewModels
         {
             // Shut down any running interactive queries
             string result = "";
-            const string jobDetailsQuery = "xquery jobs:list-details()";
+            const string jobDetailsQuery = "xquery db:list-details()";
 
             using (var session = this.model.GetSessionAsync("").Result)
             {
