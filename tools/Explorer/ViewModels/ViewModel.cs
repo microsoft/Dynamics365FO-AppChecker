@@ -53,6 +53,8 @@ namespace XppReasoningWpf.ViewModels
 
         public ICommand SubmitQueryCommand { get; private set; }
 
+        public ICommand SettingsCommand { get; private set; }
+
         public ICommand WindowsCommand { get; private set; }
 
         public ICommand CloseAllWindowsCommand { get; private set; }
@@ -102,6 +104,7 @@ namespace XppReasoningWpf.ViewModels
         public ICommand QueryUndoCommand { get; private set; }
 
         public ICommand QueryRedoCommand { get; private set; }
+
         #endregion
 
         private Views.SubmittedQueriesWindow queuedQueriesWindow = null;
@@ -120,6 +123,43 @@ namespace XppReasoningWpf.ViewModels
                 return this.queuedQueriesWindow;
             }
         }
+
+        public bool AstQueryProviderSelected
+        {
+            get
+            {
+                return this.model.QueryProvider == QueryProviderType.AST;
+            }
+
+            set
+            {
+                if (value != AstQueryProviderSelected)
+                {
+                    this.model.QueryProvider = QueryProviderType.AST;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AstQueryProviderSelected)));
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AzureAISearchQueryProviderSelected)));
+                }
+            }
+        }
+
+        public bool AzureAISearchQueryProviderSelected
+        {
+            get
+            {
+                return this.model.QueryProvider == QueryProviderType.AzureAISearch;
+            }
+
+            set
+            {
+                if (value != AzureAISearchQueryProviderSelected)
+                {
+                    this.model.QueryProvider = QueryProviderType.AzureAISearch;
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AstQueryProviderSelected)));
+                    this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AzureAISearchQueryProviderSelected)));
+                }
+            }
+        }
+
 
         private string log = string.Empty;
         public string Log
@@ -483,7 +523,7 @@ namespace XppReasoningWpf.ViewModels
             var item = new Wpf.Controls.TabItem()
             {
                 Header = name,
-                Tag = new Tuple<string, PromptEvaluator>(path, new PromptEvaluator(PromptEvaluator.FindSystemPrompt)),
+                Tag = new Tuple<string, PromptEvaluator>(path, new PromptEvaluator(Model.SystemPrompt)),
                 ToolTip = "Unsaved " + name,
                 Content = editor,
             };
@@ -655,6 +695,17 @@ namespace XppReasoningWpf.ViewModels
                 else if (e.PropertyName == "Username" || e.PropertyName == "HostName" || e.PropertyName == "SelectedDatabase")
                 {
                     this.UpdateConnectionInfo();
+                }
+                else if (e.PropertyName == "QueryProvider")
+                {
+                    var qp = model.QueryProvider;
+                    this.AstQueryProviderSelected = false;
+                    this.AzureAISearchQueryProviderSelected = false;
+
+                    if (qp == QueryProviderType.AzureAISearch)
+                        this.AzureAISearchQueryProviderSelected = true;
+                    else
+                        this.AstQueryProviderSelected = true;
                 }
                 else
                 {
@@ -833,6 +884,12 @@ namespace XppReasoningWpf.ViewModels
                 }
             );
 
+            this.SettingsCommand = new RelayCommand(
+                p =>
+                {
+                    // Open the settings dialog
+                });
+
             this.CreateNewQueryCommand = new RelayCommand(
                 p =>
                 {
@@ -981,7 +1038,7 @@ namespace XppReasoningWpf.ViewModels
                 {
                     if (this.AIPromptEvaluator == null)
                     {
-                        this.AIPromptEvaluator = new PromptEvaluator(PromptEvaluator.ManipulateSystemPrompt);
+                        this.AIPromptEvaluator = new PromptEvaluator(Model.SystemPrompt);
                     }
 
                     // We know that a source tab is selected, otherwise we would not be

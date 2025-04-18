@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" version="6.3.0.90" />
-    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.15" />
+    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" version="2.22.0" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.6.3" />
     <PackageReference Include="System.Buffers" version="4.5.1" />
@@ -99,6 +99,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\SystemPrompt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -19,20 +19,11 @@ namespace XppReasoningWpf
         /// </summary>
         public static bool UsesAzureOpenAI => false;
 
-        //public static string AzureOpenAiModel = "chatGPT_GPT35-turbo-0301";
         public static string OpenAiModel
         {
             get
             {
-                if (UsesAzureOpenAI)
-                {
-                    return "GPT-4-32K";
-                }
-                else
-                {
-                    // return "gpt-4-turbo-2024-04-09";
-                    return "gpt-4o";
-                }
+                return "GPT-4o";
             }
         }
 
@@ -40,59 +31,32 @@ namespace XppReasoningWpf
         {
             get
             {
-                if (false && UsesAzureOpenAI)
-                {
-                    return Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
-                }
-                else
-                {
-                    return Environment.GetEnvironmentVariable("OpenAIBearerToken");
-                }
+                return Environment.GetEnvironmentVariable("AzureOpenAIApiKey");
             }
         }
 
-        public static Lazy<IChatCompletionService> ChatCompletionService
+        public static string DeploymentName => "gpt-4o";
+
+        //public static Lazy<IChatCompletionService> ChatCompletionService
+        //{
+        //    get
+        //    {
+        //        return new Lazy<IChatCompletionService>(new Azure.AI.OpenAI.compleAzureOpenAIChatCompletionService(
+        //                deploymentName: OpenAiModel,
+        //                openAIClient: OpenAIClient.Value));
+        //    }
+        //}
+
+        public static Lazy<Azure.AI.OpenAI.AzureOpenAIClient> OpenAIClient
         {
             get
             {
-                if (UsesAzureOpenAI)
-                {
-                    return new Lazy<IChatCompletionService>(new AzureOpenAIChatCompletionService(
-                         deploymentName: OpenAiModel,
-                         openAIClient: OpenAIClient.Value));
-                }
-                else
-                {
-                    return new Lazy<IChatCompletionService>(new OpenAIChatCompletionService(
-                        modelId: OpenAiModel,
-                        apiKey: ApiKey)) ;
-                }
-            }
-        }
+                string AzureOpenAiApiKey = Environment.GetEnvironmentVariable("AzureOpenAIApiKey");
+                string AzureOpenAiEndpoint = Environment.GetEnvironmentVariable("AzureOpenAIEndpoint");
 
-        public static Lazy<OpenAIClient> OpenAIClient
-        {
-            get
-            {
-                if (UsesAzureOpenAI)
-                {
-                    string AzureOpenAiApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
-                    string AzureOpenAiEndpoint = "https://openai-pva.openai.azure.com/";
-
-                    return new Lazy<OpenAIClient>(new OpenAIClient(
-                      new Uri(AzureOpenAiEndpoint),
-                      new AzureKeyCredential(AzureOpenAiApiKey)));
-                }
-                else
-                {
-                    // private OpenAI account
-                    string OpenAiApiKey = Environment.GetEnvironmentVariable("OpenAIBearerToken");
-                    string OpenAIEndpoint = "https://api.openai.com/v1/chat/completions";
-
-                    return new Lazy<OpenAIClient>(new OpenAIClient(
-                        new Uri(OpenAIEndpoint),
-                        new AzureKeyCredential(OpenAiApiKey)));
-                }
+                return new Lazy<Azure.AI.OpenAI.AzureOpenAIClient>(new Azure.AI.OpenAI.AzureOpenAIClient(
+                    new Uri(AzureOpenAiEndpoint),
+                    new AzureKeyCredential(AzureOpenAiApiKey)));
             }
         }
 

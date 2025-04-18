@@ -148,7 +148,6 @@ Licensed under the MIT license.
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-                
 
             <MenuItem Header="Tasks">
                 <MenuItem x:Name="ExecuteQueryMenuItem" Command="{Binding ExecuteQueryCommand}" 
@@ -174,6 +173,14 @@ Licensed under the MIT license.
                 </MenuItem>
                 <MenuItem x:Name="OpenQueuedQueries" Command="{Binding OpenQueuedQueriesWindow}" Header="Show Queued Queries"/>
             </MenuItem>
+
+            <MenuItem Header="Tools">
+                <MenuItem Header="Provider" >
+                    <MenuItem IsCheckable="True" Header="ASTs" IsChecked="{Binding AstQueryProviderSelected}"/>
+                    <MenuItem IsCheckable="True" Header="Azure Search" IsChecked="{Binding AzureAISearchQueryProviderSelected}" />
+                </MenuItem>
+            </MenuItem>
+            
             <MenuItem Header="Window">
                 <MenuItem Header="Close All Source Documents" Command="{Binding CloseAllWindowsCommand}" >
                     <MenuItem.Icon>
