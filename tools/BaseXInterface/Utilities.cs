@@ -106,13 +106,9 @@ namespace BaseXInterface
             {
                 string bindingsString = CalculateBindingsString(externalVars);
                 _ = await session.SetBindingsAsync(bindingsString);
+            }
 
-                result = await session.ExecuteAsync(@"xquery " + query);
-            }
-            else
-            {
-                result = await session.ExecuteAsync(@"xquery " + query);
-            }
+            result = await session.ExecuteAsync(@"xquery " + query);
             return result;
         }
 

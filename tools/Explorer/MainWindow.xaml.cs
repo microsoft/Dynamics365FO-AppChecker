@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 
+#nullable enable
 namespace XppReasoningWpf
 {
     using System.Xml.XPath;

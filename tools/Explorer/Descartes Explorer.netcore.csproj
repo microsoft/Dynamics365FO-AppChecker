@@ -36,14 +36,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" version="6.3.0.90" />
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" version="2.22.0" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.6.3" />
-    <PackageReference Include="System.Buffers" version="4.5.1" />
-    <PackageReference Include="System.Numerics.Vectors" version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" version="6.0.0" />
-    <PackageReference Include="System.ValueTuple" version="4.5.0" />
+    <PackageReference Include="AvalonEdit" />
+    <PackageReference Include="Azure.AI.OpenAI" />
+    <PackageReference Include="Azure.Search.Documents" />
+    <PackageReference Include="Microsoft.ApplicationInsights" />
+    <PackageReference Include="Microsoft.SemanticKernel" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.Numerics.Vectors" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe"  />
+    <PackageReference Include="System.ValueTuple"  />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\10239725_delete_bin_recycle_trash_remove_icon.png" />
@@ -99,6 +100,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\SourceSystemPrompt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\SystemPrompt.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

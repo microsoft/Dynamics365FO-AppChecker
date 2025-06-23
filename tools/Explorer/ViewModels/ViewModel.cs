@@ -3,6 +3,7 @@
 using BaseXInterface;
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using XppReasoningWpf.OpenAI;
-using static Azure.Core.HttpHeader;
+//using static Azure.Core.HttpHeader;
 
 namespace XppReasoningWpf.ViewModels
 {
@@ -36,7 +37,8 @@ namespace XppReasoningWpf.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private PromptEvaluator AIPromptEvaluator = null;
+        private PromptEvaluator? AIPromptEvaluator = null;
+        private PromptEvaluator? SourceEvaluator = null;
 
         #region Commands
         public ICommand ExitApplicationCommand { get; private set; }
@@ -46,6 +48,8 @@ namespace XppReasoningWpf.ViewModels
         public ICommand KeyboardCheckQueryCommand { get; private set; }
 
         public ICommand ExecuteQueryCommand { get; private set; }
+        public ICommand ExecuteASTQueryCommand { get; private set; }
+        public ICommand ExecuteAzureSearchQueryCommand { get; private set; }
 
         public ICommand ExecuteAICommand { get; private set; }
 
@@ -792,12 +796,12 @@ namespace XppReasoningWpf.ViewModels
                 p =>
                 {
                     var item = view.queryTabPage.SelectedItem as Wpf.Controls.TabItem;
-                    this.ExecuteQueryCommand.Execute(item.Content);
+                    this.ExecuteASTQueryCommand.Execute(item.Content);
                 },
                 p =>
                 {
                     var item = view.queryTabPage.SelectedItem as Wpf.Controls.TabItem;
-                    return this.ExecuteQueryCommand.CanExecute(item.Content);
+                    return this.ExecuteASTQueryCommand.CanExecute(item.Content);
                 });
 
             this.KeyboardCheckQueryCommand = new RelayCommand(
@@ -1036,11 +1040,10 @@ namespace XppReasoningWpf.ViewModels
             this.ExecuteAICommand = new RelayCommand(
                 async p =>
                 {
-                    if (this.AIPromptEvaluator == null)
-                    {
-                        this.AIPromptEvaluator = new PromptEvaluator(Model.SystemPrompt);
+                    if (this.SourceEvaluator == null)
+                    { 
+                        this.SourceEvaluator = new PromptEvaluator(Model.SourceSystemPrompt);
                     }
-
                     // We know that a source tab is selected, otherwise we would not be
                     // able to execute the command.
                     var currentTabItem = this.selectedEditor.Parent as TabItem;
@@ -1059,9 +1062,9 @@ namespace XppReasoningWpf.ViewModels
                         var userQuery = (string)p;
                         // var prompt = sourceCode + Environment.NewLine + userQuery;
                         var prompt = userQuery + Environment.NewLine + sourceCode;
-                        var r = await this.AIPromptEvaluator.EvaluatePromptAsync(prompt);
+                        var r = await this.SourceEvaluator.EvaluatePromptAsync(prompt);
                         result = r.Item1;
-                        this.Status = $"AI query executed in {r.Item2.Milliseconds} ms.";
+                        this.Status = $"Source AI query executed in {r.Item2.Milliseconds} ms.";
                     }
                     finally
                     {
@@ -1087,6 +1090,48 @@ namespace XppReasoningWpf.ViewModels
                 });
 
             this.ExecuteQueryCommand = new RelayCommand(
+                p => 
+                { 
+                    if (this.AstQueryProviderSelected)
+                    {
+                        this.ExecuteASTQueryCommand.Execute(p);
+                    }
+                    else if (this.AzureAISearchQueryProviderSelected)
+                    {
+                        this.ExecuteAzureSearchQueryCommand.Execute(p);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Unknown query provider");
+                    }    
+                });
+
+            this.ExecuteAzureSearchQueryCommand = new RelayCommand(
+                async p =>
+                {
+                    var embeddings = new Embeddings(3072); // This is the dimension in the index, and the size has to match
+
+                    var queryEditor = p as QueryEditor;
+                    string query;
+
+                    if (queryEditor.SelectionLength > 0)
+                    {
+                        // The user selected some text, so use that as the query.
+                        query = queryEditor.SelectedText;
+                    }
+                    else
+                    {
+                        // No selection, so assume whole editor content
+                        query = queryEditor.Text;
+                    }
+
+                    var s = await embeddings.GetMatchingEmbeddingAsync(query, 5);
+
+                    this.Log += s + Environment.NewLine;
+
+                });
+
+            this.ExecuteASTQueryCommand = new RelayCommand(
                 async p =>
                 {
                     var queryEditor = p as QueryEditor;

@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Azure;
-using Azure.AI.OpenAI;
-using OpenAI.Embeddings;
+//using Azure;
+//using Azure.AI.OpenAI;
+//using OpenAI.Embeddings;
 using System.Numerics;
 using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
 using System.ClientModel;
 using System.Security.Cryptography.Pkcs;
+using Azure.Search.Documents;
+using Azure.Search.Documents.Models;
+using OpenAI.Embeddings;
+using Azure.AI.OpenAI;
+using Azure;
 
+#nullable enable
 namespace XppReasoningWpf.OpenAI
 {
     internal class Embeddings
@@ -40,6 +46,7 @@ namespace XppReasoningWpf.OpenAI
                 new System.ClientModel.ApiKeyCredential(apiKey));
 
             client = openAIClient.GetEmbeddingClient(model);
+
             this.dimensions = dimensions;
         }
 
@@ -48,7 +55,7 @@ namespace XppReasoningWpf.OpenAI
         /// </summary>
         /// <param name="query">The string to calculate an embedding for.</param>
         /// <returns>The embedding for the provided string.</returns>
-        private ClientResult<OpenAIEmbeddingCollection> CreateEmbeddings(params string[] query)
+        public async Task<ReadOnlyMemory<float>> CreateEmbeddingsAsync(params string[] query)
         {
             if (!query.Any())
             {
@@ -60,24 +67,75 @@ namespace XppReasoningWpf.OpenAI
                 Dimensions = this.dimensions,
             };
 
-            var embeddings = client.GenerateEmbeddings(query, embeddingGenerationOptions);
-            return embeddings;
-            //embeddings.Value.ToList().ForEach(e =>
+            var embeddings = await client.GenerateEmbeddingsAsync(query, embeddingGenerationOptions);
+
+
+            // For now, return the first vector because there is only one query to create an embedding for.
+            var result = embeddings.Value.First();
+            return result.ToFloats();
+
+            //foreach (var e in embeddings.Value)
             //{
             //    ReadOnlyMemory<float> vector = e.ToFloats();
-            //    int length = vector.Length;
-            //    System.Console.Write($"data[{e.Index}]: length={length}, ");
-            //    System.Console.Write($"[{vector.Span[0]}, {vector.Span[1]}, ..., ");
-            //    System.Console.WriteLine($"{vector.Span[length - 2]}, {vector.Span[length - 1]}]");
-            //});
+            //}
+
+            //return embeddings;
+
         }
 
-        public void GetMatchingEmbedding(string query)
+        public async Task<string> GetMatchingEmbeddingAsync(string query, int numberOfResults)
         {
             if (string.IsNullOrEmpty(query))
             {
                 throw new ArgumentException("The query must not be empty.", nameof(query));
             }
+
+            if (numberOfResults <= 0)
+            {
+                throw new ArgumentException("The number of results must be greater than 0.", nameof(numberOfResults));
+            }
+
+            string endpoint = "https://sourceinformationrepository.search.windows.net";
+            string indexName = "vector-1744504987774";
+            string apiKey = Secrets.AzureAiSearchApiKey;
+
+            var searchClient = new SearchClient(
+                new Uri(endpoint),
+                indexName,
+                new AzureKeyCredential(apiKey));
+
+            var queryVector = await this.CreateEmbeddingsAsync(query);
+
+            // Vector representation of search query
+            //float[] queryVector = { 0.876f, -0.342f, 0.654f, -0.211f };
+
+            var searchOptions = new SearchOptions
+            {
+                Size = numberOfResults, // Return top N nearest neighbors.
+                Select = { "title" },
+                VectorSearch = new VectorSearchOptions
+                {
+                    Queries = { new VectorizedQuery(queryVector)
+                        {
+                            KNearestNeighborsCount = numberOfResults,
+                            Fields = { "text_vector" }, // Specify the field containing the vectorized source
+                        }
+                    }
+                }
+            };
+
+            // Run the search
+            var response = await searchClient.SearchAsync<SearchDocument>("*", searchOptions);
+
+            Console.WriteLine("Semantic Search Results:");
+            string results = string.Empty;
+            await foreach (var result in response.Value.GetResultsAsync())
+            {
+                results += $"Score: {result.Score}\n Key: {result.Document.First().Key} Value: {result.Document.First().Value}";
+                // Console.WriteLine($"Source: {result.Document["Source"]}");
+            }
+
+            return results;
         }
     }
 }

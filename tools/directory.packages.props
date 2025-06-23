@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.6.3" />
+    <PackageVersion Include="Azure.Search.Documents" Version="11.6.0" />
+    <PackageVersion Include="System.Buffers" Version="4.5.1" />
+    <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageVersion Include="AvalonEdit" Version="6.3.0.90" />
+    <PackageVersion Include="Azure.AI.OpenAI" Version="2.1.0" />
+  </ItemGroup>
+</Project>

@@ -1,8 +1,9 @@
-﻿using Azure;
-using Azure.AI.OpenAI;
-using Azure.Core;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+﻿//using Azure;
+//using Azure.AI.OpenAI;
+//using Azure.Core;
+//using Microsoft.SemanticKernel.ChatCompletion;
+//using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Azure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,15 +38,7 @@ namespace XppReasoningWpf
 
         public static string DeploymentName => "gpt-4o";
 
-        //public static Lazy<IChatCompletionService> ChatCompletionService
-        //{
-        //    get
-        //    {
-        //        return new Lazy<IChatCompletionService>(new Azure.AI.OpenAI.compleAzureOpenAIChatCompletionService(
-        //                deploymentName: OpenAiModel,
-        //                openAIClient: OpenAIClient.Value));
-        //    }
-        //}
+        public static string AzureAiSearchApiKey => Environment.GetEnvironmentVariable("AzureAiSearchApiKey");
 
         public static Lazy<Azure.AI.OpenAI.AzureOpenAIClient> OpenAIClient
         {

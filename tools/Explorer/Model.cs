@@ -206,6 +206,7 @@ namespace XppReasoningWpf
         }
 
         public static string SystemPrompt = File.ReadAllText("Assets\\SystemPrompt.txt");
+        public static string SourceSystemPrompt = File.ReadAllText("Assets\\SourceSystemPrompt.txt");
 
         public delegate void TickEventHandler(object sender, EventArgs e);
         public event TickEventHandler Tick;

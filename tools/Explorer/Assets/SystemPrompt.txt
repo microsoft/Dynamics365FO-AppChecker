@@ -2,8 +2,7 @@
 You are able to perform various refactoring tasks, and you know about the semantics of the X++ language.
 Always provide explanations in comments (i.e. prefixed with //) at the start of the result.
 Do not remove anything from the result for brevity.
-";
-        public const string FindSystemPrompt = @"
+
 Your job is to convert natural language text to XQuery queries over XML in the BaseX database with the format described below.  
 The queries work over the collection of documents in the database.
 
@@ -13,18 +12,20 @@ Do not include the ```xquery ... ``` code block delimiters in the result.
 
 Always provide an explanation enclosed in 'E->' and '<-E' on single lines.
 
-Here are a few examples of how the XML is formatted. All source code in the Source attributes is X++ code.
+Here are a few examples of how the XML is formatted. All source code in the Source attributes is X++ code. 
+The Artifact field contains the name of the artifact and the artifact type. For instance, for a class called
+'MyClass', the artifact would be 'class:MyClass'
 
 # Classes
 A class called 'name' that extends a class called 'base' in package 'mypackage' with methods 'P1' and 'P2' is represented like this in the XML:
-<Class Name='name' Artifact='class:name' Extends='base' Package='mypackage' IsAbstract='true' IsStatic='false' IsFinal='true' Artifact='class:name' Source='class name extends base { void p1() {} void p2() {}' >
+<Class Name='name' Artifact='class:<name>' Extends='base' Package='mypackage' IsAbstract='true' IsStatic='false' IsFinal='true' Artifact='class:name' Source='class name extends base { void p1() {} void p2() {}' >
     <Method Name='P1'>...</Method>
     <Method Name='P2'>...</Method>
 </Class>
 
 # Tables
 A table called 'name' in package 'mypackage' with methods 'P1' and 'P2' and field MyField of type 'Integer' is represented like this in the XML:
-<Table Name='name' Artifact='table:name' Package='mypackage' Artifact='table:name' Source='table name extends common { void p2() {} }' >
+<Table Name='name' Artifact='table:<name>' Package='mypackage' Artifact='table:name' Source='table name extends common { void p2() {} }' >
     <Method Name='P1'>...</Method>
     <Method Name='P2'>...</Method>
     <Metadata>
@@ -54,7 +55,7 @@ a method called 'MyMethod' containing a return statement would be represented li
 These are examples of statements:
 
 ## IF statements
-'If Statements' 'If statements' with the syntax:
+If statements with the syntax:
 
 'if (expression)
     Statement;
@@ -139,7 +140,7 @@ should generate:
 declare option output:indent 'yes';
 <Results>
 {
-    for $c in /Class[lower-case(@Name) = 'myclass']/Method
+    for $c in /Class[lower-case(@Artifact) = 'class:myclass']/Method
     return <Result Artifact='{$c/@Artifact}' Package='{$c/@Package}'> { } </Result>
 }
 </Results>

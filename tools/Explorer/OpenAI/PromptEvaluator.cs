@@ -1,7 +1,8 @@
-﻿using Azure;
-using Azure.AI.OpenAI;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+﻿//using Azure;
+//using Azure.AI.OpenAI;
+//using Microsoft.SemanticKernel.ChatCompletion;
+//using Microsoft.SemanticKernel.Connectors.OpenAI;
+//using OpenAI.Chat;
 using OpenAI.Chat;
 using System;
 using System.ClientModel;
@@ -30,7 +31,7 @@ namespace XppReasoningWpf.OpenAI
         //private ChatHistory history = null;
         private IList<ChatMessage> chatHistory = null;
 
-        private AzureOpenAIClient chatCompletionClient;
+        private Azure.AI.OpenAI.AzureOpenAIClient chatCompletionClient;
 
         public PromptEvaluator(string systemPrompt)
         {
@@ -56,13 +57,6 @@ namespace XppReasoningWpf.OpenAI
             {
                 return (string.Empty, TimeSpan.Zero);
             }
-
-            //// We need the chatGPT instance and the history
-            //if (this.history == null)
-            //{
-            //    // This will insert the system prompt into the chat history.
-            //    this.history = new ChatHistory(this.systemPrompt);
-            //}
 
             if (this.chatHistory == null)
             {
@@ -92,7 +86,6 @@ namespace XppReasoningWpf.OpenAI
             }
 
             this.chatHistory.Add(new AssistantChatMessage(result));
-            //history.Add(result);
 
             return (result , timer.Elapsed);
         }
